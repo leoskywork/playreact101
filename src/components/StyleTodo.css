@@ -1,0 +1,13 @@
+.todo-item {
+	font-size: 1.4em;
+	margin: 10px 0;
+}
+
+.delete-todo-btn {
+	padding: 2px 10px;
+	vertical-align: middle;
+}
+
+.toggle-completed {
+	padding: 4px;
+}
