@@ -19,6 +19,8 @@
 .add-todo-form {
 	display: flex;
 	padding: 0 10px;
+	margin: 0 auto;
+	max-width: 720px;
 }
 
 .add-todo-btn {
