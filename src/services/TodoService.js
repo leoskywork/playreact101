@@ -8,7 +8,7 @@ export class TodoService {
 		let queryString = limit > 0 ? 'limit=' + limit : '';
 
 		return axios
-			.get(`${AppConst.ApiBaseUrl}todos?${queryString}`)
+			.get(`${AppConst.ApiBaseUrl}todos${queryString ? '?' + queryString : ''}`)
 			.then(result => this.unifyResultValidator(result))
 			.then(result => {
 				const apiResult = result.data;
@@ -75,21 +75,34 @@ export class TodoService {
 	}
 
 	static mapFromDtoTodo(dto) {
-		dto.id = dto._id;
-		delete dto._id;
+		if (dto._id) {
+			dto.id = dto._id;
+			delete dto._id;
+		}
+
 		delete dto.__v;
 		return dto;
 	}
 
 	//fixme: impl notification system
 	unifyResultValidator(axiosResponse) {
-		if (!axiosResponse || !axiosResponse.data) return axiosResponse;
+		if (!axiosResponse || !axiosResponse.data || axiosResponse.data.success) return axiosResponse;
 
 		const data = axiosResponse.data;
 
-		if (!data.success && Utility.notEmpty(data.message)) {
+		//fixme: pop error message
+		if (Utility.notEmpty(data.message)) {
 			alert(data.message);
 			data.unifyHandled = true;
+		} else if (Utility.notEmpty(data)) {
+			alert(`error message: ${JSON.stringify(data)}`);
+			if (typeof data === 'object') {
+				data.unifyHandled = true;
+			} else {
+				axiosResponse.data = {};
+				axiosResponse.data.unifyHandled = true;
+				axiosResponse.data.data = data;
+			}
 		}
 
 		return axiosResponse;

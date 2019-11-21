@@ -24,12 +24,11 @@ class Todos extends React.Component {
 				});
 			}
 
-			if (result) {
-				//fixme: pop error message
-				return alert(`source: ${source}, message: ` + result.message);
+			//fixme: pop error message
+			if (!result || !result.unifyHandled) {
+				// return alert(`source: ${source}, message: ${result.message ? result.message : JSON.stringify(result)}`);
+				alert(`api result: ${JSON.stringify(result)}, source: ${source}`);
 			}
-
-			alert('api result is null, source: ' + source);
 		});
 	}
 
