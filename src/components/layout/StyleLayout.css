@@ -1,0 +1,21 @@
+.nav-bar {
+	margin: 10px auto;
+	padding: 10px;
+	/* background-color: lightgray; */
+	background-color: lightyellow;
+	min-width: 400px;
+}
+
+.nav-item {
+	padding: 10px 4px;
+	margin-left: 10px;
+	margin-right: 10px;
+	font-size: 1.4em;
+	color: gray;
+}
+
+.nav-item:hover,
+.nav-item.selected {
+	border-bottom: black 2px solid;
+	color: black;
+}

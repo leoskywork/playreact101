@@ -3,6 +3,15 @@
 ## todo
 
 - [ ] move this to Note?
+- [x] how to sort items?
+  - seems can not do it on UI, have to sort array first(make a copy of state data),
+    - then use sorted array to map to jsx
+  - [ref](https://stackoverflow.com/questions/43572436/sort-an-array-of-objects-in-react-and-render-them/43572944)
+- [ ] disable delete button when deleting
+- [ ] confirm(2 steps) before delete
+- [x] router(nav bar)
+- [ ] cache loaded data when switch tabs?
+- [ ] UI refine
 
 ## basic
 
@@ -101,3 +110,5 @@ scripts.build: "webpack --mode production"
 ```
 
 ## more
+
+todo

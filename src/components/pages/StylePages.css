@@ -1,0 +1,12 @@
+.text-centered {
+	text-align: center;
+}
+
+.contact-list {
+	margin: 10px auto;
+}
+
+.contact-item {
+	padding: 10px;
+	font-size: 1.2em;
+}

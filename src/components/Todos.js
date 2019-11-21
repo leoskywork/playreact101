@@ -92,7 +92,7 @@ class Todos extends React.Component {
 	};
 
 	render() {
-		console.log('Todos.render', this.state.todoList, this.props.deadline);
+		//console.log('Todos.render', this.state.todoList, this.props.deadline);
 
 		let dueHour = Math.floor(this.props.deadline.getTime() / 1000 / 60 / 60) * 1000 * 60 * 60;
 
@@ -109,7 +109,8 @@ class Todos extends React.Component {
 
 		return (
 			<React.Fragment>
-				<h2>Todo List Due {new Date(dueHour).toLocaleString().replace(',', ' ')}</h2>
+				<br></br>
+				<h3>Todo List Due {new Date(dueHour).toLocaleString().replace(',', ' ')}</h3>
 				<br></br>
 				<AddTodo addTodo={this.addTodo}></AddTodo>
 				<br></br>
