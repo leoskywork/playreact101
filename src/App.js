@@ -3,6 +3,7 @@ import './App.css';
 // import logo from './logo.svg';
 
 import Todos from './components/Todos';
+import Common from './common/Common';
 
 function App() {
 	let state = {
@@ -11,9 +12,11 @@ function App() {
 
 	return (
 		<div className="App">
-			<h1>Dev React 101</h1>
+			<h1>{Common.AppName}</h1>
 			<br />
-			<Todos deadline={state.deadline} />
+			<div className="todo-board">
+				<Todos deadline={state.deadline} />
+			</div>
 		</div>
 
 		// <div className="App">

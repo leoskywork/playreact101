@@ -40,4 +40,12 @@ a {
 	text-decoration: none;
 }
 
+/* ----- app styles */
+.todo-board {
+	width: 90%;
+	min-width: 320px;
+	max-width: 960px;
+	margin: 0 auto;
+}
+
 /* ---------------------------------------------------------------- */

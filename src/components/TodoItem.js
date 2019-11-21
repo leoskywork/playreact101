@@ -7,14 +7,29 @@ export class TodoItem extends React.Component {
 		name: 'todo item'
 	};
 
-	render() {
-		const { id, title, completed } = this.props.todo;
+	//fixme: Warning: A component is changing an uncontrolled input of type checkbox to be controlled.
+	toggleCompleted = e => {
+		console.log(this.props.todo.id, this.props.todo.completed, this.state.completed);
 
+		//	this.props.todo.completed = !this.props.todo.completed;
+		// this.setState({
+		// 	//use e.target.value if not 'checkbox'
+		// 	completed: e.target.checked
+		// });
+		this.props.todo.completed = !this.props.todo.completed;
+		this.props.toggleCompleted(this.props.todo).then(() => {
+			this.setState(this.state);
+		});
+	};
+
+	render() {
 		return (
 			<div className="todo-item">
-				<input type="checkbox" className="toggle-completed" onChange={this.props.toggleCompleted.bind(this, id)} checked={completed}></input>
-				&nbsp; {title} &nbsp;
-				<button className="delete-todo-btn" onClick={this.props.deleteTodo.bind(this, id)}>
+				<input type="checkbox" className="toggle-completed" onChange={this.toggleCompleted} checked={this.props.todo.completed}></input>
+				<span>
+					&nbsp;&nbsp;<span className={this.props.todo.completed ? 'completed' : ''}>{this.props.todo.title}</span>&nbsp;&nbsp;
+				</span>
+				<button className="delete-todo-btn" onClick={this.props.deleteTodo.bind(this, this.props.todo.id)}>
 					Delete
 				</button>
 			</div>
