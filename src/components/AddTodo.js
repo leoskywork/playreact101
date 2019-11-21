@@ -22,8 +22,11 @@ export class AddTodo extends React.Component {
 
 		this.setState({ isSendingRequest: true });
 		let newTodo = new Todo(null, this.state.title);
-		this.props.addTodo(newTodo).finally(() => {
-			this.setState({ isSendingRequest: false, title: '' });
+		this.props.addTodo(newTodo).then(success => {
+			this.setState({
+				isSendingRequest: false,
+				title: success ? '' : this.state.title
+			});
 			document.querySelector('#add-todo-title').select();
 		});
 	};

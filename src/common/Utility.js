@@ -5,6 +5,10 @@ export class Utility {
 
 		return () => seed++;
 	})();
+
+	static notEmpty(value) {
+		return value && String(value).trim().length > 0;
+	}
 }
 
 export default Utility;

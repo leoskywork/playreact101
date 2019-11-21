@@ -1,42 +1,74 @@
 import React from 'react';
 import { TodoItem } from './TodoItem';
 import PropTypes from 'prop-types';
-import { Todo } from '../models/Todo';
 import { AddTodo } from './AddTodo';
 import Utility from '../common/Utility';
+import todoService from '../services/TodoService';
 
 class Todos extends React.Component {
 	state = {
-		todoList: [new Todo(11, 'wash clothes', false), new Todo(12, 'buy water', true), new Todo(14, 'learn react', false)]
+		//todoList: [new Todo(11, 'wash clothes', false), new Todo(12, 'buy water', true), new Todo(14, 'learn react', false)]
+		todoList: []
 	};
+
+	componentDidMount() {
+		this.reload('component did mount');
+	}
+
+	reload(source) {
+		console.log('reload data, source: ', source);
+		return todoService.getTodos().then(result => {
+			if (result && result.success) {
+				return this.setState({
+					todoList: result.data || []
+				});
+			}
+
+			if (result) {
+				//fixme: pop error message
+				return alert(`source: ${source}, message: ` + result.message);
+			}
+
+			alert('api result is null, source: ' + source);
+		});
+	}
 
 	//note: this function has to be arrow function, in order to get the right 'this'
 	//  - i.e point to the current class
 	toggleCompleted = todo => {
 		console.log('toggle completed: ', todo.id);
-		// let todoItem = this.state.todoList.find(t => t.id === id);
+		//return Promise.resolve();
 
-		// if (todoItem) {
-		// 	todoItem.completed = !todoItem.completed;
-		// 	this.setState(this.state); //fire UI repaint
-		// }
-		// this.setState({
-		// 	todoList: this.state.todoList.map(t => {
-		// 		if (t.id === id) {
-		// 			t.completed = !t.completed;
-		// 		}
-		// 		return t;
-		// 	})
-		// });
+		return todoService.updateTodo(todo).then(result => {
+			if (result.success) {
+				const index = this.state.todoList.indexOf(todo);
 
-		return Promise.resolve();
+				if (index !== -1) {
+					this.state.todoList.splice(index, 1, result.data);
+					// this.state.todoList[index] = result.data;
+					this.setState({
+						todoList: this.state.todoList
+					});
+				} else {
+					this.reload('data changed after toggle todo completed');
+				}
+			} else {
+				this.reload('toggle todo completed fail');
+			}
+		});
 	};
 
 	deleteTodo = id => {
 		console.log('delete todo: ', id);
 
-		this.setState({
-			todoList: this.state.todoList.filter(t => t.id !== id)
+		todoService.deleteTodo(id).then(result => {
+			if (result.success) {
+				this.setState({
+					todoList: this.state.todoList.filter(t => t.id !== id)
+				});
+			} else {
+				this.reload('delete todo error');
+			}
 		});
 	};
 
@@ -45,9 +77,19 @@ class Todos extends React.Component {
 		if (!newTodo || !newTodo.title) return Promise.reject('blank todo item');
 
 		newTodo.id = Utility.genInteger();
-		this.setState({ todoList: [...this.state.todoList, newTodo] });
+		console.log('new todo id ', newTodo.id);
+		// this.setState({ todoList: [...this.state.todoList, newTodo] });
 
-		return Promise.resolve();
+		return todoService.addTodo(newTodo).then(result => {
+			if (result.success) {
+				// this.setState({ todoList: [...this.state.todoList.filter(t => t.id === new)]})
+				this.setState({ todoList: [result.data, ...this.state.todoList] });
+				return true;
+			}
+
+			this.reload('add todo error');
+			return false;
+		});
 	};
 
 	render() {

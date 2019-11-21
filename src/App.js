@@ -3,7 +3,7 @@ import './App.css';
 // import logo from './logo.svg';
 
 import Todos from './components/Todos';
-import Common from './common/Common';
+import AppConst from './common/AppConst';
 
 function App() {
 	let state = {
@@ -12,7 +12,7 @@ function App() {
 
 	return (
 		<div className="App">
-			<h1>{Common.AppName}</h1>
+			<h1>{AppConst.AppName}</h1>
 			<br />
 			<div className="todo-board">
 				<Todos deadline={state.deadline} />

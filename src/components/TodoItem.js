@@ -18,7 +18,7 @@ export class TodoItem extends React.Component {
 		// });
 		this.props.todo.completed = !this.props.todo.completed;
 		this.props.toggleCompleted(this.props.todo).then(() => {
-			this.setState(this.state);
+			//this.setState(this.state);
 		});
 	};
 
