@@ -9,19 +9,32 @@ import Header from './components/layout/Header';
 import About from './components/pages/About';
 import Support from './components/pages/Support';
 
+class NavItem {
+	constructor(name, path) {
+		this.name = name;
+		this.path = path;
+	}
+}
+
 function App() {
 	let state = {
-		deadline: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) //24 hours later
+		deadline: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), //24 hours later
+		nav: {
+			home: new NavItem('Home', '/'),
+			about: new NavItem('About', '/about'),
+			support: new NavItem('Support', '/support')
+		}
 	};
 
+	const { nav } = state;
 	//fixme: what's 'exact' in <Route> for?
 	return (
 		<Router>
 			<div className="App">
 				<h1 className="app-name">{AppConst.AppName}</h1>
-				<Header></Header>
+				<Header nav={nav}></Header>
 				<Route
-					path="/"
+					path={nav.home.path}
 					exact
 					render={_ => (
 						<div className="todo-board">
@@ -29,8 +42,8 @@ function App() {
 						</div>
 					)}
 				></Route>
-				<Route path="/about" component={About}></Route>
-				<Route path="/support" component={Support}></Route>
+				<Route path={nav.about.path} component={About}></Route>
+				<Route path={nav.support.path} component={Support}></Route>
 			</div>
 		</Router>
 	);

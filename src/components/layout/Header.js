@@ -1,24 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './StyleLayout.css';
+import PropTypes from 'prop-types';
 
-class NavItem {
-	constructor(name, path) {
-		this.name = name;
-		this.path = path;
-	}
-}
 class Header extends React.Component {
 	state = {
 		name: 'header',
-		currentNavItem: 'Home',
-		home: new NavItem('Home', '/'),
-		about: new NavItem('About', '/about'),
-		support: new NavItem('Support', '/support')
+		currentNavItem: 'Home'
 	};
 
 	render() {
-		const { home, about, support } = this.state;
+		const { home, about, support } = this.props.nav;
 
 		return (
 			<header>
@@ -58,9 +50,9 @@ class Header extends React.Component {
 		console.log(document.location);
 
 		// reset current nav item if not root path
-		if (document.location.pathname === '/') return;
+		// if (document.location.pathname === '/') return;
 
-		const navItems = [this.state.home, this.state.about, this.state.support];
+		const navItems = Object.values(this.props.nav);
 		const current = navItems.find(n => document.location.pathname.toLowerCase() === n.path.toLowerCase());
 
 		if (current) {
@@ -68,5 +60,9 @@ class Header extends React.Component {
 		}
 	}
 }
+
+Header.propTypes = {
+	nav: PropTypes.object.isRequired
+};
 
 export default Header;
