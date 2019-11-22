@@ -15,7 +15,7 @@ function About() {
 				<br></br>
 				<p>leoskywork@outlook.com</p>
 				<br></br>
-				<p>leo @ home @ 2019 Nov 21 23:52 GMT+0800</p>
+				<p>leo @ home @ 2019.11.21 23:52 GMT+0800</p>
 			</div>
 		</React.Fragment>
 	);

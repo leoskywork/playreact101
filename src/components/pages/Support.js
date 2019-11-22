@@ -14,7 +14,7 @@ function Support() {
 		name: 'Support',
 		contacts: [
 			new Contact('qq', 2228460788),
-			new Contact('微信公众号', '李欧谈谈'),
+			//new Contact('微信公众号', '李欧谈谈'),
 			new Contact('website', 'www.leoskywork.com'),
 			new Contact('email', 'leoskywork@outlook.com'),
 			new Contact('github', 'www.github.com/leoskywork')

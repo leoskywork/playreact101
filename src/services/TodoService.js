@@ -27,7 +27,7 @@ export class TodoService {
 
 	addTodo(todo) {
 		return axios
-			.put(`${AppConst.ApiBaseUrl}todos/`, todo)
+			.post(`${AppConst.ApiBaseUrl}todos/`, todo)
 			.then(result => this.unifyResultValidator(result))
 			.then(result => {
 				const apiResult = result.data;
@@ -58,7 +58,7 @@ export class TodoService {
 
 	updateTodo(todo) {
 		return axios
-			.post(`${AppConst.ApiBaseUrl}todos/${todo.id}`, todo)
+			.put(`${AppConst.ApiBaseUrl}todos/${todo.id}`, todo)
 			.then(result => this.unifyResultValidator(result))
 			.then(result => {
 				const apiResult = result.data;
@@ -90,7 +90,7 @@ export class TodoService {
 
 		const data = axiosResponse.data;
 
-		//fixme: pop error message
+		//fixme: pop error message - don't use built in alert func and no repeat alerts within x amount of time
 		if (Utility.notEmpty(data.message)) {
 			alert(data.message);
 			data.unifyHandled = true;

@@ -11,6 +11,8 @@ class Todos extends React.Component {
 		todoList: []
 	};
 
+	poppedAlerts = new Map();
+
 	componentDidMount() {
 		this.reload('component did mount');
 	}
@@ -24,11 +26,15 @@ class Todos extends React.Component {
 				});
 			}
 
-			//fixme: pop error message
-			if (!result || !result.unifyHandled) {
-				// return alert(`source: ${source}, message: ${result.message ? result.message : JSON.stringify(result)}`);
-				alert(`api result: ${JSON.stringify(result)}, source: ${source}`);
-			}
+			if (result && result.unifyHandled) return;
+
+			//fixme: pop error message - don't use default alert func
+			//  - no repeat alerts within x milliseconds - always pop error caused by user action
+			const alertKey = source + '_reload_' + JSON.stringify(result);
+			if (this.poppedAlerts.has(alertKey) && Date.now() - this.poppedAlerts.get(alertKey) < 30000) return;
+
+			this.poppedAlerts.set(alertKey, Date.now());
+			alert(`reload api result: ${JSON.stringify(result)}, source: ${source}`);
 		});
 	}
 
@@ -39,21 +45,23 @@ class Todos extends React.Component {
 		//return Promise.resolve();
 
 		return todoService.updateTodo(todo).then(result => {
-			if (result.success) {
+			if (result && result.success) {
 				const index = this.state.todoList.indexOf(todo);
 
 				if (index !== -1) {
-					this.state.todoList.splice(index, 1, result.data);
 					// this.state.todoList[index] = result.data;
+					this.state.todoList.splice(index, 1, result.data);
 					this.setState({
 						todoList: this.state.todoList
 					});
 				} else {
 					this.reload('data changed after toggle todo completed');
 				}
-			} else {
-				this.reload('toggle todo completed fail');
+
+				return;
 			}
+
+			this.reload('toggle todo completed fail');
 		});
 	};
 
@@ -61,13 +69,14 @@ class Todos extends React.Component {
 		console.log('delete todo: ', id);
 
 		todoService.deleteTodo(id).then(result => {
-			if (result.success) {
+			if (result && result.success) {
 				this.setState({
 					todoList: this.state.todoList.filter(t => t.id !== id)
 				});
-			} else {
-				this.reload('delete todo error');
+				return;
 			}
+
+			this.reload('delete todo error');
 		});
 	};
 
@@ -80,7 +89,7 @@ class Todos extends React.Component {
 		// this.setState({ todoList: [...this.state.todoList, newTodo] });
 
 		return todoService.addTodo(newTodo).then(result => {
-			if (result.success) {
+			if (result && result.success) {
 				// this.setState({ todoList: [...this.state.todoList.filter(t => t.id === new)]})
 				this.setState({ todoList: [result.data, ...this.state.todoList] });
 				return true;
