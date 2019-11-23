@@ -13,7 +13,7 @@ class Header extends React.Component {
 		const { home, about, support } = this.props.nav;
 
 		return (
-			<header>
+			<header hidden={this.props.hideHeader}>
 				<nav className="nav-bar">
 					<Link className={this.getNavItemStyle(home)} to={home.path} onClick={this.clickNavItem}>
 						{home.name}
@@ -62,7 +62,8 @@ class Header extends React.Component {
 }
 
 Header.propTypes = {
-	nav: PropTypes.object.isRequired
+	nav: PropTypes.object.isRequired,
+	hideHeader: PropTypes.bool.isRequired
 };
 
 export default Header;

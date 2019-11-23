@@ -1,0 +1,64 @@
+.intro-title {
+	background-color: darkslategray;
+	color: lightgray;
+	padding: 20px 0;
+}
+
+.intro-load-form {
+	margin: 40px auto;
+}
+
+#intro-lsk-load-input {
+	padding: 6px 10px;
+	font-size: 1.2em;
+}
+
+.btn-intro-load {
+	padding: 6px 10px;
+	font-size: 1.2em;
+	cursor: pointer;
+}
+
+.intro-fulfill-item {
+	margin: 30px auto;
+	font-size: 1.4em;
+}
+
+.intro-fulfill-form {
+	margin: 30px auto;
+}
+
+.intro-fulfill-form input[type='text'] {
+	padding: 4px 10px;
+	font-size: 1em;
+	margin: 10px auto;
+}
+
+.btn-intro-fulfill {
+	padding: 8px 12px;
+	margin: 10px auto;
+	vertical-align: middle;
+	border-style: none;
+	font-weight: bold;
+	color: darkslategray;
+	background-color: lightgray;
+	cursor: pointer;
+}
+
+.btn-intro-fulfill.expand {
+	color: white !important;
+	background-color: gray !important;
+}
+
+.btn-intro-fulfill:hover {
+	color: black;
+	background-color: silver;
+}
+
+.btn-intro-fulfill-send {
+	padding: 4px 10px;
+	margin: 10px auto;
+	font-weight: bold;
+	font-size: 1em;
+	cursor: pointer;
+}
