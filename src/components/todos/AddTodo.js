@@ -1,5 +1,5 @@
 import React from 'react';
-import { Todo } from '../models/Todo';
+import { Todo } from '../../models/Todo';
 import './StyleTodo.css';
 import PropTypes from 'prop-types';
 

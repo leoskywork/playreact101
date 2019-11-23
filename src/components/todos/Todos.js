@@ -2,8 +2,8 @@ import React from 'react';
 import { TodoItem } from './TodoItem';
 import PropTypes from 'prop-types';
 import { AddTodo } from './AddTodo';
-import Utility from '../common/Utility';
-import todoService from '../services/TodoService';
+import Utility from '../../common/Utility';
+import todoService from '../../services/TodoService';
 
 class Todos extends React.Component {
 	state = {

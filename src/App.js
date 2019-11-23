@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 // import logo from './logo.svg';
 
-import Todos from './components/Todos';
+import Todos from './components/todos/Todos';
 import AppConst from './common/AppConst';
 import Header from './components/layout/Header';
 import About from './components/pages/About';
@@ -22,8 +22,10 @@ function App() {
 		nav: {
 			home: new NavItem('Home', '/'),
 			about: new NavItem('About', '/about'),
-			support: new NavItem('Support', '/support')
-		}
+			support: new NavItem('Support', '/support'),
+			introspection: new NavItem('Introspection', '/intro')
+		},
+		hideHeader: false
 	};
 
 	const { nav } = state;
@@ -31,8 +33,10 @@ function App() {
 	return (
 		<Router>
 			<div className="App">
-				<h1 className="app-name">{AppConst.AppName}</h1>
-				<Header nav={nav}></Header>
+				<h1 className="app-name" hidden={state.hideHeader}>
+					{AppConst.AppName}
+				</h1>
+				<Header nav={nav} hidden={state.hideHeader}></Header>
 				<Route
 					path={nav.home.path}
 					exact
