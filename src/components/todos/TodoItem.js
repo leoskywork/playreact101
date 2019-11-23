@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './StyleTodo.css';
+import './StyleTodos.css';
 
 export class TodoItem extends React.Component {
 	state = {

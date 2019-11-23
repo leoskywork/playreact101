@@ -1,6 +1,6 @@
 import React from 'react';
 import { Todo } from '../../models/Todo';
-import './StyleTodo.css';
+import './StyleTodos.css';
 import PropTypes from 'prop-types';
 
 export class AddTodo extends React.Component {
