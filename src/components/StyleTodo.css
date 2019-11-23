@@ -10,6 +10,8 @@
 .delete-todo-btn {
 	padding: 2px 10px;
 	vertical-align: middle;
+	cursor: pointer;
+	border-style: solid;
 }
 
 .toggle-completed {
@@ -30,6 +32,7 @@
 	font-size: 1.2em;
 	/* the default flex-grow value is 0 */
 	flex-grow: 0;
+	border-style: solid;
 }
 
 #add-todo-title {

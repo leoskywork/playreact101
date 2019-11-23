@@ -39,8 +39,9 @@
   - for progressive web app and offline content
 - lifecycle methods
   - render()
+  - componentWillMount()
   - componentDidMount()
-    - do ajax call inner this func
+    - do ajax call inner this func???
 - events
 - JSX - html code block
   - use 'className=' instead of 'class='
@@ -95,7 +96,7 @@
   - translate ES6(or later) to lower version (e.g es5) for compatible
   - a js compiler
 - fix async, await error 'regeneratorRuntime is not defined'
-  - install babel-polyfill, babel-preset-es2015, babel-preset-stage-0
+  - install babel-polyfill, babel-preset-env, babel-preset-stage-0
   - webpack.config.js, add `babel-polyfill` to entry, add `stage-0` to loaders[].query.presets[]
 - config
 
