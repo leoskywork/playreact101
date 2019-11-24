@@ -1,6 +1,6 @@
 export class AppConst {
 	static get isDev() {
-		return true;
+		return false;
 	}
 
 	static get appName() {
@@ -12,11 +12,15 @@ export class AppConst {
 	}
 
 	static get apiBaseUrl() {
-		return AppConst.isDev ? 'http://localhost:5000/public/' : 'not implemented';
+		return AppConst.isDev ? 'http://localhost:5000/public/' : 'http://leoskywork.com/api/mock/';
 	}
 
 	static get netApiBaseUrl() {
 		return AppConst.isDev ? 'http://localhost:57005/' : 'http://leoskywork.com/api/';
+	}
+
+	static get frontendBaseUrl() {
+		return process.env.PUBLIC_URL;
 	}
 
 	static get headers() {

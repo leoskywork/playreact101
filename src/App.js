@@ -21,10 +21,14 @@ export class App extends React.Component {
 	state = {
 		deadline: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), //24 hours later
 		nav: {
+			// home: new NavItem('Home', AppConst.frontendBaseUrl + '/'),
+			// about: new NavItem('About', AppConst.frontendBaseUrl + '/about'),
+			// support: new NavItem('Support', AppConst.frontendBaseUrl + '/support'),
+			// introspection: new NavItem('Introspection', AppConst.frontendBaseUrl + '/intro')
 			home: new NavItem('Home', '/'),
 			about: new NavItem('About', '/about'),
 			support: new NavItem('Support', '/support'),
-			introspection: new NavItem('Introspection', '/intro')
+			introspection: new NavItem('Intro', '/intro')
 		},
 		hideHeader: false
 	};
@@ -43,7 +47,7 @@ export class App extends React.Component {
 		const { nav } = this.state;
 		//fixme: what's 'exact' in <Route> for?
 		return (
-			<Router>
+			<Router basename="/r101">
 				<div className="App">
 					<h1 className="app-name" hidden={this.state.hideHeader}>
 						{AppConst.appName}

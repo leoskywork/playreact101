@@ -10,7 +10,7 @@ class Header extends React.Component {
 	};
 
 	render() {
-		const { home, about, support } = this.props.nav;
+		const { home, about, support, introspection } = this.props.nav;
 
 		return (
 			<header hidden={this.props.hideHeader}>
@@ -23,6 +23,9 @@ class Header extends React.Component {
 					</Link>
 					<Link className={this.getNavItemStyle(support)} to={support.path} onClick={this.clickNavItem}>
 						{support.name}
+					</Link>
+					<Link className={this.getNavItemStyle(introspection)} to={introspection.path} onClick={this.clickNavItem}>
+						{introspection.name}
 					</Link>
 				</nav>
 			</header>

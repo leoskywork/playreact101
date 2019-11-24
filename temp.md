@@ -150,6 +150,16 @@ scripts.build: "webpack --mode production"
 
 ```
 
+## error fix
+
+- deploy to subdomain
+  - opt1) package.json file, `homepage:"http://leoskywork.com/r101/"` # `only affect build`
+    - alternative, you can set `homepage:"."` rather hard coded the domain
+  - opt2) app.js file, `<Router basename="/r101">`
+  - opt31) tag `<Link to={process.env.PUBLIC_URL}+'/about' ...` ---# `affect tag <a>`
+  - opt32) tag `<Route path={process.env.PUBLIC_URL}+'/about' ...` # `affect router(browser address input)`
+  - do (opt1, opt2) or (opt1, opt31, opt32)
+
 ## more
 
 todo

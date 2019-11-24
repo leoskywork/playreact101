@@ -22,6 +22,10 @@ export class Introspection extends React.Component {
 		document.querySelector('#intro-lsk-load-input').select();
 	}
 
+	componentWillUnmount() {
+		this.props.collapseHeader(false);
+	}
+
 	reload(lsk, source) {
 		console.log('reload data - source', source);
 
@@ -63,7 +67,7 @@ export class Introspection extends React.Component {
 						autoComplete="off"
 					></input>
 					<button type="submit" className="btn-intro-load" disabled={this.disableLoadButton()}>
-						LOAD
+						ENTER
 					</button>
 				</form>
 				<div>
