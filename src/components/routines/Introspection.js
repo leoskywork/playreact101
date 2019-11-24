@@ -74,7 +74,7 @@ export class Introspection extends React.Component {
 						ENTER
 					</button>
 				</form>
-				<div>
+				<div className="sm-align-right-wrap">
 					<br></br>
 					{this.state.fulfillments.map(f => (
 						<div className="intro-fulfill-item" key={f.id}>

@@ -31,7 +31,8 @@
 .intro-fulfill-form input[type='text'] {
 	padding: 4px 10px;
 	font-size: 1em;
-	margin: 10px;
+	margin: 10px 0;
+	width: 260px;
 }
 
 .btn-intro-fulfill {
@@ -56,7 +57,7 @@
 
 .btn-intro-fulfill-send {
 	padding: 4px 10px;
-	margin: 10px auto;
+	margin: 10px 0 10px 10px;
 	font-weight: bold;
 	font-size: 1em;
 	color: darkslategray;
@@ -64,4 +65,12 @@
 
 .btn-intro-fulfill-send:disabled {
 	color: #888;
+}
+
+/* for small screen */
+@media (max-width: 320px) {
+	.sm-align-right-wrap {
+		text-align: right;
+		margin-right: 10%;
+	}
 }
