@@ -17,6 +17,10 @@ export class Introspection extends React.Component {
 		customAlertPopped: false
 	};
 
+	get maxLength() {
+		return 128;
+	}
+
 	componentDidMount() {
 		this.props.collapseHeader(true);
 		document.querySelector('#intro-lsk-load-input').select();
@@ -31,7 +35,7 @@ export class Introspection extends React.Component {
 
 		this.setState({ isLoadingData: true });
 
-		return routineService.getRoutines(lsk.substring(0, Math.min(32, lsk.length))).then(result => {
+		return routineService.getRoutines(lsk.substring(0, Math.min(this.maxLength, lsk.length))).then(result => {
 			let data = this.state.fulfillments;
 			const success = result && result.success;
 
@@ -183,7 +187,7 @@ export class Introspection extends React.Component {
 
 		this.setState({ isSendingLskFulfill: true });
 
-		routineService.fulfillRoutine(fulfillment, this.state.lskFulfill.substring(0, Math.min(32, this.state.lskFulfill.length))).then(result => {
+		routineService.fulfillRoutine(fulfillment, this.state.lskFulfill.substring(0, Math.min(this.maxLength, this.state.lskFulfill.length))).then(result => {
 			let data = this.state.fulfillments;
 			const success = result && result.success;
 
