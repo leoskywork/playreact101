@@ -42,23 +42,38 @@ class Header extends React.Component {
 
 	clickNavItem = e => {
 		console.log('click nav item:', e);
-		console.log('header state:', this.state.currentNavItem);
+		//console.log('header state:', this.state.currentNavItem);
 
 		// state.currentNavItem = e.target.innerText;
 		this.setState({ currentNavItem: e.target.innerText });
-		console.log('header state after set:', this.state.currentNavItem);
+		//console.log('header state after set:', this.state.currentNavItem);
 	};
 
 	componentDidMount() {
-		console.log(document.location);
+		console.log('-----> header did mount ', document.location);
 
-		// reset current nav item if not root path
-		// if (document.location.pathname === '/') return;
-
+		//fixme: don't know why, can't get value from AppConst here...
+		const basePath = '/r101';
+		const lowerPath = document.location.pathname.toLowerCase();
 		const navItems = Object.values(this.props.nav);
-		const current = navItems.find(n => document.location.pathname.toLowerCase() === n.path.toLowerCase());
+		const current = navItems.find(n => basePath + n.path.toLowerCase() === lowerPath);
 
-		if (current) {
+		if (current && current.name !== this.state.currentNavItem) {
+			this.setState({ currentNavItem: current.name });
+		}
+	}
+
+	componentDidUpdate(pp, ps, ss) {
+		console.log('-----> header did update, pre: ', ps, ', current: ', this.state);
+		console.log('-----> location', document.location.pathname);
+
+		//fixme: don't know why, can't get value from AppConst here...
+		const basePath = '/r101';
+		const lowerPath = document.location.pathname.toLowerCase();
+		const navItems = Object.values(this.props.nav);
+		const current = navItems.find(n => basePath + n.path.toLowerCase() === lowerPath);
+
+		if (current && current.name !== this.state.currentNavItem) {
 			this.setState({ currentNavItem: current.name });
 		}
 	}
