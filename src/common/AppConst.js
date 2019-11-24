@@ -12,11 +12,11 @@ export class AppConst {
 	}
 
 	static get apiBaseUrl() {
-		return AppConst.isDev ? 'http://localhost:5000/public/' : 'http://leoskywork.com/api/mock/';
+		return AppConst.isDev ? 'http://localhost:5000/public/' : 'https://leoskywork.com/api/mock/';
 	}
 
 	static get netApiBaseUrl() {
-		return AppConst.isDev ? 'http://localhost:57005/' : 'http://leoskywork.com/api/';
+		return AppConst.isDev ? 'http://localhost:57005/' : 'https://leoskywork.com/api/';
 	}
 
 	static get frontendBaseUrl() {
