@@ -53,10 +53,9 @@ class Header extends React.Component {
 		console.log('-----> header did mount ', document.location);
 
 		//fixme: don't know why, can't get value from AppConst here...
-		const basePath = '/r101';
 		const lowerPath = document.location.pathname.toLowerCase();
-		const navItems = Object.values(this.props.nav);
-		const current = navItems.find(n => basePath + n.path.toLowerCase() === lowerPath);
+		const lowerBase = this.props.nav._basePath.path.toLowerCase();
+		const current = Object.values(this.props.nav).find(n => lowerBase + n.path.toLowerCase() === lowerPath);
 
 		if (current && current.name !== this.state.currentNavItem) {
 			this.setState({ currentNavItem: current.name });
@@ -68,12 +67,12 @@ class Header extends React.Component {
 		console.log('-----> location', document.location.pathname);
 
 		//fixme: don't know why, can't get value from AppConst here...
-		const basePath = '/r101';
 		const lowerPath = document.location.pathname.toLowerCase();
-		const navItems = Object.values(this.props.nav);
-		const current = navItems.find(n => basePath + n.path.toLowerCase() === lowerPath);
+		const lowerBase = this.props.nav._basePath.path.toLowerCase();
+		const current = Object.values(this.props.nav).find(n => lowerBase + n.path.toLowerCase() === lowerPath);
 
 		if (current && current.name !== this.state.currentNavItem) {
+			//if (current) {
 			this.setState({ currentNavItem: current.name });
 		}
 	}

@@ -11,9 +11,10 @@ import Support from './components/pages/Support';
 import { Introspection as Intro } from './components/routines/Introspection';
 
 class NavItem {
-	constructor(name, path) {
+	constructor(name, path, appInternal = false) {
 		this.name = name;
 		this.path = path;
+		this.appInternal = appInternal;
 	}
 }
 
@@ -28,7 +29,8 @@ export class App extends React.Component {
 			home: new NavItem('Home', '/'),
 			about: new NavItem('About', '/about'),
 			support: new NavItem('Support', '/support'),
-			introspection: new NavItem('Intro', '/intro')
+			introspection: new NavItem('Intro', '/intro'),
+			_basePath: new NavItem('_basePath', '/r101', true)
 		},
 		hideHeader: false
 	};
@@ -47,7 +49,7 @@ export class App extends React.Component {
 		const { nav } = this.state;
 		//fixme: what's 'exact' in <Route> for?
 		return (
-			<Router basename="/r101">
+			<Router basename={nav._basePath.path}>
 				<div className="App">
 					<h1 className="app-name" hidden={this.state.hideHeader}>
 						{AppConst.appName}

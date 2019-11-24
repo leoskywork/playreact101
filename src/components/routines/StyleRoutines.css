@@ -10,13 +10,13 @@
 
 #intro-lsk-load-input {
 	padding: 6px 10px;
+	margin: 0 10px 20px 10px;
 	font-size: 1.2em;
 }
 
 .btn-intro-load {
 	padding: 6px 10px;
 	font-size: 1.2em;
-	cursor: pointer;
 }
 
 .intro-fulfill-item {
@@ -31,7 +31,7 @@
 .intro-fulfill-form input[type='text'] {
 	padding: 4px 10px;
 	font-size: 1em;
-	margin: 10px auto;
+	margin: 10px;
 }
 
 .btn-intro-fulfill {
@@ -42,7 +42,6 @@
 	font-weight: bold;
 	color: darkslategray;
 	background-color: lightgray;
-	cursor: pointer;
 }
 
 .btn-intro-fulfill.expand {
@@ -60,5 +59,9 @@
 	margin: 10px auto;
 	font-weight: bold;
 	font-size: 1em;
-	cursor: pointer;
+	color: darkslategray;
+}
+
+.btn-intro-fulfill-send:disabled {
+	color: #888;
 }
