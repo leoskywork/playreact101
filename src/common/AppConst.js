@@ -1,6 +1,6 @@
 export class AppConst {
 	static get isDev() {
-		return false;
+		return true;
 	}
 
 	static get appName() {

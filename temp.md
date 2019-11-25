@@ -2,16 +2,16 @@
 
 ## todo
 
-- [ ] move this to Note?
+- [ ] move this to learning Note?
 - [x] how to sort items?
   - seems can not do it on UI, have to sort array first(make a copy of state data),
     - then use sorted array to map to jsx
   - [ref](https://stackoverflow.com/questions/43572436/sort-an-array-of-objects-in-react-and-render-them/43572944)
-- [ ] disable delete button when deleting
+- [x] disable delete button when deleting
 - [ ] confirm(2 steps) before delete
 - [x] router(nav bar)
+- [ ] sometimes page doesn't load correctly when nav by click on backward button of chrome
 - [ ] cache loaded data for 5 sec when switch tabs?
-- [ ] UI refine
 
 ## react basic
 
@@ -163,7 +163,10 @@ scripts.build: "webpack --mode production"
   - // -------------------------- auto move bits to dest folder --v
   - modify package.json, `scripts.build: "react-scripts build && rm -rf ../dist/react101 && mv build ../dist/react101"`
   - run `npm run build`
+- error 404 when refresh page on a sub url path(non-home page)
+  - a quick work around is to config IIS to redirect to home page (e.g /r101/) when have 404 error
+  - sophisticated approach would be use hash history/browser history
+    - [ref](https://stackoverflow.com/questions/27928372/react-router-urls-dont-work-when-refreshing-or-writing-manually)
+    - [ref2](https://github.com/jintoppy/react-training/blob/master/basic/node_modules/react-router/docs/guides/Histories.md#browserhistory)
 
 ## more
-
-todo

@@ -52,59 +52,6 @@ export class Introspection extends React.Component {
 		});
 	}
 
-	render() {
-		return (
-			<React.Fragment>
-				<h3 className="intro-title">
-					<span>INTROSPECTION</span>
-					<span>&nbsp;&nbsp;{new Date().toLocaleDateString().replace(/\//g, '.')}</span>
-				</h3>
-				<form className="intro-load-form" onSubmit={this.onSubmitLoading} hidden={!this.state.lskLoadShowing}>
-					<input
-						type="text"
-						id="intro-lsk-load-input"
-						name="lskLoad"
-						value={this.state.lskLoad}
-						onChange={this.onLskArgumentChange}
-						placeholder="..."
-						disabled={this.state.isLoadingData}
-						autoComplete="off"
-					></input>
-					<button type="submit" className="btn-intro-load" disabled={this.disableLoadButton()}>
-						ENTER
-					</button>
-				</form>
-				<div className="sm-align-right-wrap">
-					<br></br>
-					{this.state.fulfillments.map(f => (
-						<div className="intro-fulfill-item" key={f.id}>
-							<span>{f.name}</span>&nbsp;&nbsp;<span>{this.getLastFulfillDescription(f)}</span>
-							<span>&nbsp;&nbsp;</span>
-							<button className={this.getFulfillExpandButtonStyle(f)} onClick={this.onToggleLskFulfill.bind(this, f)}>
-								FULFILL
-							</button>
-							<form className="intro-fulfill-form" onSubmit={e => this.onSubmitFulfillment(e, f)} hidden={!this.shouldExpandFulfillForm(f)}>
-								<input
-									type="text"
-									id={'intro-lsk-fulfill-' + f.id}
-									name="lskFulfill"
-									value={this.state.lskFulfill}
-									onChange={this.onLskArgumentChange}
-									placeholder="..."
-									disabled={this.state.isLoadingData || this.state.isSendingLskFulfill}
-									autoComplete="off"
-								></input>
-								<button type="submit" className="btn-intro-fulfill-send" disabled={this.disableSendButton()}>
-									SEND
-								</button>
-							</form>
-						</div>
-					))}
-				</div>
-			</React.Fragment>
-		);
-	}
-
 	disableSendButton() {
 		return this.state.isLoadingData || !this.state.lskFulfill || this.state.isSendingLskFulfill;
 	}
@@ -215,6 +162,59 @@ export class Introspection extends React.Component {
 			});
 		});
 	};
+
+	render() {
+		return (
+			<React.Fragment>
+				<h3 className="intro-title">
+					<span>INTROSPECTION</span>
+					<span>&nbsp;&nbsp;{new Date().toLocaleDateString().replace(/\//g, '.')}</span>
+				</h3>
+				<form className="intro-load-form" onSubmit={this.onSubmitLoading} hidden={!this.state.lskLoadShowing}>
+					<input
+						type="number"
+						id="intro-lsk-load-input"
+						name="lskLoad"
+						value={this.state.lskLoad}
+						onChange={this.onLskArgumentChange}
+						placeholder="..."
+						disabled={this.state.isLoadingData}
+						autoComplete="off"
+					></input>
+					<button type="submit" className="btn-intro-load" disabled={this.disableLoadButton()}>
+						ENTER
+					</button>
+				</form>
+				<div className="sm-align-right-wrap">
+					<br></br>
+					{this.state.fulfillments.map(f => (
+						<div className="intro-fulfill-item" key={f.id}>
+							<span>{f.name}</span>&nbsp;&nbsp;<span>{this.getLastFulfillDescription(f)}</span>
+							<span>&nbsp;&nbsp;</span>
+							<button className={this.getFulfillExpandButtonStyle(f)} onClick={this.onToggleLskFulfill.bind(this, f)}>
+								FULFILL
+							</button>
+							<form className="intro-fulfill-form" onSubmit={e => this.onSubmitFulfillment(e, f)} hidden={!this.shouldExpandFulfillForm(f)}>
+								<input
+									type="text"
+									id={'intro-lsk-fulfill-' + f.id}
+									name="lskFulfill"
+									value={this.state.lskFulfill}
+									onChange={this.onLskArgumentChange}
+									placeholder="..."
+									disabled={this.state.isLoadingData || this.state.isSendingLskFulfill}
+									autoComplete="off"
+								></input>
+								<button type="submit" className="btn-intro-fulfill-send" disabled={this.disableSendButton()}>
+									SEND
+								</button>
+							</form>
+						</div>
+					))}
+				</div>
+			</React.Fragment>
+		);
+	}
 }
 
 Introspection.propTypes = {
