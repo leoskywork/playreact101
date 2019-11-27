@@ -36,11 +36,14 @@ export class Introspection extends React.Component {
 		this.setState({ isLoadingData: true });
 
 		return routineService.getRoutines(lsk.substring(0, Math.min(this.maxLength, lsk.length))).then(result => {
-			let data = this.state.fulfillments;
 			const success = result && result.success;
+			let data = null;
 
 			if (success) {
 				data = result.data || [];
+				data.sort((a, b) => (b.lastFulfill || b.createAt).getTime() - (a.lastFulfill || a.createAt).getTime());
+			} else {
+				data = this.state.fulfillments;
 			}
 
 			this.setState({
@@ -63,7 +66,7 @@ export class Introspection extends React.Component {
 	getLastFulfillDescription(fulfillment) {
 		if (fulfillment.lastFulfill) {
 			console.log(typeof fulfillment.lastFulfill);
-			const date = new Date(fulfillment.lastFulfill);
+			const date = fulfillment.lastFulfill; // new Date(fulfillment.lastFulfill);
 			const daysAgo = Math.floor((Date.now() - date.getTime()) / 1000 / 60 / 60 / 24);
 
 			return (
@@ -192,7 +195,7 @@ export class Introspection extends React.Component {
 							<span>{f.name}</span>&nbsp;&nbsp;<span>{this.getLastFulfillDescription(f)}</span>
 							<span>&nbsp;&nbsp;</span>
 							<button className={this.getFulfillExpandButtonStyle(f)} onClick={this.onToggleLskFulfill.bind(this, f)}>
-								FULFILL
+								...
 							</button>
 							<form className="intro-fulfill-form" onSubmit={e => this.onSubmitFulfillment(e, f)} hidden={!this.shouldExpandFulfillForm(f)}>
 								<input

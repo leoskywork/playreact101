@@ -3,14 +3,16 @@ export class Fulfillment {
 		this.id = uid;
 		this.name = name;
 
-		// if (lastFulfill) {
-		//     this.lastFulfill = new Date(lastFulfill);
-		// }
-		this.lastFulfill = lastFulfill;
+		if (lastFulfill) {
+			this.lastFulfill = new Date(lastFulfill);
+		}
 
 		this.historyFulfillments = history;
 		this.createBy = createBy;
-		this.createAt = createAt;
+
+		if (createAt) {
+			this.createAt = new Date(createAt);
+		}
 	}
 }
 
