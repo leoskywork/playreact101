@@ -69,12 +69,12 @@ export class Introspection extends React.Component {
 			const date = fulfillment.lastFulfill; // new Date(fulfillment.lastFulfill);
 			const daysAgo = Math.floor((Date.now() - date.getTime()) / 1000 / 60 / 60 / 24);
 
-			return (
-				date
-					.toLocaleDateString()
-					.split('/')
-					.join('.') + (daysAgo > 1 ? ` (${daysAgo > 99 ? '99+' : daysAgo} days ago)` : '')
-			);
+			return daysAgo > 1
+				? ` (${daysAgo > 99 ? '99+' : daysAgo} days ago)`
+				: date
+						.toLocaleDateString()
+						.split('/')
+						.join('.');
 		}
 
 		return '--';

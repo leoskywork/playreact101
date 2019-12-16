@@ -4,6 +4,7 @@ export class Fulfillment {
 		this.name = name;
 
 		if (lastFulfill) {
+			this._rawLastFulfill = lastFulfill; //is this necessary??
 			this.lastFulfill = new Date(lastFulfill);
 		}
 
@@ -11,6 +12,7 @@ export class Fulfillment {
 		this.createBy = createBy;
 
 		if (createAt) {
+			this._rawCreateAt = createAt; //is this necessary??S
 			this.createAt = new Date(createAt);
 		}
 	}
