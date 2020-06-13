@@ -61,6 +61,7 @@
 	font-weight: bold;
 	font-size: 1em;
 	color: darkslategray;
+	background-color: #d3d3d3;
 }
 
 .btn-intro-fulfill-send:disabled {
