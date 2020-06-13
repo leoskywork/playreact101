@@ -1,6 +1,6 @@
 export class AppConst {
     static get isDev() {
-        return true;
+        return false;
     }
 
     static get appName() {
@@ -17,7 +17,7 @@ export class AppConst {
 
     //.net framework api
     static get netApiBaseUrl() {
-        return AppConst.isDev ? 'http://localhost:57005/' : 'http://118.31.35.69:1080/api/'; //'https://leoskywork.com/api/';
+        return AppConst.isDev ? 'http://localhost:57005/' : 'https://leoskywork.com/api/'; //'http://118.31.35.69:1080/api/';
     }
 
     static get frontendBaseUrl() {

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './StyleRoutines.css';
 import routineService from '../../services/RoutineService';
+import AppConst from '../../common/AppConst';
 
 export class Introspection extends React.Component {
     state = {
@@ -66,15 +67,17 @@ export class Introspection extends React.Component {
     getLastFulfillDescription(fulfillment) {
         if (fulfillment.lastFulfill) {
             console.log(typeof fulfillment.lastFulfill);
-            const date = fulfillment.lastFulfill; // new Date(fulfillment.lastFulfill);
+            const date = fulfillment.lastFulfill;
             const daysAgo = Math.floor((Date.now() - date.getTime()) / 1000 / 60 / 60 / 24);
 
-            return daysAgo > 1
-                ? ` (${daysAgo > 99 ? '99+' : daysAgo} days ago)`
-                : date
-                    .toLocaleDateString()
-                    .split('/')
-                    .join('.');
+            if (daysAgo === 0) {
+                return '(today)';
+            } else if (daysAgo === 1) {
+                return '(yesterday)';
+            } else {
+                return `(${daysAgo > 99 ? '99+' : daysAgo} days ago)`
+                // date.toLocaleDateString().split('/').join('.');
+            }
         }
 
         return '--';
@@ -170,7 +173,7 @@ export class Introspection extends React.Component {
         return (
             <React.Fragment>
                 <h3 className="intro-title">
-                    <span>INTROSPECTION</span>
+                    <span title={AppConst.appName}>INTROSPECTION</span>
                     <span>&nbsp;&nbsp;{new Date().toLocaleDateString().replace(/\//g, '.')}</span>
                 </h3>
                 <form className="intro-load-form" onSubmit={this.onSubmitLoading} hidden={!this.state.lskLoadShowing}>
