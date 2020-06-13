@@ -12,6 +12,8 @@
 - [x] router(nav bar)
 - [ ] sometimes page doesn't load correctly when nav by click on backward button of chrome
 - [ ] cache loaded data for 5 sec when switch tabs?
+- [ ] Introspection
+  - [ ] allow add note when submit fulfillment
 
 ## react basic
 

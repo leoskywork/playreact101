@@ -35,6 +35,10 @@ export class AppConst {
     static get DefaultFulfillDay() {
         return '0';
     }
+
+    static get HeartBeatInterval() {
+        return 1000 * 60 * 60;
+    }
 }
 
 export default AppConst;

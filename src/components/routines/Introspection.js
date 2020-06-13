@@ -6,6 +6,7 @@ import AppConst from '../../common/AppConst';
 
 export class Introspection extends React.Component {
     state = {
+        lskHeartbeat: 'beat',
         lskLoad: '',
         lskLoadShowing: true,
         lskFulfill: AppConst.DefaultFulfillDay,
@@ -15,7 +16,8 @@ export class Introspection extends React.Component {
         fulfillments: [],
         isLoadingData: false,
         isSendingLskFulfill: false,
-        customAlertPopped: false
+        customAlertPopped: false,
+        isLoadingHistoryRecords: {}
     };
 
     get maxLength() {
@@ -25,6 +27,10 @@ export class Introspection extends React.Component {
     componentDidMount() {
         this.props.collapseHeader(true);
         document.querySelector('#intro-lsk-load-input').select();
+
+        setInterval(() => {
+            routineService.getHeartBeat(this.state.lskHeartbeat, 'user-todo');
+        }, AppConst.HeartBeatInterval);
     }
 
     componentWillUnmount() {
@@ -53,6 +59,36 @@ export class Introspection extends React.Component {
             });
 
             return success;
+        });
+    }
+
+    getHistoryRecords(lsk, id, source) {
+        console.log('get history record - ', source, id);
+        if (!id) return;
+        if (this.state.isLoadingHistoryRecords[id]) return;
+
+        const loadingFlags = Object(this.state.isLoadingHistoryRecords);
+        loadingFlags[id] = true;
+
+        this.setState({ isLoadingHistoryRecords: loadingFlags });
+
+        routineService.getHistoryRecords(lsk, id).then(result => {
+            loadingFlags[id] = false;
+            this.setState({ isLoadingHistoryRecords: loadingFlags });
+
+            if (result && result.success && result.data) {
+                const fulfillment = this.state.fulfillments.find(f => f.id === id);
+
+                if (fulfillment) {
+                    const data = this.state.fulfillments;
+                    data.splice(data.indexOf(fulfillment), 1, result.data);
+                    data.sort((a, b) => (b.lastFulfill || b.createAt).getTime() - (a.lastFulfill || a.createAt).getTime());
+
+                    this.setState({
+                        fulfillments: data
+                    });
+                }
+            }
         });
     }
 
@@ -138,6 +174,8 @@ export class Introspection extends React.Component {
             setTimeout(() => {
                 document.querySelector('#intro-lsk-fulfill-' + fulfillment.id).select();
             });
+
+            this.getHistoryRecords(this.state.lskLoad, fulfillment.id, 'toggle-fulfill-button');
         }
     };
 
