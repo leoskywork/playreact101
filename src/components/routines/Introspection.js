@@ -44,19 +44,14 @@ export class Introspection extends React.Component {
 
         return routineService.getRoutines(lsk.substring(0, Math.min(this.maxLength, lsk.length))).then(result => {
             const success = result && result.success;
-            let data = null;
 
             if (success) {
-                data = result.data || [];
-                data.sort((a, b) => (b.lastFulfill || b.createAt).getTime() - (a.lastFulfill || a.createAt).getTime());
-            } else {
-                data = this.state.fulfillments;
+                const data = result.data || [];
+                data.sort(this.sortByFulfillmentDateDesc);
+                this.setState({ fulfillments: data });
             }
 
-            this.setState({
-                fulfillments: data,
-                isLoadingData: false
-            });
+            this.setState({ isLoadingData: false });
 
             return success;
         });
@@ -82,14 +77,16 @@ export class Introspection extends React.Component {
                 if (fulfillment) {
                     const data = this.state.fulfillments;
                     data.splice(data.indexOf(fulfillment), 1, result.data);
-                    data.sort((a, b) => (b.lastFulfill || b.createAt).getTime() - (a.lastFulfill || a.createAt).getTime());
+                    data.sort(this.sortByFulfillmentDateDesc);
 
-                    this.setState({
-                        fulfillments: data
-                    });
+                    this.setState({ fulfillments: data });
                 }
             }
         });
+    }
+
+    sortByFulfillmentDateDesc(a, b) {
+        return (b.lastFulfill || b.createAt).getTime() - (a.lastFulfill || a.createAt).getTime();
     }
 
 
@@ -104,9 +101,8 @@ export class Introspection extends React.Component {
     getLastFulfillDescription(fulfillment) {
         if (fulfillment.lastFulfill) {
             //console.log(fulfillment.lastFulfill.getTime(), fulfillment.name);
-            const date = fulfillment.lastFulfill;
-            //fixme, add a few seconds for local now to avoid time diff between client and server
-            const daysAgo = Math.floor((Date.now() + 5000 - date.getTime()) / 1000 / 60 / 60 / 24);
+            const last = fulfillment.lastFulfill;
+            const daysAgo = Math.floor(Date.now() / 1000 / 60 / 60 / 24) - Math.floor(last.getTime() / 1000 / 60 / 60 / 24);
 
             if (daysAgo === 0) {
                 return '(today)';
@@ -187,15 +183,24 @@ export class Introspection extends React.Component {
 
         routineService.fulfillRoutine(fulfillment, this.state.lskFulfill.substring(0, Math.min(this.maxLength, this.state.lskFulfill.length))).then(result => {
             //console.log('submit returned', result);
-            let data = this.state.fulfillments;
-            const success = result && result.success;
+            this.setState({ isSendingLskFulfill: false });
 
-            if (success) {
+            if (result && result.success) {
+                let data = [...this.state.fulfillments];
                 const index = data.indexOf(fulfillment);
-                if (index !== -1) {
+                if (index > -1) {
                     data.splice(index, 1, result.data);
+                    data.sort(this.sortByFulfillmentDateDesc);
                 }
+
+                this.setState({
+                    lskFulfill: '',
+                    fulfillments: data,
+                    lskFulfillShowing: false
+                });
             } else {
+                this.setState({ lskFulfillShowing: true });
+
                 // this.reload('submit fulfillment error', this.state.lskLoad || this.state.lastFulfill);
                 if (!this.state.customAlertPopped) {
                     this.setState({ customAlertPopped: true });
@@ -206,12 +211,7 @@ export class Introspection extends React.Component {
                 });
             }
 
-            this.setState({
-                isSendingLskFulfill: false,
-                fulfillments: data,
-                lskFulfill: success ? '' : this.state.lskFulfill,
-                lskFulfillShowing: !success
-            });
+
         });
     };
 
@@ -219,7 +219,7 @@ export class Introspection extends React.Component {
         return (
             <React.Fragment>
                 <h3 className="intro-title">
-                    <span title={AppConst.appName}>INTROSPECTION</span>
+                    <span title={AppConst.appName}>{AppConst.isDev ? 'DEV  ' : ''}INTROSPECTION</span>
                     <span>&nbsp;&nbsp;{new Date().toLocaleDateString().replace(/\//g, '.')}</span>
                 </h3>
                 <form className="intro-load-form" onSubmit={this.onSubmitLoading} hidden={!this.state.lskLoadShowing}>
