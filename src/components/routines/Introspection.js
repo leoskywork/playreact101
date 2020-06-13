@@ -129,6 +129,25 @@ export class Introspection extends React.Component {
         return this.state.lskFulfillShowing && this.state.lskFulfillOwner === fulfillment.id;
     }
 
+    getHistoryFulfillDescription(fulfillment, index) {
+        if (!fulfillment || !fulfillment.historyFulfillments || !fulfillment.lastFulfill) return;
+
+        const reverseIndex = fulfillment.historyFulfillments.length - index - 1;
+        const reverseDate = index === -1 ? fulfillment.lastFulfill : new Date(fulfillment.historyFulfillments[reverseIndex]);
+        const formattedDate = reverseDate.toLocaleDateString().split('/').join('.');
+
+        if (reverseIndex === 0) return `fulfill at ${formattedDate}, initial`; //no offset since this is the first fulfillment ever
+
+        //compare the last fulfill when the latest history
+        const priorDate = new Date(fulfillment.historyFulfillments[index === -1 ? fulfillment.historyFulfillments.length - 1 : reverseIndex - 1]);
+        //fixme, should 1 day diff when [Sun Jun 14 2020 00:55:14 GMT+0800 (China Standard Time)] 
+        //and prior to[Sat Jun 13 2020 22: 57: 54 GMT + 0800(China Standard Time)]
+        //but get 0 here
+        const daysSincePrior = Math.floor(reverseDate.getTime() / 1000 / 60 / 60 / 24) - Math.floor(priorDate.getTime() / 1000 / 60 / 60 / 24);
+
+        return `fulfill at ${formattedDate}, offset ${daysSincePrior}`;
+    }
+
     onLskArgumentChange = e => {
         this.setState({
             [e.target.name]: e.target.value
@@ -261,6 +280,16 @@ export class Introspection extends React.Component {
                                 <button type="submit" className="btn-intro-fulfill-send" disabled={this.disableSendButton()}>
                                     SEND
 								</button>
+                                {!!f.historyFulfillments ?
+                                    (<div>
+                                        <ul className="intro-fulfill-history">
+                                            <li><span className="intro-fulfill-history-item">{this.getHistoryFulfillDescription(f, -1)}</span></li>
+                                            {f.historyFulfillments.map((_, i) => (
+                                                <li><span className="intro-fulfill-history-item">{this.getHistoryFulfillDescription(f, i)}</span></li>
+                                            ))}
+                                        </ul>
+                                    </div>) : ''
+                                }
                             </form>
                         </div>
                     ))}

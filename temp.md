@@ -14,6 +14,8 @@
 - [ ] cache loaded data for 5 sec when switch tabs?
 - [ ] Introspection
   - [ ] allow add note when submit fulfillment
+  - [x] show history fulfillments
+  - [ ] fix days ago calculation bug
 
 ## react basic
 
