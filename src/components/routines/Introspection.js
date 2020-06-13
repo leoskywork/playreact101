@@ -8,7 +8,7 @@ export class Introspection extends React.Component {
     state = {
         lskLoad: '',
         lskLoadShowing: true,
-        lskFulfill: '',
+        lskFulfill: AppConst.DefaultFulfillDay,
         lskFulfillShowing: false,
         lskFulfillOwner: '',
         lskFulfillLastOwner: '',
@@ -31,7 +31,7 @@ export class Introspection extends React.Component {
         this.props.collapseHeader(false);
     }
 
-    reload(lsk, source) {
+    async reload(lsk, source) {
         console.log('reload data - source', source);
 
         this.setState({ isLoadingData: true });
@@ -56,6 +56,7 @@ export class Introspection extends React.Component {
         });
     }
 
+
     disableSendButton() {
         return this.state.isLoadingData || !this.state.lskFulfill || this.state.isSendingLskFulfill;
     }
@@ -66,9 +67,10 @@ export class Introspection extends React.Component {
 
     getLastFulfillDescription(fulfillment) {
         if (fulfillment.lastFulfill) {
-            console.log(typeof fulfillment.lastFulfill);
+            //console.log(fulfillment.lastFulfill.getTime(), fulfillment.name);
             const date = fulfillment.lastFulfill;
-            const daysAgo = Math.floor((Date.now() - date.getTime()) / 1000 / 60 / 60 / 24);
+            //fixme, add a few seconds for local now to avoid time diff between client and server
+            const daysAgo = Math.floor((Date.now() + 5000 - date.getTime()) / 1000 / 60 / 60 / 24);
 
             if (daysAgo === 0) {
                 return '(today)';
@@ -118,10 +120,15 @@ export class Introspection extends React.Component {
     onToggleLskFulfill = fulfillment => {
         const lastOwner = this.state.lskFulfillOwner;
         const newOwner = fulfillment.id;
-        const showing = lastOwner === newOwner ? !this.state.lskFulfillShowing : true;
+        const showing = lastOwner !== newOwner || !this.state.lskFulfillShowing;
+
+        if (lastOwner !== newOwner) {
+            this.setState({
+                lskFulfill: AppConst.DefaultFulfillDay
+            });
+        }
 
         this.setState({
-            lskFulfill: lastOwner === newOwner ? this.state.lastFulfill : '',
             lskFulfillShowing: showing,
             lskFulfillOwner: newOwner,
             lskFulfillLastOwner: lastOwner
@@ -141,6 +148,7 @@ export class Introspection extends React.Component {
         this.setState({ isSendingLskFulfill: true });
 
         routineService.fulfillRoutine(fulfillment, this.state.lskFulfill.substring(0, Math.min(this.maxLength, this.state.lskFulfill.length))).then(result => {
+            //console.log('submit returned', result);
             let data = this.state.fulfillments;
             const success = result && result.success;
 

@@ -31,6 +31,10 @@ export class AppConst {
             }
         };
     }
+
+    static get DefaultFulfillDay() {
+        return '0';
+    }
 }
 
 export default AppConst;
