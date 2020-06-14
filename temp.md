@@ -15,7 +15,8 @@
 - [ ] Introspection
   - [ ] allow add note when submit fulfillment
   - [x] show history fulfillments
-  - [ ] fix days ago calculation bug
+  - [x] fix days ago calculation bug
+  - [x] archive history fulfillments
 
 ## react basic
 
@@ -119,8 +120,8 @@ npm run build
 # start dev server
 npm start
 
-# start test runner
-npm test
+### start test runner
+## npm test
 
 # one step - create app (under current folder) - this won't install react globally
 npx create-react-app .

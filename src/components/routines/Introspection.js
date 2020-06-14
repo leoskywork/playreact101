@@ -17,7 +17,7 @@ export class Introspection extends React.Component {
         isLoadingData: false,
         isSendingLskFulfill: false,
         customAlertPopped: false,
-        isLoadingHistoryRecords: {}
+        currentRoutine: null
     };
 
     get maxLength() {
@@ -57,30 +57,29 @@ export class Introspection extends React.Component {
         });
     }
 
-    getHistoryRecords(lsk, id, source) {
-        console.log('get history record - ', source, id);
-        if (!id) return;
-        if (this.state.isLoadingHistoryRecords[id]) return;
+    getHistoryRecords(lsk, fulfillment, source) {
+        console.log('get history record - ', source, fulfillment.id);
+        if (!fulfillment || fulfillment.isLoadingHistoryRecords) return;
 
-        const loadingFlags = Object(this.state.isLoadingHistoryRecords);
-        loadingFlags[id] = true;
+        fulfillment.isLoadingHistoryRecords = true;
+        this.setState({ currentRoutine: fulfillment });
 
-        this.setState({ isLoadingHistoryRecords: loadingFlags });
+        routineService.getHistoryRecords(lsk, fulfillment.id, AppConst.StagedHistory).then(result => {
+            const data = this.state.fulfillments;
+            const fulfillmentFromList = data.find(f => f.id === fulfillment.id);
 
-        routineService.getHistoryRecords(lsk, id).then(result => {
-            loadingFlags[id] = false;
-            this.setState({ isLoadingHistoryRecords: loadingFlags });
+            if (fulfillmentFromList) {
+                fulfillmentFromList.isLoadingHistoryRecords = false;
+                fulfillmentFromList.showLoadMore = true;
 
-            if (result && result.success && result.data) {
-                const fulfillment = this.state.fulfillments.find(f => f.id === id);
-
-                if (fulfillment) {
-                    const data = this.state.fulfillments;
-                    data.splice(data.indexOf(fulfillment), 1, result.data);
+                if (result && result.success && result.data) {
+                    result.data.isLoadingHistoryRecords = false;
+                    result.data.showLoadMore = true;
+                    data.splice(data.indexOf(fulfillmentFromList), 1, result.data);
                     data.sort(this.sortByFulfillmentDateDesc);
-
-                    this.setState({ fulfillments: data });
                 }
+
+                this.setState({ fulfillments: data });
             }
         });
     }
@@ -98,6 +97,11 @@ export class Introspection extends React.Component {
         return this.state.isLoadingData || !this.state.lskLoad || this.state.isSendingLskFulfill;
     }
 
+    disabledMoreHistoryButton() {
+        const current = this.state.currentRoutine;
+        return !current || current.isLoadingHistoryRecords || current.isLoadingMoreHistory;
+    }
+
     getLastFulfillDescription(fulfillment) {
         if (fulfillment.lastFulfill) {
             //console.log(fulfillment.lastFulfill.getTime(), fulfillment.name);
@@ -109,8 +113,8 @@ export class Introspection extends React.Component {
             } else if (daysAgo === 1) {
                 return '(yesterday)';
             } else {
-                return `(${daysAgo > 99 ? '99+' : daysAgo} days ago)`
                 // date.toLocaleDateString().split('/').join('.');
+                return `(${daysAgo > 99 ? '99+' : daysAgo} days ago)`
             }
         }
 
@@ -129,40 +133,20 @@ export class Introspection extends React.Component {
         return this.state.lskFulfillShowing && this.state.lskFulfillOwner === fulfillment.id;
     }
 
-    // getHistoryFulfillDescription_old(fulfillment, index) {
-    //     if (!fulfillment || !fulfillment.historyFulfillments || !fulfillment.lastFulfill) return;
-
-    //     const reverseIndex = fulfillment.historyFulfillments.length - index - 1;
-    //     const reverseDate = index === -1 ? fulfillment.lastFulfill : new Date(fulfillment.historyFulfillments[reverseIndex]);
-    //     const formattedDate = reverseDate.toLocaleDateString().split('/').join('.');
-
-    //     if (reverseIndex === 0) return `fulfill at ${formattedDate}, initial`; //no offset since this is the first fulfillment ever
-
-    //     //compare the last fulfill when the latest history
-    //     const priorDate = new Date(fulfillment.historyFulfillments[index === -1 ? fulfillment.historyFulfillments.length - 1 : reverseIndex - 1]);
-    //     //fixme, should 1 day diff when [Sun Jun 14 2020 00:55:14 GMT+0800 (China Standard Time)] 
-    //     //and prior to [Sat Jun 13 2020 22: 57: 54 GMT + 0800(China Standard Time)]
-    //     //but get 0 here
-    //     const daysSincePrior = Math.floor(reverseDate.getTime() / 1000 / 60 / 60 / 24) - Math.floor(priorDate.getTime() / 1000 / 60 / 60 / 24);
-
-    //     return `fulfill at ${formattedDate}, offset ${daysSincePrior}`;
-    // }
-
     getHistoryFulfillDescription(index, allRecords) {
         if (!allRecords || allRecords.length === 0) return;
 
         const reverseIndex = allRecords.length - index - 1;
-        const reverseDate = new Date(allRecords[reverseIndex]);
+        const reverseDate = allRecords[reverseIndex].time;
         const formattedDate = reverseDate.toLocaleDateString().split('/').join('.');
 
-        if (reverseIndex === 0) return `fulfill at ${formattedDate}, initial`; //no offset since this is the first fulfillment ever
+        if (reverseIndex === 0) return `fulfill at ${formattedDate}, baseline`; //no offset since this is the first fulfillment ever
 
-        const priorDate = new Date(allRecords[reverseIndex - 1]);
+        const priorDate = allRecords[reverseIndex - 1].time;
         //fixme, should 1 day diff when [Sun Jun 14 2020 00:55:14 GMT+0800 (China Standard Time)] 
         //and prior to [Sat Jun 13 2020 22: 57: 54 GMT + 0800(China Standard Time)]
-        //but get 0 here
+        //but get 0 here, following is a temp hack
         const daysSincePrior = Math.floor(reverseDate.getTime() / 1000 / 60 / 60 / 24) - Math.floor(priorDate.getTime() / 1000 / 60 / 60 / 24);
-        //fixme, temp hack
         if (daysSincePrior < 28 && reverseDate.getMonth() === priorDate.getMonth()) {
             const localDaysDiff = reverseDate.getDate() - priorDate.getDate();
             if (localDaysDiff !== daysSincePrior) {
@@ -207,7 +191,8 @@ export class Introspection extends React.Component {
         this.setState({
             lskFulfillShowing: showing,
             lskFulfillOwner: newOwner,
-            lskFulfillLastOwner: lastOwner
+            lskFulfillLastOwner: lastOwner,
+            currentRoutine: fulfillment
         });
 
         if (showing) {
@@ -215,7 +200,7 @@ export class Introspection extends React.Component {
                 document.querySelector('#intro-lsk-fulfill-' + fulfillment.id).select();
             });
 
-            this.getHistoryRecords(this.state.lskLoad, fulfillment.id, 'toggle-fulfill-button');
+            this.getHistoryRecords(this.state.lskLoad, fulfillment, 'toggle-fulfill-button');
         }
     };
 
@@ -254,10 +239,33 @@ export class Introspection extends React.Component {
                     document.querySelector('#intro-lsk-fulfill-' + fulfillment.id).select();
                 });
             }
-
-
         });
     };
+
+
+    onLoadMoreHistory(e, fulfillment) {
+        e.preventDefault();
+        if (!fulfillment) return;
+        if (fulfillment.isLoadingHistoryRecords || fulfillment.isLoadingMoreHistory) return;
+
+        fulfillment.isLoadingMoreHistory = true;
+        this.setState({ currentRoutine: fulfillment });
+
+        routineService.getHistoryRecords(this.state.lskLoad, fulfillment.id, AppConst.ArchivedHistory).then(result => {
+            const fulfillmentFromList = this.state.fulfillments.find(f => f.id === fulfillment.id);
+
+            if (fulfillmentFromList) {
+                fulfillmentFromList.isLoadingMoreHistory = false;
+
+                if (result && result.success && result.data) {
+                    fulfillmentFromList.archivedFulfillments = result.data;
+                    fulfillmentFromList.showLoadMore = false;
+                }
+
+                this.setState({ currentRoutine: fulfillment });
+            }
+        });
+    }
 
     render() {
         return (
@@ -286,7 +294,7 @@ export class Introspection extends React.Component {
                     <br></br>
                     {this.state.fulfillments.map(f => (
                         <div className="intro-fulfill-item" key={f.id}>
-                            <span>{f.name}</span>&nbsp;&nbsp;<span>{this.getLastFulfillDescription(f)}</span>
+                            <span title={f.lastRemark}>{f.name}</span>&nbsp;&nbsp;<span>{this.getLastFulfillDescription(f)}</span>
                             <span>&nbsp;&nbsp;</span>
                             <button className={this.getFulfillExpandButtonStyle(f)} onClick={this.onToggleLskFulfill.bind(this, f)}>
                                 ...
@@ -308,12 +316,14 @@ export class Introspection extends React.Component {
                                 {f.hasRecords ?
                                     (<div>
                                         <ul className="intro-fulfill-history">
-                                            {f.getAllRecords().map((_, i, arr) => (
-                                                <li key={i}><span
-                                                    title={`total fulfillments ${arr.length}`}
-                                                    className="intro-fulfill-history-item">{this.getHistoryFulfillDescription(i, arr)}</span>
+                                            {f.getAllRecords().map((r, i, arr) => (
+                                                <li key={i} title={`loaded fulfillments ${arr.length}${r.remark ? ', ' + r.remark : ''}`}>
+                                                    <span className="intro-fulfill-history-item">{this.getHistoryFulfillDescription(i, arr)}{r.remark ? ' ...' : ''}</span>
                                                 </li>
                                             ))}
+                                            {f.hasArchived && f.showLoadMore ? (<li key='load-more'>
+                                                <button className="btn-intro-fulfill-history" disabled={this.disabledMoreHistoryButton()} onClick={e => this.onLoadMoreHistory(e, f)}>MORE</button>
+                                            </li>) : null}
                                         </ul>
                                     </div>) : null
                                 }

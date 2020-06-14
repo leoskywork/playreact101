@@ -39,6 +39,14 @@ export class AppConst {
     static get HeartBeatInterval() {
         return 1000 * 60 * 60;
     }
+
+    static get StagedHistory() {
+        return 'staged';
+    }
+
+    static get ArchivedHistory() {
+        return 'archived';
+    }
 }
 
 export default AppConst;

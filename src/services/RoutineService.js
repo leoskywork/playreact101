@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AppConst from '../common/AppConst';
 import Utility from '../common/Utility';
-import Fulfillment from '../models/Fulfillment';
+import DtoMapper from './DtoMapper';
 
 export class RoutineService {
     getRoutines(lsk) {
@@ -14,20 +14,27 @@ export class RoutineService {
         return axios
             .get(`${AppConst.netApiBaseUrl}introspection`, config)
             .then(result => Utility.unifyResultValidator(result))
-            .then(result => Utility.unifyArrayMapper(result.data, RoutineService.mapFromDtoRoutine))
+            .then(result => Utility.unifyArrayMapper(result.data, DtoMapper.fromDtoRoutine))
             .catch(error => Utility.unifyAjaxErrorHandling(error));
     }
 
-    getHistoryRecords(lsk, id) {
+    getHistoryRecords(lsk, id, historyKind) {
         const config = {
             headers: {
                 [AppConst.headers.lskIntrospection]: lsk
             }
         };
 
+        if (historyKind === AppConst.ArchivedHistory) {
+            return axios.get(`${AppConst.netApiBaseUrl}introspection/${id}?history=archived`, config)
+                .then(result => Utility.unifyResultValidator(result))
+                .then(result => Utility.unifyArrayMapper(result.data, DtoMapper.fromDtoFulfillmentArchive))
+                .catch(error => Utility.unifyAjaxErrorHandling(error));
+        }
+
         return axios.get(`${AppConst.netApiBaseUrl}introspection/${id}`, config)
             .then(result => Utility.unifyResultValidator(result))
-            .then(result => Utility.unifyObjectMapper(result.data, RoutineService.mapFromDtoRoutine))
+            .then(result => Utility.unifyObjectMapper(result.data, DtoMapper.fromDtoRoutine))
             .catch(error => Utility.unifyAjaxErrorHandling(error));
     }
 
@@ -41,7 +48,7 @@ export class RoutineService {
         return axios
             .put(`${AppConst.netApiBaseUrl}introspection/${fulfillment.id}`, fulfillment, config)
             .then(result => Utility.unifyResultValidator(result))
-            .then(result => Utility.unifyObjectMapper(result.data, RoutineService.mapFromDtoRoutine))
+            .then(result => Utility.unifyObjectMapper(result.data, DtoMapper.fromDtoRoutine))
             .catch(error => Utility.unifyAjaxErrorHandling(error));
     }
 
@@ -57,9 +64,6 @@ export class RoutineService {
             .catch(error => Utility.unifyAjaxErrorHandling(error, true));
     }
 
-    static mapFromDtoRoutine(dto) {
-        return new Fulfillment(dto.Uid, dto.Name, dto.LastFulfill, dto.HistoryFulfillments, dto.CreateBy, dto.CreateAt);
-    }
 }
 
 export default new RoutineService();

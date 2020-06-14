@@ -90,6 +90,25 @@
     background-color: silver;
 }
 
+.btn-intro-fulfill-history{
+    padding: 6px 16px;
+    margin-top: 10px;
+	border-style: none;
+    font-weight: bold;
+    font-size: 0.8em;
+	color: darkslategray;
+	background-color: lightgray;
+}
+
+.btn-intro-fulfill-history:hover{
+    color: black;
+	background-color: silver;
+}
+.btn-intro-fulfill-history[disabled]{
+    color: #888;
+    background-color: lightgray !important;
+}
+
 /* for small screen */
 @media (max-width: 320px) {
 	.sm-align-right-wrap {
