@@ -38,15 +38,21 @@ export class RoutineService {
             .catch(error => Utility.unifyAjaxErrorHandling(error));
     }
 
-    fulfillRoutine(fulfillment, lsk) {
+    fulfillRoutine(fulfillment, lsk, remark) {
         const config = {
             headers: {
                 [AppConst.headers.lskIntrospection]: lsk
             }
         };
 
+        const dtoFulfillment = {
+            Name: fulfillment.name,
+            LastFulfill: fulfillment.lastFulfill,
+            LastRemark: remark
+        }
+
         return axios
-            .put(`${AppConst.netApiBaseUrl}introspection/${fulfillment.id}`, fulfillment, config)
+            .put(`${AppConst.netApiBaseUrl}introspection/${fulfillment.id}`, dtoFulfillment, config)
             .then(result => Utility.unifyResultValidator(result))
             .then(result => Utility.unifyObjectMapper(result.data, DtoMapper.fromDtoRoutine))
             .catch(error => Utility.unifyAjaxErrorHandling(error));

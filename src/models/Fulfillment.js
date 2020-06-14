@@ -34,7 +34,7 @@ export class Fulfillment {
         return false;
     }
 
-    getAllRecords() {
+    getAllRecordsDesc() {
         const allRecords = [];
 
         if (this.archivedFulfillments && this.archivedFulfillments.length > 0) {
@@ -49,7 +49,7 @@ export class Fulfillment {
             allRecords.push(new FulfillmentArchive(this.uid, 'mock-last-fulfill', this.lastRemark, this.lastFulfill));
         }
 
-        return allRecords.length > 0 ? allRecords : null;
+        return allRecords.length > 0 ? allRecords.reverse() : null;
     }
 }
 

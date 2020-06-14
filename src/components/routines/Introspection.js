@@ -133,22 +133,21 @@ export class Introspection extends React.Component {
         return this.state.lskFulfillShowing && this.state.lskFulfillOwner === fulfillment.id;
     }
 
-    getHistoryFulfillDescription(index, allRecords) {
-        if (!allRecords || allRecords.length === 0) return;
+    getHistoryFulfillDescription(index, allRecordsDesc) {
+        if (!allRecordsDesc || allRecordsDesc.length === 0) return;
 
-        const reverseIndex = allRecords.length - index - 1;
-        const reverseDate = allRecords[reverseIndex].time;
-        const formattedDate = reverseDate.toLocaleDateString().split('/').join('.');
+        const currentDate = allRecordsDesc[index].time;
+        const formattedDate = currentDate.toLocaleDateString().split('/').join('.');
 
-        if (reverseIndex === 0) return `fulfill at ${formattedDate}, baseline`; //no offset since this is the first fulfillment ever
+        if (index === allRecordsDesc.length - 1) return `fulfill at ${formattedDate}, baseline`; //no offset since this is the first fulfillment ever
 
-        const priorDate = allRecords[reverseIndex - 1].time;
+        const priorDate = allRecordsDesc[index + 1].time;
         //fixme, should 1 day diff when [Sun Jun 14 2020 00:55:14 GMT+0800 (China Standard Time)] 
         //and prior to [Sat Jun 13 2020 22: 57: 54 GMT + 0800(China Standard Time)]
         //but get 0 here, following is a temp hack
-        const daysSincePrior = Math.floor(reverseDate.getTime() / 1000 / 60 / 60 / 24) - Math.floor(priorDate.getTime() / 1000 / 60 / 60 / 24);
-        if (daysSincePrior < 28 && reverseDate.getMonth() === priorDate.getMonth()) {
-            const localDaysDiff = reverseDate.getDate() - priorDate.getDate();
+        const daysSincePrior = Math.floor(currentDate.getTime() / 1000 / 60 / 60 / 24) - Math.floor(priorDate.getTime() / 1000 / 60 / 60 / 24);
+        if (daysSincePrior < 28 && currentDate.getMonth() === priorDate.getMonth()) {
+            const localDaysDiff = currentDate.getDate() - priorDate.getDate();
             if (localDaysDiff !== daysSincePrior) {
                 return `fulfill at ${formattedDate}, offset ${localDaysDiff}`;
             }
@@ -209,14 +208,23 @@ export class Introspection extends React.Component {
         if (this.state.isLoadingData || this.state.isSendingLskFulfill) return;
 
         this.setState({ isSendingLskFulfill: true });
+        let userInput = this.state.lskFulfill.substring(0, Math.min(this.maxLength, this.state.lskFulfill.length));
+        const separatorIndex = userInput.indexOf(';');
+        let inputLsk = userInput, remark;
 
-        routineService.fulfillRoutine(fulfillment, this.state.lskFulfill.substring(0, Math.min(this.maxLength, this.state.lskFulfill.length))).then(result => {
+        if (separatorIndex > 0 && separatorIndex < userInput.length - 1) {
+            inputLsk = userInput.substring(0, separatorIndex);
+            remark = userInput.substring(separatorIndex + 1);
+        }
+
+        routineService.fulfillRoutine(fulfillment, inputLsk, remark).then(result => {
             //console.log('submit returned', result);
             this.setState({ isSendingLskFulfill: false });
 
             if (result && result.success) {
                 let data = [...this.state.fulfillments];
                 const index = data.indexOf(fulfillment);
+
                 if (index > -1) {
                     data.splice(index, 1, result.data);
                     data.sort(this.sortByFulfillmentDateDesc);
@@ -235,6 +243,7 @@ export class Introspection extends React.Component {
                     this.setState({ customAlertPopped: true });
                     alert('please try to refresh page if fail to send fulfillment again');
                 }
+
                 setTimeout(() => {
                     document.querySelector('#intro-lsk-fulfill-' + fulfillment.id).select();
                 });
@@ -306,7 +315,7 @@ export class Introspection extends React.Component {
                                     name="lskFulfill"
                                     value={this.state.lskFulfill}
                                     onChange={this.onLskArgumentChange}
-                                    placeholder="..."
+                                    placeholder="days;remark"
                                     disabled={this.state.isLoadingData || this.state.isSendingLskFulfill}
                                     autoComplete="off"
                                 ></input>
@@ -316,13 +325,16 @@ export class Introspection extends React.Component {
                                 {f.hasRecords ?
                                     (<div>
                                         <ul className="intro-fulfill-history">
-                                            {f.getAllRecords().map((r, i, arr) => (
+                                            {f.getAllRecordsDesc().map((r, i, arr) => (
                                                 <li key={i} title={`loaded fulfillments ${arr.length}${r.remark ? ', ' + r.remark : ''}`}>
                                                     <span className="intro-fulfill-history-item">{this.getHistoryFulfillDescription(i, arr)}{r.remark ? ' ...' : ''}</span>
                                                 </li>
                                             ))}
                                             {f.hasArchived && f.showLoadMore ? (<li key='load-more'>
-                                                <button className="btn-intro-fulfill-history" disabled={this.disabledMoreHistoryButton()} onClick={e => this.onLoadMoreHistory(e, f)}>MORE</button>
+                                                <button
+                                                    className="btn-intro-fulfill-history"
+                                                    disabled={this.disabledMoreHistoryButton()}
+                                                    onClick={e => this.onLoadMoreHistory(e, f)}>MORE</button>
                                             </li>) : null}
                                         </ul>
                                     </div>) : null
