@@ -53,8 +53,8 @@ export class RoutineService {
         };
 
         return axios.get(`${AppConst.netApiBaseUrl}introspection/heartbeat?user=${encodeURI(user)}`, config)
-            .then(result => Utility.unifyResultValidator(result))
-            .catch(error => Utility.unifyAjaxErrorHandling(error));
+            .then(result => Utility.unifyResultValidator(result, true))
+            .catch(error => Utility.unifyAjaxErrorHandling(error, true));
     }
 
     static mapFromDtoRoutine(dto) {

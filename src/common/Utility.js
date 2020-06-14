@@ -1,79 +1,86 @@
 export class Utility {
-	//closure + IIFE
-	static genInteger = (() => {
-		let seed = 100;
+    //closure + IIFE
+    static genInteger = (() => {
+        let seed = 100;
 
-		return () => seed++;
-	})();
+        return () => seed++;
+    })();
 
-	static notEmpty(value) {
-		return value && String(value).trim().length > 0;
-	}
+    static notEmpty(value) {
+        return value && String(value).trim().length > 0;
+    }
 
-	//fixme: impl notification system
-	static unifyResultValidator(axiosResponse) {
-		if (!axiosResponse || !axiosResponse.data || axiosResponse.data.success) return axiosResponse;
+    //fixme: impl notification system
+    static unifyResultValidator(axiosResponse, suppressAlert = false) {
+        if (!axiosResponse || !axiosResponse.data || axiosResponse.data.success) return axiosResponse;
+        if (axiosResponse.data.unifyHandled) return axiosResponse;
 
-		const data = axiosResponse.data;
+        if (suppressAlert) {
+            axiosResponse.data.unifyHandled = true;
+            return axiosResponse;
+        }
 
-		//fixme: pop error message - don't use built in alert func and no repeat alerts within x amount of time
-		if (Utility.notEmpty(data.message)) {
-			alert(data.message);
-			data.unifyHandled = true;
-		} else if (Utility.notEmpty(data)) {
-			alert(`error message: ${JSON.stringify(data)}`);
-			if (typeof data === 'object') {
-				data.unifyHandled = true;
-			} else {
-				axiosResponse.data = {};
-				axiosResponse.data.unifyHandled = true;
-				axiosResponse.data.data = data;
-			}
-		}
+        //fixme: pop error message - don't use built in alert func and no repeat alerts within x amount of time
+        if (Utility.notEmpty(axiosResponse.data.message)) {
+            alert(axiosResponse.data.message);
+            axiosResponse.data.unifyHandled = true;
+        } else if (Utility.notEmpty(axiosResponse.data)) {
+            alert(`error message: ${JSON.stringify(axiosResponse.data)}`);
+            if (typeof axiosResponse.data === 'object') {
+                axiosResponse.data.unifyHandled = true;
+            } else {
+                const data = axiosResponse.data;
+                axiosResponse.data = {};
+                axiosResponse.data.unifyHandled = true;
+                axiosResponse.data.originalData = data;
+            }
+        }
 
-		return axiosResponse;
-	}
+        return axiosResponse;
+    }
 
-	static unifyArrayMapper(apiResult, itemMapper) {
-		if (itemMapper == null) {
-			return apiResult;
-		}
+    static unifyArrayMapper(apiResult, itemMapper) {
+        if (itemMapper == null) {
+            return apiResult;
+        }
 
-		if (apiResult && apiResult.success && Array.isArray(apiResult.data)) {
-			apiResult.data = apiResult.data.map(t => itemMapper(t));
-		}
+        if (apiResult && apiResult.success && Array.isArray(apiResult.data)) {
+            apiResult.data = apiResult.data.map(t => itemMapper(t));
+        }
 
-		return apiResult;
-	}
+        return apiResult;
+    }
 
-	static unifyObjectMapper(apiResult, itemMapper) {
-		if (itemMapper == null) {
-			return apiResult;
-		}
+    static unifyObjectMapper(apiResult, itemMapper) {
+        if (itemMapper == null) {
+            return apiResult;
+        }
 
-		if (apiResult && apiResult.success && apiResult.data) {
-			apiResult.data = itemMapper(apiResult.data);
-		}
+        if (apiResult && apiResult.success && apiResult.data) {
+            apiResult.data = itemMapper(apiResult.data);
+        }
 
-		return apiResult;
-	}
+        return apiResult;
+    }
 
-	static unifyAjaxErrorHandling(error) {
-		//todo: unify error handling
-		console.log(error);
+    static unifyAjaxErrorHandling(error, suppressAlert = false) {
+        //todo: unify error handling
+        console.log(error);
 
-		if (error && error.response && error.response.data) {
-			const data = error.response.data;
+        if (suppressAlert) return;
 
-			if (data.Message) {
-				return alert('Error: ' + (typeof data.Message == 'object' ? JSON.stringify(data.Message) : data.Message));
-			}
+        if (error && error.response && error.response.data) {
+            const data = error.response.data;
 
-			return alert('Error: ' + (typeof data == 'object' ? JSON.stringify(data) : data));
-		}
+            if (data.Message) {
+                return alert('Error: ' + (typeof data.Message == 'object' ? JSON.stringify(data.Message) : data.Message));
+            }
 
-		alert(error);
-	}
+            return alert('Error: ' + (typeof data == 'object' ? JSON.stringify(data) : data));
+        }
+
+        return alert(error);
+    }
 }
 
 export default Utility;

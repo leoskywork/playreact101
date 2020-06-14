@@ -73,7 +73,7 @@
     max-height: 320px;
     max-width: 390px;
     overflow: auto;
-    margin: 0 auto;
+    margin: 10px auto;
 }
 
 .intro-fulfill-history-item{
