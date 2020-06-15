@@ -8,7 +8,6 @@ export class Introspection extends React.Component {
     state = {
         lskHeartbeat: 'beat',
         lskLoad: '',
-        lskLoadShowing: true,
         lskFulfill: AppConst.DefaultFulfillDay,
         lskFulfillShowing: false,
         lskFulfillOwner: '',
@@ -17,7 +16,8 @@ export class Introspection extends React.Component {
         isLoadingData: false,
         isSendingLskFulfill: false,
         customAlertPopped: false,
-        currentRoutine: null
+        currentRoutine: null,
+        showRemark: false
     };
 
     get maxLength() {
@@ -29,7 +29,8 @@ export class Introspection extends React.Component {
         document.querySelector('#intro-lsk-load-input').select();
 
         setInterval(() => {
-            routineService.getHeartBeat(this.state.lskHeartbeat, 'user-todo');
+            try { routineService.getHeartBeat(this.state.lskHeartbeat, 'user-todo'); }
+            catch (ex) { console.log('heart beat error - ', ex); }
         }, AppConst.HeartBeatInterval);
     }
 
@@ -168,10 +169,8 @@ export class Introspection extends React.Component {
 
         this.reload(this.state.lskLoad, 'submit loading').then(success => {
             if (success) {
-                this.setState({
-                    lskLoad: '',
-                    lskLoadShowing: false
-                });
+                this.setState({ lskLoad: '' });
+                document.querySelector('.intro-load-form').remove();
             }
         });
     };
@@ -208,13 +207,16 @@ export class Introspection extends React.Component {
         if (this.state.isLoadingData || this.state.isSendingLskFulfill) return;
 
         this.setState({ isSendingLskFulfill: true });
-        let userInput = this.state.lskFulfill.substring(0, Math.min(this.maxLength, this.state.lskFulfill.length));
-        const separatorIndex = userInput.indexOf(';');
-        let inputLsk = userInput, remark;
 
-        if (separatorIndex > 0 && separatorIndex < userInput.length - 1) {
-            inputLsk = userInput.substring(0, separatorIndex);
-            remark = userInput.substring(separatorIndex + 1);
+        let userInput = this.state.lskFulfill.substring(0, Math.min(this.maxLength, this.state.lskFulfill.length));
+        let inputLsk = userInput, remark;
+        let inputUnits = userInput.split(';');
+
+        if (inputUnits.length === 1) inputUnits = userInput.split('；'); //Chinese char
+
+        if (inputUnits.length > 1) {
+            inputLsk = inputUnits[0].trim();
+            remark = inputUnits[1].trim();
         }
 
         routineService.fulfillRoutine(fulfillment, inputLsk, remark).then(result => {
@@ -283,9 +285,9 @@ export class Introspection extends React.Component {
                     <span title={AppConst.appName}>{AppConst.isDev ? 'DEV  ' : ''}INTROSPECTION</span>
                     <span>&nbsp;&nbsp;{new Date().toLocaleDateString().replace(/\//g, '.')}</span>
                 </h3>
-                <form className="intro-load-form" onSubmit={this.onSubmitLoading} hidden={!this.state.lskLoadShowing}>
+                <form className="intro-load-form" onSubmit={this.onSubmitLoading}>
                     <input
-                        type="number"
+                        type="password"
                         id="intro-lsk-load-input"
                         name="lskLoad"
                         value={this.state.lskLoad}
@@ -315,7 +317,7 @@ export class Introspection extends React.Component {
                                     name="lskFulfill"
                                     value={this.state.lskFulfill}
                                     onChange={this.onLskArgumentChange}
-                                    placeholder="days;remark"
+                                    placeholder="days; remark"
                                     disabled={this.state.isLoadingData || this.state.isSendingLskFulfill}
                                     autoComplete="off"
                                 ></input>
@@ -324,17 +326,18 @@ export class Introspection extends React.Component {
 								</button>
                                 {f.hasRecords ?
                                     (<div>
+                                        <div className="intro-loading-message" hidden={!f.isLoadingHistoryRecords}>Loading history...</div>
                                         <ul className="intro-fulfill-history">
                                             {f.getAllRecordsDesc().map((r, i, arr) => (
                                                 <li key={i} title={`loaded fulfillments ${arr.length}${r.remark ? ', ' + r.remark : ''}`}>
-                                                    <span className="intro-fulfill-history-item">{this.getHistoryFulfillDescription(i, arr)}{r.remark ? ' ...' : ''}</span>
+                                                    <span className="intro-fulfill-history-item">
+                                                        {this.getHistoryFulfillDescription(i, arr)}
+                                                        {r.remark ? (this.state.showRemark ? ', ' + r.remark : ' ...') : ''}
+                                                    </span>
                                                 </li>
                                             ))}
                                             {f.hasArchived && f.showLoadMore ? (<li key='load-more'>
-                                                <button
-                                                    className="btn-intro-fulfill-history"
-                                                    disabled={this.disabledMoreHistoryButton()}
-                                                    onClick={e => this.onLoadMoreHistory(e, f)}>MORE</button>
+                                                <button className="btn-intro-common" disabled={this.disabledMoreHistoryButton()} onClick={e => this.onLoadMoreHistory(e, f)}>MORE</button>
                                             </li>) : null}
                                         </ul>
                                     </div>) : null
@@ -342,6 +345,9 @@ export class Introspection extends React.Component {
                             </form>
                         </div>
                     ))}
+                    {this.state.fulfillments.length > 0 ? (<div>
+                        <button className="btn-intro-common btn-switch" onClick={() => this.setState({ showRemark: !this.state.showRemark })}>REMARK {this.state.showRemark ? 'ON' : 'OFF'}</button>
+                    </div>) : null}
                 </div>
             </React.Fragment>
         );

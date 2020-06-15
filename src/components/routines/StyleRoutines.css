@@ -90,9 +90,10 @@
     background-color: silver;
 }
 
-.btn-intro-fulfill-history{
-    padding: 6px 16px;
+.btn-intro-common{
     margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 6px 16px;
 	border-style: none;
     font-weight: bold;
     font-size: 0.8em;
@@ -100,14 +101,31 @@
 	background-color: lightgray;
 }
 
-.btn-intro-fulfill-history:hover{
+.btn-intro-common:hover{
     color: black;
 	background-color: silver;
 }
-.btn-intro-fulfill-history[disabled]{
+
+.btn-intro-common:focus{
+    outline: none;
+}
+
+.btn-intro-common[disabled]{
     color: #888;
     background-color: lightgray !important;
 }
+
+.intro-loading-message{
+    margin-top: 10px;
+    color: lightgray;
+}
+
+.btn-switch{
+    width: 140px;
+    font-size: 1em;
+    font-weight: normal;
+}
+
 
 /* for small screen */
 @media (max-width: 320px) {

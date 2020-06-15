@@ -13,10 +13,11 @@
 - [ ] sometimes page doesn't load correctly when nav by click on backward button of chrome
 - [ ] cache loaded data for 5 sec when switch tabs?
 - [ ] Introspection
-  - [ ] allow add note when submit fulfillment
+  - [x] allow add note when submit fulfillment
   - [x] show history fulfillments
   - [x] fix days ago calculation bug
   - [x] archive history fulfillments
+  - [ ] increase list width when showing remark
 
 ## react basic
 

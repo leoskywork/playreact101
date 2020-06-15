@@ -5,11 +5,7 @@ import DtoMapper from './DtoMapper';
 
 export class RoutineService {
     getRoutines(lsk) {
-        const config = {
-            headers: {
-                [AppConst.headers.lskIntrospection]: lsk
-            }
-        };
+        const config = this.createHttpConfig(lsk);
 
         return axios
             .get(`${AppConst.netApiBaseUrl}introspection`, config)
@@ -19,11 +15,7 @@ export class RoutineService {
     }
 
     getHistoryRecords(lsk, id, historyKind) {
-        const config = {
-            headers: {
-                [AppConst.headers.lskIntrospection]: lsk
-            }
-        };
+        const config = this.createHttpConfig(lsk);
 
         if (historyKind === AppConst.ArchivedHistory) {
             return axios.get(`${AppConst.netApiBaseUrl}introspection/${id}?history=archived`, config)
@@ -39,11 +31,7 @@ export class RoutineService {
     }
 
     fulfillRoutine(fulfillment, lsk, remark) {
-        const config = {
-            headers: {
-                [AppConst.headers.lskIntrospection]: lsk
-            }
-        };
+        const config = this.createHttpConfig(lsk);
 
         const dtoFulfillment = {
             Name: fulfillment.name,
@@ -59,15 +47,19 @@ export class RoutineService {
     }
 
     getHeartBeat(lsk, user) {
-        const config = {
-            headers: {
-                [AppConst.headers.lskIntrospection]: lsk
-            }
-        };
+        const config = this.createHttpConfig(lsk);
 
         return axios.get(`${AppConst.netApiBaseUrl}introspection/heartbeat?user=${encodeURI(user)}`, config)
             .then(result => Utility.unifyResultValidator(result, true))
             .catch(error => Utility.unifyAjaxErrorHandling(error, true));
+    }
+
+    createHttpConfig(lsk) {
+        return {
+            headers: {
+                [AppConst.headers.lskIntrospection]: encodeURI(lsk)
+            }
+        }
     }
 
 }
