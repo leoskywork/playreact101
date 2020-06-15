@@ -11,6 +11,21 @@ export class AppConst {
         return new Date('2019-11-20 GMT+0800');
     }
 
+    static get version() {
+        return AppConst.historyVersions[AppConst.historyVersions.length - 1][0];
+    }
+
+    static get versionDetails() {
+        return 'v' + AppConst.historyVersions[AppConst.historyVersions.length - 1].join(' - ');
+    }
+
+    static get historyVersions() {
+        return [
+            ['1.0.0', '2019.11.20'],
+            ['1.1.0', '2020.6.15']
+        ]
+    }
+
     static get apiBaseUrl() {
         return AppConst.isDev ? 'http://localhost:5000/public/' : 'http://118.31.35.69:1080/api/mock/'; //'https://leoskywork.com/api/mock/';
     }

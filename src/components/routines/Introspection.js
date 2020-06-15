@@ -281,8 +281,8 @@ export class Introspection extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <h3 className="intro-title">
-                    <span title={AppConst.appName}>{AppConst.isDev ? 'DEV  ' : ''}INTROSPECTION</span>
+                <h3 className="intro-title" title={AppConst.appName + ' - ' + AppConst.versionDetails}>
+                    <span>{AppConst.isDev ? AppConst.appName + ' ' : ''}INTROSPECTION</span>
                     <span>&nbsp;&nbsp;{new Date().toLocaleDateString().replace(/\//g, '.')}</span>
                 </h3>
                 <form className="intro-load-form" onSubmit={this.onSubmitLoading}>
