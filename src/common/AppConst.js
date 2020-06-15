@@ -27,12 +27,14 @@ export class AppConst {
     }
 
     static get apiBaseUrl() {
-        return AppConst.isDev ? 'http://localhost:5000/public/' : 'http://118.31.35.69:1080/api/mock/'; //'https://leoskywork.com/api/mock/';
+        // return AppConst.isDev ? 'http://localhost:5000/public/' : 'http://118.31.35.69:1080/api/mock/'; 
+        return AppConst.isDev ? 'http://localhost:5000/public/' : 'https://leoskywork.com/api/mock/';
     }
 
     //.net framework api
     static get netApiBaseUrl() {
-        return AppConst.isDev ? 'http://localhost:57005/' : 'https://leoskywork.com/api/'; //'http://118.31.35.69:1080/api/';
+        // return AppConst.isDev ? 'http://localhost:57005/' : 'http://118.31.35.69:1080/api/';
+        return AppConst.isDev ? 'http://localhost:57005/' : 'https://leoskywork.com/api/';
     }
 
     static get frontendBaseUrl() {
