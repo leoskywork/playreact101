@@ -18,6 +18,7 @@
   - [x] fix days ago calculation bug
   - [x] archive history fulfillments
   - [ ] increase list width when showing remark
+  - [ ] extract fulfillment history records to a component
 
 ## react basic
 
