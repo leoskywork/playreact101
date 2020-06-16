@@ -112,8 +112,7 @@ export class Introspection extends React.Component {
     getLastFulfillDescription(fulfillment) {
         if (fulfillment.lastFulfill) {
             //console.log(fulfillment.lastFulfill.getTime(), fulfillment.name);
-            const last = fulfillment.lastFulfill;
-            const daysAgo = Math.floor(Date.now() / 1000 / 60 / 60 / 24) - Math.floor(last.getTime() / 1000 / 60 / 60 / 24);
+            const daysAgo = this.getDaysBetween(new Date(), fulfillment.lastFulfill);
 
             if (daysAgo === 0) {
                 return '(today)';
@@ -149,21 +148,27 @@ export class Introspection extends React.Component {
         if (index === allRecordsDesc.length - 1) return `fulfill at ${formattedDate}, base`; //no offset since this is the first fulfillment ever
 
         const priorDate = allRecordsDesc[index + 1].time;
+        const daysSincePrior = this.getDaysBetween(currentDate, priorDate);
+
+        return `fulfill at ${formattedDate}, offset ${daysSincePrior}`;
+    }
+
+    getDaysBetween(currentDate, priorDate) {
         //fixme, should 1 day diff when [Sun Jun 14 2020 00:55:14 GMT+0800 (China Standard Time)] 
         //and prior to [Sat Jun 13 2020 22: 57: 54 GMT + 0800(China Standard Time)]
         //but get 0 here, following is a temp hack
         let daysSincePrior = Math.floor(currentDate.getTime() / 1000 / 60 / 60 / 24) - Math.floor(priorDate.getTime() / 1000 / 60 / 60 / 24);
 
-        if (daysSincePrior === 0 && currentDate.getDate() !== priorDate.getDate()) daysSincePrior = 1;
+        if (daysSincePrior === 0 && currentDate.getDate() !== priorDate.getDate()) return 1;
 
         if (daysSincePrior < 28 && currentDate.getMonth() === priorDate.getMonth()) {
             const localDaysDiff = currentDate.getDate() - priorDate.getDate();
             if (localDaysDiff !== daysSincePrior) {
-                return `fulfill at ${formattedDate}, offset ${localDaysDiff}`;
+                return localDaysDiff;
             }
         }
 
-        return `fulfill at ${formattedDate}, offset ${daysSincePrior}`;
+        return daysSincePrior;
     }
 
     onLskArgumentChange = e => {
