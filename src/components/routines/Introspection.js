@@ -28,9 +28,15 @@ export class Introspection extends React.Component {
         this.props.collapseHeader(true);
         document.querySelector('#intro-lsk-load-input').select();
 
-        setInterval(() => {
-            try { routineService.getHeartBeat(this.state.lskHeartbeat, 'user-todo'); }
-            catch (ex) { console.log('heart beat error - ', ex); }
+        this.heartBeat();
+    }
+
+    heartBeat() {
+        try { routineService.getHeartBeat(this.state.lskHeartbeat, 'user-todo'); }
+        catch (ex) { console.log('heart beat error - ', ex); }
+
+        setTimeout(() => {
+            this.heartBeat();
         }, AppConst.HeartBeatInterval);
     }
 
