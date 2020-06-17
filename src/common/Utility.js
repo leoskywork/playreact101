@@ -81,6 +81,24 @@ export class Utility {
 
         return alert(error);
     }
+
+    static getDaysBetween(currentDate, priorDate) {
+        //fixme, should 1 day diff when [Sun Jun 14 2020 00:55:14 GMT+0800 (China Standard Time)] 
+        //and prior to [Sat Jun 13 2020 22: 57: 54 GMT + 0800(China Standard Time)]
+        //but get 0 here, following is a temp hack
+        let daysSincePrior = Math.floor(currentDate.getTime() / 1000 / 60 / 60 / 24) - Math.floor(priorDate.getTime() / 1000 / 60 / 60 / 24);
+
+        if (daysSincePrior === 0 && currentDate.getDate() !== priorDate.getDate()) return 1;
+
+        if (daysSincePrior < 28 && currentDate.getMonth() === priorDate.getMonth()) {
+            const localDaysDiff = currentDate.getDate() - priorDate.getDate();
+            if (localDaysDiff !== daysSincePrior) {
+                return localDaysDiff;
+            }
+        }
+
+        return daysSincePrior;
+    }
 }
 
 export default Utility;

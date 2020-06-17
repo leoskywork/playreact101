@@ -9,6 +9,10 @@ export class FulfillmentArchive {
             this.time = new Date(time);
         }
     }
+
+    static fromLastFulfill(fulfillment, uid) {
+        return new FulfillmentArchive(fulfillment.uid, uid, fulfillment.lastRemark, fulfillment.lastFulfill)
+    }
 }
 
 export default FulfillmentArchive;

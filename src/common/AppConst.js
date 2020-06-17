@@ -64,6 +64,11 @@ export class AppConst {
     static get ArchivedHistory() {
         return 'archived';
     }
+
+    static get maxFulfillmentLength() {
+        return 128;
+    }
+
 }
 
 export default AppConst;

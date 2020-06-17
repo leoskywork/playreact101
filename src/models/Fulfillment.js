@@ -1,4 +1,3 @@
-import FulfillmentArchive from "./FulfillmentArchive";
 
 export class Fulfillment {
     constructor(uid, name, lastFulfill, history, createBy, createAt, lastRemark, hasArchived) {
@@ -20,37 +19,15 @@ export class Fulfillment {
 
         this.lastRemark = lastRemark;
         this.hasArchived = hasArchived;
-        this.archivedFulfillments = null;
+        // this.archivedFulfillments = null;
 
-        //for UI part
-        this.isLoadingHistoryRecords = false;
-        this.isLoadingMoreHistory = false;
-        this.showLoadMore = false;
+        //for UI part //moved to state{}
+        //this.isLoadingHistoryRecords = false;
+        //this.isLoadingMoreHistory = false;
+        //this.showLoadMore = false;
     }
 
-    get hasRecords() {
-        if (this.historyFulfillments && this.historyFulfillments.length > 0) return true;
-        if (this.lastFulfill) return true;
-        return false;
-    }
 
-    getAllRecordsDesc() {
-        const allRecords = [];
-
-        if (this.archivedFulfillments && this.archivedFulfillments.length > 0) {
-            allRecords.push(...this.archivedFulfillments);
-        }
-
-        if (this.historyFulfillments && this.historyFulfillments.length > 0) {
-            allRecords.push(...this.historyFulfillments);
-        }
-
-        if (this.lastFulfill) {
-            allRecords.push(new FulfillmentArchive(this.uid, 'mock-last-fulfill', this.lastRemark, this.lastFulfill));
-        }
-
-        return allRecords.length > 0 ? allRecords.reverse() : null;
-    }
 }
 
 export default Fulfillment;

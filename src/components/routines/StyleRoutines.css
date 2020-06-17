@@ -120,6 +120,10 @@
     color: lightgray;
 }
 
+.message-main-loading{
+    font-size: 1.4em;
+}
+
 .btn-switch{
     width: 140px;
     font-size: 1em;

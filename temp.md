@@ -18,7 +18,8 @@
   - [x] fix days ago calculation bug
   - [x] archive history fulfillments
   - [ ] increase list width when showing remark
-  - [ ] extract fulfillment history records to a component
+  - [x] extract fulfillment history records to a component
+    - [x] test show remark
 
 ## react basic
 
@@ -52,6 +53,12 @@
 - events
 - JSX - html code block
   - use 'className=' instead of 'class='
+  - syntax & api
+    - `<React.Fragment>` lets you return multiple elements in a render() method without creating additional dom element
+    - `props` pass values from parent to child component
+      - `ChildComponent.propTypes = { ... }` setup type checking for props
+      - access it by `this.props.x` in child component
+      - assign value by `<ChildComponent x = { ... }>`
 
 ## webpack
 
