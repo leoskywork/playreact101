@@ -93,7 +93,7 @@ export class FulfillmentHistory extends React.Component {
 
         this.setState({ isLoadingMoreHistory: true });
 
-        routineService.getHistoryRecords(this.state.lskLoad, this.props.fulfillment.id, AppConst.ArchivedHistory).then(result => {
+        routineService.getHistoryRecords(this.state.lskLoad, this.props.fulfillment.id, AppConst.archivedHistory).then(result => {
             this.setState({ isLoadingMoreHistory: false });
 
             if (result && result.success && result.data) {

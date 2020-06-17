@@ -17,7 +17,7 @@ export class RoutineService {
     getHistoryRecords(lsk, id, historyKind) {
         const config = this.createHttpConfig(lsk);
 
-        if (historyKind === AppConst.ArchivedHistory) {
+        if (historyKind === AppConst.archivedHistory) {
             return axios.get(`${AppConst.netApiBaseUrl}introspection/${id}?history=archived`, config)
                 .then(result => Utility.unifyResultValidator(result))
                 .then(result => Utility.unifyArrayMapper(result.data, DtoMapper.fromDtoFulfillmentArchive))

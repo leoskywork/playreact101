@@ -50,19 +50,23 @@ export class AppConst {
         };
     }
 
-    static get DefaultFulfillDay() {
+    static get defaultFulfillDay() {
         return '0';
     }
 
-    static get HeartBeatInterval() {
+    static get heartBeatInterval() {
         return 1000 * 60 * 60;
     }
 
-    static get StagedHistory() {
+    static get daysAgoRecalculateTime() {
+        return 1000 * 60 * 5;
+    }
+
+    static get stagedHistory() {
         return 'staged';
     }
 
-    static get ArchivedHistory() {
+    static get archivedHistory() {
         return 'archived';
     }
 

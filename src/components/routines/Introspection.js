@@ -13,7 +13,8 @@ export class Introspection extends React.Component {
         fulfillments: [],
         isLoadingData: false,
         customAlertPopped: false,
-        className: 'Introspection'
+        className: 'Introspection',
+        today: new Date().toLocaleDateString().replace(/\//g, '.')
     };
 
     componentDidMount() {
@@ -21,6 +22,7 @@ export class Introspection extends React.Component {
         document.querySelector('#intro-lsk-load-input').select();
 
         this.heartBeat();
+        this.recalculateDaysAgo();
     }
 
     heartBeat() {
@@ -29,7 +31,16 @@ export class Introspection extends React.Component {
 
         setTimeout(() => {
             this.heartBeat();
-        }, AppConst.HeartBeatInterval);
+        }, AppConst.heartBeatInterval);
+    }
+
+    recalculateDaysAgo() {
+        setInterval(() => {
+            this.setState({
+                today: new Date().toLocaleDateString().replace(/\//g, '.'),
+                fulfillments: this.state.fulfillments
+            });
+        }, AppConst.daysAgoRecalculateTime);
     }
 
     componentWillUnmount() {
@@ -42,7 +53,8 @@ export class Introspection extends React.Component {
             <React.Fragment>
                 <h3 className="intro-title" title={AppConst.appName + ' - ' + AppConst.versionDetails}>
                     <span>{AppConst.isDev ? AppConst.appName + ' ' : ''}INTROSPECTION</span>
-                    <span>&nbsp;&nbsp;{new Date().toLocaleDateString().replace(/\//g, '.')}</span>
+                    <span>&nbsp;&nbsp;</span>
+                    <span>{this.state.today}</span>
                 </h3>
                 <form className="intro-load-form" onSubmit={this.onSubmitLoading}>
                     <input

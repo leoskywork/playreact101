@@ -12,7 +12,7 @@ export class FulfillmentView extends React.Component {
         collapseView: true,
         isSendingLskFulfill: false,
         isLoadingHistoryRecords: false,
-        lskFulfill: AppConst.DefaultFulfillDay,
+        lskFulfill: AppConst.defaultFulfillDay,
         className: 'FulfillmentView'
     }
 
@@ -93,7 +93,7 @@ export class FulfillmentView extends React.Component {
 
         if (!willCollapsing) {
             this.setState({
-                lskFulfill: AppConst.DefaultFulfillDay
+                lskFulfill: AppConst.defaultFulfillDay
             });
 
             setTimeout(() => {
@@ -150,7 +150,7 @@ export class FulfillmentView extends React.Component {
 
         this.setState({ isLoadingHistoryRecords: true });
 
-        routineService.getHistoryRecords(lsk, this.props.fulfillment.id, AppConst.StagedHistory).then(result => {
+        routineService.getHistoryRecords(lsk, this.props.fulfillment.id, AppConst.stagedHistory).then(result => {
 
             this.setState({
                 isLoadingHistoryRecords: false,
