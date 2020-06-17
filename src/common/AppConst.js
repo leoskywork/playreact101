@@ -22,7 +22,8 @@ export class AppConst {
     static get historyVersions() {
         return [
             ['1.0.0', '2019.11.20'],
-            ['1.1.0', '2020.6.15']
+            ['1.1.0', '2020.6.15'],
+            ['1.1.1', '2020.6.17']
         ]
     }
 
