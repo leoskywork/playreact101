@@ -1,6 +1,6 @@
 
 export class Fulfillment {
-    constructor(uid, name, lastFulfill, history, createBy, createAt, lastRemark, hasArchived) {
+    constructor(uid, name, lastFulfill, history, createBy, createAt, lastRemark, hasArchived, isDeleted, deleteReason) {
         this.id = uid;
         this.name = name;
 
@@ -25,6 +25,11 @@ export class Fulfillment {
         //this.isLoadingHistoryRecords = false;
         //this.isLoadingMoreHistory = false;
         //this.showLoadMore = false;
+
+        if (isDeleted) {
+            this.isDeleted = isDeleted;
+            this.deleteReason = deleteReason;
+        }
     }
 
 

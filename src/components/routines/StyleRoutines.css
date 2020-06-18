@@ -37,7 +37,8 @@
 
 .btn-intro-fulfill {
 	padding: 8px 12px;
-	margin: 10px auto;
+    margin: 10px;
+    min-width: 40px;
 	vertical-align: middle;
 	border-style: none;
 	font-weight: bold;
@@ -48,6 +49,10 @@
 .btn-intro-fulfill.expand {
 	color: white !important;
 	background-color: gray !important;
+}
+
+.btn-intro-fulfill:focus{
+    outline: none;
 }
 
 .btn-intro-fulfill:hover {
@@ -91,8 +96,7 @@
 }
 
 .btn-intro-common{
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px;
     padding: 6px 16px;
 	border-style: none;
     font-weight: bold;

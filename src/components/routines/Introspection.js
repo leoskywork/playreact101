@@ -9,6 +9,8 @@ export class Introspection extends React.Component {
     state = {
         lskLoad: '',
         showRemark: false,
+        showDeletedRoutine: false,
+        showDeletedHistory: false,
         lskHeartbeat: 'beat',
         fulfillments: [],
         isLoadingData: false,
@@ -79,18 +81,28 @@ export class Introspection extends React.Component {
                 </form>
                 <div className="sm-align-right-wrap">
                     <br></br>
-                    {this.state.isLoadingData ? <div className='intro-loading-message message-main-loading'>Loading...</div> : null}
+                    <div className='intro-loading-message message-main-loading' hidden={!this.state.isLoadingData}>Loading...</div>
                     {this.state.fulfillments.map(f =>
                         <FulfillmentView key={f.id}
                             fulfillment={f}
                             afterHistoryLoaded={this.afterHistoryLoaded}
                             afterSubmitFulfillment={this.afterSubmitFulfillment}
                             afterMoreHistoryLoaded={this.afterMoreHistoryLoaded}
-                            showRemark={this.state.showRemark}>
+                            showRemark={this.state.showRemark}
+                            showDeletedHistory={this.state.showDeletedHistory}
+                            hidden={f.isDeleted && !this.showDeletedRoutine}>
                         </FulfillmentView>)}
-                    {this.state.fulfillments.length > 0 ? (<div>
-                        <button className="btn-intro-common btn-switch" onClick={() => this.setState({ showRemark: !this.state.showRemark })}>REMARK {this.state.showRemark ? 'ON' : 'OFF'}</button>
-                    </div>) : null}
+                    <div hidden={!this.state.fulfillments || this.state.fulfillments.length === 0}>
+                        <button className="btn-intro-common btn-switch"
+                            onClick={() => this.setState({ showRemark: !this.state.showRemark })}>REMARK {this.state.showRemark ? 'SHOW' : 'HIDE'}
+                        </button>
+                        <button className="btn-intro-common btn-switch"
+                            onClick={() => this.setState({ showDeletedRoutine: !this.state.showDeletedRoutine })}>DEL ROUTINE {this.state.showDeletedRoutine ? 'SHOW' : 'HIDE'}
+                        </button>
+                        <button className="btn-intro-common btn-switch"
+                            onClick={() => this.setState({ showDeletedHistory: !this.state.showDeletedHistory })}>DEL HISTORY {this.state.showDeletedHistory ? 'SHOW' : 'HIDE'}
+                        </button>
+                    </div>
                 </div>
             </React.Fragment>
         );

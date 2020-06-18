@@ -4,7 +4,6 @@ import AppConst from '../../common/AppConst';
 import Utility from '../../common/Utility';
 import routineService from '../../services/RoutineService';
 import PropTypes from 'prop-types'
-import FulfillmentArchive from '../../models/FulfillmentArchive';
 
 
 export class FulfillmentHistory extends React.Component {
@@ -28,26 +27,30 @@ export class FulfillmentHistory extends React.Component {
             <div>
                 <ul className="intro-fulfill-history">
                     {this.getAllRecordsDesc().map((r, i, arr) => (
-                        <li key={i} title={`loaded fulfillments ${arr.length}${r.remark ? ', ' + r.remark : ''}`}>
+                        <li key={i}
+                            hidden={r.isDeleted && !this.props.showDeletedHistory}
+                            title={`loaded fulfillments ${arr.length}${this.getTooltip(r)}`}>
                             <span className="intro-fulfill-history-item">
+                                <span hidden={!r.isDeleted}>*** </span>
                                 {this.getHistoryFulfillDescription(i, arr)}{r.remark ? (this.props.showRemark ? ', ' + r.remark : ' ...') : ''}
                             </span>
                         </li>
                     ))}
-                    {this.props.fulfillment.hasArchived && this.props.showLoadMore ?
-                        (<li key='load-more'>
-                            <button className="btn-intro-common" disabled={this.state.isLoadingMoreHistory} onClick={e => this.onLoadMoreHistory(e)}>MORE</button>
-                        </li>) : null}
+                    <li key='load-more' hidden={!this.props.showLoadMore}>
+                        <button className="btn-intro-common" disabled={this.state.isLoadingMoreHistory} onClick={e => this.onLoadMoreHistory(e)}>MORE</button>
+                    </li>
                 </ul>
             </div>
         ) : null
     }
 
+    getTooltip(history) {
+        return `${history.remark ? ', ' + history.remark : ''}${history.isDeleted && history.deleteReason ? ', del: ' + history.deleteReason : ''}`;
+    }
 
     hasRecords() {
         const fulfillment = this.props.fulfillment;
         if (fulfillment.historyFulfillments && fulfillment.historyFulfillments.length > 0) return true;
-        if (fulfillment.lastFulfill) return true;
         return false;
     }
 
@@ -63,10 +66,6 @@ export class FulfillmentHistory extends React.Component {
 
         if (staged && staged.length > 0) {
             allRecords.push(...staged);
-        }
-
-        if (fulfillment.lastFulfill) {
-            allRecords.push(FulfillmentArchive.fromLastFulfill(fulfillment, 'mock-last-fulfill'));
         }
 
         return allRecords.length > 0 ? allRecords.reverse() : null;
@@ -97,10 +96,6 @@ export class FulfillmentHistory extends React.Component {
             this.setState({ isLoadingMoreHistory: false });
 
             if (result && result.success && result.data) {
-                // const newFulfillment = { ...this.state.fulfillment };
-                // newFulfillment.archivedFulfillments = result.data;
-                // this.setState({ fulfillment: newFulfillment });
-
                 this.setState({ archivedFulfillments: result.data });
             }
 
@@ -112,6 +107,7 @@ export class FulfillmentHistory extends React.Component {
 FulfillmentHistory.propTypes = {
     showRemark: PropTypes.bool.isRequired,
     showLoadMore: PropTypes.bool.isRequired,
+    showDeletedHistory: PropTypes.bool.isRequired,
     fulfillment: PropTypes.object.isRequired,
     afterHistoryLoaded: PropTypes.func.isRequired,
     afterMoreHistoryLoaded: PropTypes.func.isRequired

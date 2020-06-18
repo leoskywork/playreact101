@@ -26,9 +26,13 @@ export class FulfillmentView extends React.Component {
 
     render() {
         return <div className="intro-fulfill-item">
-            <span title={this.props.fulfillment.lastRemark}>{this.props.fulfillment.name}</span>&nbsp;&nbsp;<span>{this.getLastFulfillDescription()}</span>
+            <span hidden={!this.props.fulfillment.isDeleted} title={this.props.fulfillment.deleteReason}>***  </span>
+            <span title={this.props.fulfillment.lastRemark}>{this.props.fulfillment.name}</span>
+            <span>&nbsp;&nbsp;</span>
+            <span>{this.getLastFulfillDescription()}</span>
             <span>&nbsp;&nbsp;</span>
             <button className={this.getFulfillExpandButtonStyle()} onClick={this.onToggleLskFulfill}>...</button>
+            <button className='btn-intro-fulfill' onClick={() => { }}>x</button>
             <form className="intro-fulfill-form" onSubmit={e => this.onSubmitFulfillment(e)} hidden={this.state.collapseView}>
                 <input
                     type="text"
@@ -45,6 +49,7 @@ export class FulfillmentView extends React.Component {
                 <FulfillmentHistory
                     showLoadMore={this.state.showLoadMore}
                     showRemark={this.props.showRemark}
+                    showDeletedHistory={this.props.showDeletedHistory}
                     fulfillment={this.props.fulfillment}
                     afterHistoryLoaded={this.props.afterHistoryLoaded}
                     afterMoreHistoryLoaded={this.afterMoreHistoryLoaded}>
@@ -154,7 +159,7 @@ export class FulfillmentView extends React.Component {
 
             this.setState({
                 isLoadingHistoryRecords: false,
-                showLoadMore: true
+                showLoadMore: result && result.success && result.data && result.data.hasArchived
             })
 
             this.props.afterHistoryLoaded(result, this.props.fulfillment.id);
@@ -171,12 +176,13 @@ export class FulfillmentView extends React.Component {
 }
 
 FulfillmentView.propTypes = {
+    // fulfillment: PropTypes.object, //optional is not chained with 'isRequired'
     showRemark: PropTypes.bool.isRequired,
     fulfillment: PropTypes.object.isRequired,
+    showDeletedHistory: PropTypes.bool.isRequired,
     afterHistoryLoaded: PropTypes.func.isRequired,
     afterSubmitFulfillment: PropTypes.func.isRequired,
     afterMoreHistoryLoaded: PropTypes.func.isRequired
-    // fulfillment: PropTypes.object, //optional is not chained with 'isRequired'
 }
 
 export default FulfillmentView;
