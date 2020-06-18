@@ -58,8 +58,8 @@ export class AppConst {
         return 1000 * 60 * 60;
     }
 
-    static get daysAgoRecalculateTime() {
-        return 1000 * 60 * 5;
+    static get dayRolloverCheckingRate() {
+        return 1000 * 60;
     }
 
     static get stagedHistory() {

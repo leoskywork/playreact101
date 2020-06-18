@@ -22,7 +22,7 @@ export class Introspection extends React.Component {
         document.querySelector('#intro-lsk-load-input').select();
 
         this.heartBeat();
-        this.recalculateDaysAgo();
+        this.checkDayRollover();
     }
 
     heartBeat() {
@@ -34,13 +34,18 @@ export class Introspection extends React.Component {
         }, AppConst.heartBeatInterval);
     }
 
-    recalculateDaysAgo() {
+    checkDayRollover() {
         setInterval(() => {
-            this.setState({
-                today: new Date().toLocaleDateString().replace(/\//g, '.'),
-                fulfillments: this.state.fulfillments
-            });
-        }, AppConst.daysAgoRecalculateTime);
+            const today = new Date().toLocaleDateString().replace(/\//g, '.');
+
+            if (today !== this.state.today) {
+                this.setState({
+                    today: today,
+                    fulfillments: this.state.fulfillments
+                });
+            }
+
+        }, AppConst.dayRolloverCheckingRate);
     }
 
     componentWillUnmount() {

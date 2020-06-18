@@ -20,6 +20,9 @@
   - [ ] increase list width when showing remark
   - [x] extract fulfillment history records to a component
     - [x] test show remark
+    - [ ] test load more
+  - [ ] support soft delete routine via popup to input a reason
+  - [ ] support soft delete fulfillment record via popup
 
 ## react basic
 
