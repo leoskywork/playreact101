@@ -134,8 +134,13 @@
     font-weight: normal;
 }
 
+/* ----- common */
+.no-bg-color{
+    background-color: inherit;
+}
 
-/* for small screen */
+
+/* ----- for small screen */
 @media (max-width: 320px) {
 	.sm-align-right-wrap {
 		text-align: right;

@@ -31,8 +31,8 @@ export class FulfillmentView extends React.Component {
             <span>&nbsp;&nbsp;</span>
             <span>{this.getLastFulfillDescription()}</span>
             <span>&nbsp;&nbsp;</span>
-            <button className={this.getFulfillExpandButtonStyle()} onClick={this.onToggleLskFulfill}>...</button>
-            <button className='btn-intro-fulfill' onClick={() => { }}>x</button>
+            <button className={this.getFulfillExpandButtonStyle()} onClick={this.onToggleLskFulfill}>{this.state.collapseView ? 'v' : '^'}</button>
+            <button className='btn-intro-fulfill no-bg-color' onClick={() => { }}>...</button>
             <form className="intro-fulfill-form" onSubmit={e => this.onSubmitFulfillment(e)} hidden={this.state.collapseView}>
                 <input
                     type="text"
