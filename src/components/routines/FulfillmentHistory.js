@@ -7,11 +7,15 @@ import PropTypes from 'prop-types'
 
 
 export class FulfillmentHistory extends React.Component {
-    state = {
-        lskLoad: '',
-        isLoadingMoreHistory: false,
-        archivedFulfillments: null,
-        className: 'FulfillmentHistory'
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            lskLoad: '',
+            isLoadingMoreHistory: false,
+            archivedFulfillments: null,
+            className: 'FulfillmentHistory'
+        }
     }
 
     componentDidMount() {

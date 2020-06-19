@@ -6,18 +6,24 @@ import AppConst from '../../common/AppConst';
 import FulfillmentView from './FulfillmentView';
 
 export class Introspection extends React.Component {
-    state = {
-        lskLoad: '',
-        showRemark: false,
-        showDeletedRoutine: false,
-        showDeletedHistory: false,
-        lskHeartbeat: 'beat',
-        fulfillments: [],
-        isLoadingData: false,
-        customAlertPopped: false,
-        className: 'Introspection',
-        today: new Date().toLocaleDateString().replace(/\//g, '.')
-    };
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            lskLoad: '',
+            showRemark: false,
+            showDeletedRoutine: false,
+            showDeletedHistory: false,
+            lskHeartbeat: 'beat',
+            fulfillments: [],
+            isLoadingData: false,
+            customAlertPopped: false,
+            className: 'Introspection',
+            today: new Date().toLocaleDateString().replace(/\//g, '.')
+        };
+    }
+
 
     componentDidMount() {
         this.props.collapseHeader(true);
@@ -31,13 +37,19 @@ export class Introspection extends React.Component {
         try { routineService.getHeartBeat(this.state.lskHeartbeat, 'user-todo'); }
         catch (ex) { console.log('heart beat error', ex); }
 
-        setTimeout(() => {
+        const timerId = setTimeout(() => {
             this.heartBeat();
         }, AppConst.heartBeatInterval);
+
+        if (!this.heartBeatTimerId) {
+            clearTimeout(this.heartBeatTimerId);
+        }
+
+        this.heartBeatTimerId = timerId;
     }
 
     checkDayRollover() {
-        setInterval(() => {
+        this.dayRolloverTimerId = setInterval(() => {
             const today = new Date().toLocaleDateString().replace(/\//g, '.');
 
             if (today !== this.state.today) {
@@ -52,6 +64,8 @@ export class Introspection extends React.Component {
 
     componentWillUnmount() {
         console.log('intro - component will unmount');
+        clearTimeout(this.heartBeatTimerId);
+        clearInterval(this.dayRolloverTimerId);
         this.props.collapseHeader(false);
     }
 
@@ -75,9 +89,7 @@ export class Introspection extends React.Component {
                         autoComplete="off"
                         maxLength="12"
                     ></input>
-                    <button type="submit" className="btn-intro-load" disabled={this.disableLoadButton()}>
-                        ENTER
-					</button>
+                    <button type="submit" className="btn-intro-load" disabled={this.disableLoadButton()}>ENTER</button>
                 </form>
                 <div className="sm-align-right-wrap">
                     <br></br>

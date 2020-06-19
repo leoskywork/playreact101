@@ -7,13 +7,17 @@ import Utility from '../../common/Utility';
 import routineService from '../../services/RoutineService';
 
 export class FulfillmentView extends React.Component {
-    state = {
-        showLoadMore: false,
-        collapseView: true,
-        isSendingLskFulfill: false,
-        isLoadingHistoryRecords: false,
-        lskFulfill: AppConst.defaultFulfillDay,
-        className: 'FulfillmentView'
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showLoadMore: false,
+            collapseView: true,
+            isSendingLskFulfill: false,
+            isLoadingHistoryRecords: false,
+            lskFulfill: AppConst.defaultFulfillDay,
+            className: 'FulfillmentView'
+        }
     }
 
     componentDidMount() {
