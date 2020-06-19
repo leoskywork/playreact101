@@ -26,13 +26,12 @@ export class FulfillmentView extends React.Component {
 
     render() {
         return <div className="intro-fulfill-item">
-            <span hidden={!this.props.fulfillment.isDeleted} title={this.props.fulfillment.deleteReason}>***  </span>
+            <span hidden={!this.props.fulfillment.isDeleted} title={this.props.fulfillment.deleteReason}>***</span>
             <span title={this.props.fulfillment.lastRemark}>{this.props.fulfillment.name}</span>
-            <span>&nbsp;&nbsp;</span>
+            <span>&nbsp;</span>
             <span>{this.getLastFulfillDescription()}</span>
-            <span>&nbsp;&nbsp;</span>
-            <button className={this.getFulfillExpandButtonStyle()} onClick={this.onToggleLskFulfill}>...</button>
-            <button className='btn-intro-fulfill no-bg-color' onClick={() => { }}>...</button>
+            <button className='btn-fulfill-op no-bg-color' onClick={() => { }}><span className="dropdown-caret"></span></button>
+            <button className={`btn-fulfill-op ${!this.state.collapseView ? 'expand' : ''}`} onClick={this.onToggleLskFulfill}>+</button>
             <form className="intro-fulfill-form" onSubmit={e => this.onSubmitFulfillment(e)} hidden={this.state.collapseView}>
                 <input
                     type="text"
@@ -80,15 +79,6 @@ export class FulfillmentView extends React.Component {
         }
 
         return '--';
-    }
-
-
-    getFulfillExpandButtonStyle() {
-        if (!this.state.collapseView) {
-            return 'btn-intro-fulfill expand';
-        }
-
-        return 'btn-intro-fulfill';
     }
 
     onToggleLskFulfill = () => {
