@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './StyleRoutines.css';
+
 import routineService from '../../services/RoutineService';
 import AppConst from '../../common/AppConst';
 import FulfillmentView from './FulfillmentView';
+import ToastBox from './controls/ToastBox';
 
 export class Introspection extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {
+        const prodState = {
             lskLoad: '',
             showRemark: false,
             showDeletedRoutine: false,
@@ -20,8 +22,22 @@ export class Introspection extends React.Component {
             isLoadingData: false,
             customAlertPopped: false,
             className: 'Introspection',
-            today: new Date().toLocaleDateString().replace(/\//g, '.')
+            today: new Date().toLocaleDateString().replace(/\//g, '.'),
+            showToast: false,
+            toastTitle: '',
+            toastMessage: ''
         };
+
+        if (AppConst.isDev) {
+            this.state = {
+                ...prodState,
+                showRemark: true,
+                showDeletedRoutine: true,
+                showDeletedHistory: true,
+            };
+        } else {
+            this.state = prodState;
+        }
     }
 
 
@@ -100,9 +116,10 @@ export class Introspection extends React.Component {
                             afterHistoryLoaded={this.afterHistoryLoaded}
                             afterSubmitFulfillment={this.afterSubmitFulfillment}
                             afterMoreHistoryLoaded={this.afterMoreHistoryLoaded}
+                            afterDeleteRoutineReturned={this.afterDeleteRoutineReturned}
                             showRemark={this.state.showRemark}
-                            showDeletedHistory={this.state.showDeletedHistory}
-                            hidden={f.isDeleted && !this.showDeletedRoutine}>
+                            showDeletedRoutine={this.state.showDeletedRoutine}
+                            showDeletedHistory={this.state.showDeletedHistory}>
                         </FulfillmentView>)}
                     <div hidden={!this.state.fulfillments || this.state.fulfillments.length === 0}>
                         <button className="btn-intro-common btn-switch"
@@ -116,6 +133,9 @@ export class Introspection extends React.Component {
                         </button>
                     </div>
                 </div>
+
+                <ToastBox show={this.state.showToast} title={this.state.toastTitle} message={this.state.toastMessage} onClose={this.onCloseToastBox}></ToastBox>
+
             </React.Fragment>
         );
     }
@@ -216,6 +236,42 @@ export class Introspection extends React.Component {
         //     }
         // }
     }
+
+    afterDeleteRoutineReturned = (result, id) => {
+        this.setState({
+            showToast: true,
+            toastTitle: 'Delete Routine',
+            toastMessage: result && result.success ? `Routine ${result.data.name} deleted.` : 'Failed to delete routine.'
+        });
+
+        if (result && result.success) {
+            let data = [...this.state.fulfillments];
+
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].id === id) {
+                    data.splice(i, 1, result.data);
+                    data.sort(this.sortByFulfillmentDateDesc);
+                    this.setState({ fulfillments: data });
+                    break;
+                }
+            }
+
+        } else {
+            if (!this.state.customAlertPopped) {
+                this.setState({ customAlertPopped: true });
+                alert('please try to refresh page if fail to delete routine again');
+            }
+        }
+    }
+
+    onCloseToastBox = () => {
+        this.setState({
+            showToast: false,
+            toastTitle: '',
+            toastMessage: ''
+        })
+    }
+
 
 
 }

@@ -49,6 +49,11 @@
     border-radius: 4px;
 }
 
+.intro-op-dropdown-menu{
+    /* border-color: darkgray; */
+    box-shadow: 0 2px 8px darkgrey;
+}
+
 /* ----- deprecated - replace by react-bootstrap */
 .btn-fulfill-op {
 	padding: 8px 12px;
@@ -145,7 +150,8 @@
     font-weight: bold;
     font-size: 0.8em;
 	color: darkslategray;
-	background-color: lightgray;
+    background-color: lightgray;
+    border-radius: 4px;
 }
 
 .btn-intro-common:hover{
@@ -193,6 +199,17 @@
     border-right: 4px solid transparent;
     border-bottom: 0 solid transparent;
     border-left: 4px solid transparent;
+}
+
+.deleted-item{
+    color: darkgray;
+    text-decoration: line-through;
+}
+
+input:disabled{
+    color: darkgray;
+    border-color: darkgray;
+    cursor: not-allowed;
 }
 
 /* ----- for small screen */

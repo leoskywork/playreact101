@@ -30,6 +30,15 @@ export class RoutineService {
             .catch(error => Utility.unifyAjaxErrorHandling(error));
     }
 
+
+    getHeartBeat(lsk, user) {
+        const config = this.createHttpConfig(lsk);
+
+        return axios.get(`${AppConst.netApiBaseUrl}introspection/heartbeat?user=${encodeURI(user)}`, config)
+            .then(result => Utility.unifyResultValidator(result, true))
+            .catch(error => Utility.unifyAjaxErrorHandling(error, true));
+    }
+
     fulfillRoutine(fulfillment, lsk, remark) {
         const config = this.createHttpConfig(lsk);
 
@@ -46,12 +55,35 @@ export class RoutineService {
             .catch(error => Utility.unifyAjaxErrorHandling(error));
     }
 
-    getHeartBeat(lsk, user) {
+    deleteRoutine(fulfillment, deleteReason, lsk) {
         const config = this.createHttpConfig(lsk);
+        // const dtoDeleteBody = {
+        //     Name: fulfillment.name,
+        //     Reason: deleteReason
+        // }
 
-        return axios.get(`${AppConst.netApiBaseUrl}introspection/heartbeat?user=${encodeURI(user)}`, config)
-            .then(result => Utility.unifyResultValidator(result, true))
-            .catch(error => Utility.unifyAjaxErrorHandling(error, true));
+        //axios doesn't support delete with body, use query paramter here
+        return axios
+            .delete(`${AppConst.netApiBaseUrl}introspection/${fulfillment.id}?reason=${encodeURI(deleteReason)}`, config)
+            .then(result => Utility.unifyResultValidator(result))
+            .then(result => Utility.unifyObjectMapper(result.data, DtoMapper.fromDtoRoutine))
+            .catch(error => Utility.unifyResultValidator(error));
+    }
+
+    deleteRoutineHistory(fulfillmentHistory, deleteReason, kind, lsk) {
+        const config = this.createHttpConfig(lsk);
+        // const dtoDeleteBody = {
+        //     Name: fulfillmentHistory.name,
+        //     Reason: deleteReason,
+        //     Kind: kind
+        // }
+        const parentId = fulfillmentHistory.parentId;
+
+        //axios doesn't support delete with body
+        return axios
+            .delete(`${AppConst.netApiBaseUrl}introspection/${parentId}/history/${fulfillmentHistory.id}?reason=${deleteReason}&kind=${kind}`, config)
+            .then(result => Utility.unifyResultValidator(result))
+            .catch(error => Utility.unifyResultValidator(error));
     }
 
     createHttpConfig(lsk) {

@@ -24,7 +24,8 @@ export class FulfillmentView extends React.Component {
             isSendingLskFulfill: false,
             isLoadingHistoryRecords: false,
             lskFulfill: AppConst.defaultFulfillDay,
-            className: 'FulfillmentView'
+            className: 'FulfillmentView',
+            isDeletingRoutine: false
         }
     }
 
@@ -37,36 +38,38 @@ export class FulfillmentView extends React.Component {
     }
 
     render() {
-        return <div className="intro-fulfill-item">
-            <span hidden={!this.props.fulfillment.isDeleted} title={this.props.fulfillment.deleteReason}>***</span>
-            <span title={this.props.fulfillment.lastRemark}>{this.props.fulfillment.name}</span>
-            <span>&nbsp;</span>
-            <span>{this.getLastFulfillDescription()}</span>
+        return <div className="intro-fulfill-item" hidden={!this.props.showDeletedRoutine && this.props.fulfillment.isDeleted}>
+            <span className={this.props.fulfillment.isDeleted ? 'deleted-item' : ''}
+                title={this.props.fulfillment.isDeleted ? `deleted due to ${this.props.fulfillment.deleteReason}` : ''}>
+                <span>{this.props.fulfillment.name}</span>
+                <span>&nbsp;</span>
+                <span>{this.getLastFulfillDescription()}</span>
+            </span>
             {/* <button className={`btn-fulfill-op ${!this.state.collapseView ? 'expand' : ''}`} onClick={this.onToggleLskFulfill}>+</button> */}
             {/* <button className='btn-fulfill-op no-bg-color' onClick={() => { }}><span className="dropdown-caret"></span></button> */}
-
-            {/* <SplitButton
-                className="btn-fulfill-op-dropdown"
-                id={`fulfill-op-${this.props.fulfillment.id}`}
-                variant="secondary"
-                onClick={this.onToggleLskFulfill} title="+">
-                <ActionDropdown fulfillment={this.props.fulfillment}></ActionDropdown>
-            </SplitButton> */}
 
             {/* need more control of the visual appearance, 'id' for DropdownToggle is necessary */}
             <Dropdown as={ButtonGroup} className="btn-fulfill-op-container">
                 <Button
                     className={`btn-fulfill-op-add ${this.state.collapseView ? '' : 'expand'}`}
                     onClick={this.onToggleLskFulfill}
-                    variant="secondary">+</Button>
-                <DropdownToggle split variant="secondary" id={`fulfill-op-${this.props.fulfillment.id}`} />
-                <DropdownMenu>
-                    <ActionDropdown fulfillment={this.props.fulfillment}></ActionDropdown>
+                    variant="secondary">+
+                </Button>
+                <DropdownToggle split variant="secondary" id={`fulfill-op-${this.props.fulfillment.id}`} disabled={this.shouldDisableEdit()} />
+                <DropdownMenu disabled={this.state.isDeletingRoutine} className="intro-op-dropdown-menu">
+                    <ActionDropdown
+                        beforeCallDeleteRoutine={this.beforeCallDeleteRoutine}
+                        afterDeleteRoutineReturned={this.afterDeleteRoutineReturned}
+                        fulfillment={this.props.fulfillment}>
+                    </ActionDropdown>
                 </DropdownMenu>
             </Dropdown>
 
 
-            <form className="intro-fulfill-form" onSubmit={e => this.onSubmitFulfillment(e)} hidden={this.state.collapseView}>
+            <form className="intro-fulfill-form"
+                onSubmit={e => this.onSubmitFulfillment(e)}
+                hidden={this.state.collapseView}
+                disabled={this.shouldDisableEdit()}>
                 <input
                     type="text"
                     id={'intro-lsk-fulfill-' + this.props.fulfillment.id}
@@ -74,10 +77,9 @@ export class FulfillmentView extends React.Component {
                     value={this.state.lskFulfill}
                     onChange={this.onLskArgumentChange}
                     placeholder="days; remark"
-                    disabled={this.state.isSendingLskFulfill}
-                    autoComplete="off"
-                ></input>
-                <button type="submit" className="btn-intro-fulfill-send" disabled={this.disableSendButton()}>SEND</button>
+                    disabled={this.shouldDisableEdit()}
+                    autoComplete="off"></input>
+                <button type="submit" className="btn-intro-fulfill-send" disabled={this.shouldDisableSendButton()}>SEND</button>
                 <div className="intro-loading-message" hidden={!this.state.isLoadingHistoryRecords}>Loading history...</div>
                 <FulfillmentHistory
                     showLoadMore={this.state.showLoadMore}
@@ -89,6 +91,14 @@ export class FulfillmentView extends React.Component {
                 </FulfillmentHistory>
             </form>
         </div>
+    }
+
+    shouldDisableEdit() {
+        return this.state.isDeletingRoutine || this.props.fulfillment.isDeleted || this.state.isSendingLskFulfill;
+    }
+
+    shouldDisableSendButton() {
+        return !this.state.lskFulfill || this.shouldDisableEdit();
     }
 
     onLskArgumentChange = e => {
@@ -131,10 +141,6 @@ export class FulfillmentView extends React.Component {
 
             this.getHistoryRecords(this.state.lskLoad, 'toggle-fulfill-button');
         }
-    }
-
-    disableSendButton() {
-        return !this.state.lskFulfill || this.state.isSendingLskFulfill;
     }
 
     onSubmitFulfillment = (e) => {
@@ -197,16 +203,28 @@ export class FulfillmentView extends React.Component {
 
         this.props.afterMoreHistoryLoaded(result, this.props.fulfillment.id);
     }
+
+    beforeCallDeleteRoutine = () => {
+        this.setState({ isDeletingRoutine: true });
+    }
+
+    afterDeleteRoutineReturned = (result, id) => {
+        this.setState({ isDeletingRoutine: false });
+
+        this.props.afterDeleteRoutineReturned(result, id);
+    }
 }
 
 FulfillmentView.propTypes = {
     // fulfillment: PropTypes.object, //optional is not chained with 'isRequired'
-    showRemark: PropTypes.bool.isRequired,
     fulfillment: PropTypes.object.isRequired,
+    showRemark: PropTypes.bool.isRequired,
+    showDeletedRoutine: PropTypes.bool.isRequired,
     showDeletedHistory: PropTypes.bool.isRequired,
     afterHistoryLoaded: PropTypes.func.isRequired,
     afterSubmitFulfillment: PropTypes.func.isRequired,
-    afterMoreHistoryLoaded: PropTypes.func.isRequired
+    afterMoreHistoryLoaded: PropTypes.func.isRequired,
+    afterDeleteRoutineReturned: PropTypes.func.isRequired
 }
 
 export default FulfillmentView;

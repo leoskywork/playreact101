@@ -74,6 +74,14 @@ export class AppConst {
         return 128;
     }
 
+    static get comma() {
+        return ";";
+    }
+
+    static get commaCN() {
+        return "；";
+    }
+
 }
 
 export default AppConst;

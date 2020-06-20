@@ -27,25 +27,22 @@ export class FulfillmentHistory extends React.Component {
     }
 
     render() {
-        return this.hasRecords() ? (
-            <div>
-                <ul className="intro-fulfill-history">
-                    {this.getAllRecordsDesc().map((r, i, arr) => (
-                        <li key={i}
-                            hidden={r.isDeleted && !this.props.showDeletedHistory}
-                            title={`loaded fulfillments ${arr.length}${this.getTooltip(r)}`}>
-                            <span className="intro-fulfill-history-item">
-                                <span hidden={!r.isDeleted}>*** </span>
-                                {this.getHistoryFulfillDescription(i, arr)}{r.remark ? (this.props.showRemark ? ', ' + r.remark : ' ...') : ''}
-                            </span>
-                        </li>
-                    ))}
-                    <li key='load-more' hidden={!this.props.showLoadMore}>
-                        <button className="btn-intro-common" disabled={this.state.isLoadingMoreHistory} onClick={e => this.onLoadMoreHistory(e)}>MORE</button>
-                    </li>
-                </ul>
-            </div>
-        ) : null
+        return this.hasRecords() && (<div>
+            <ul className="intro-fulfill-history">
+                {this.getAllRecordsDesc().map((r, i, arr) => (
+                    <li key={i}
+                        hidden={r.isDeleted && !this.props.showDeletedHistory}
+                        title={`loaded fulfillments ${arr.length}${this.getTooltip(r)}`}>
+                        <span className="intro-fulfill-history-item">
+                            <span hidden={!r.isDeleted}>*** </span>
+                            {this.getHistoryFulfillDescription(i, arr)}{r.remark ? (this.props.showRemark ? ', ' + r.remark : ' ...') : ''}
+                        </span>
+                    </li>))}
+                <li key='load-more' hidden={!this.props.showLoadMore}>
+                    <button className="btn-intro-common" disabled={this.state.isLoadingMoreHistory} onClick={e => this.onLoadMoreHistory(e)}>MORE</button>
+                </li>
+            </ul>
+        </div>)
     }
 
     getTooltip(history) {
