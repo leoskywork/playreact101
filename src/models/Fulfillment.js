@@ -7,19 +7,18 @@ export class Fulfillment {
         if (lastFulfill) {
             this._rawLastFulfill = lastFulfill; //is this necessary??
             this.lastFulfill = new Date(lastFulfill);
+            this.lastRemark = lastRemark;
         }
 
-        this.historyFulfillments = history;
-        this.createBy = createBy;
 
+        this.createBy = createBy;
         if (createAt) {
             this._rawCreateAt = createAt; //is this necessary??S
             this.createAt = new Date(createAt);
         }
 
-        this.lastRemark = lastRemark;
+        this.historyFulfillments = history;
         this.hasArchived = hasArchived;
-        // this.archivedFulfillments = null;
 
         //for UI part //moved to state{}
         //this.isLoadingHistoryRecords = false;

@@ -39,28 +39,32 @@ export class Utility {
         return axiosResponse;
     }
 
-    static unifyArrayMapper(apiResult, itemMapper) {
+    static unifyArrayMapper(apiResultData, itemMapper) {
         if (itemMapper == null) {
-            return apiResult;
+            return apiResultData;
         }
 
-        if (apiResult && apiResult.success && Array.isArray(apiResult.data)) {
-            apiResult.data = apiResult.data.map(t => itemMapper(t));
+        if (apiResultData && apiResultData.success && Array.isArray(apiResultData.data)) {
+            apiResultData.data = apiResultData.data.map(t => itemMapper(t));
         }
 
-        return apiResult;
+        return apiResultData;
     }
 
-    static unifyObjectMapper(apiResult, itemMapper) {
+    static unifyObjectMapper(apiResultData, itemMapper) {
         if (itemMapper == null) {
-            return apiResult;
+            return apiResultData;
         }
 
-        if (apiResult && apiResult.success && apiResult.data) {
-            apiResult.data = itemMapper(apiResult.data);
+        if (apiResultData && apiResultData.success && apiResultData.data) {
+            apiResultData.data = itemMapper(apiResultData.data);
         }
 
-        return apiResult;
+        return apiResultData;
+    }
+
+    static unifyDirectDataMapper(apiResult) {
+        return apiResult.data;
     }
 
     static unifyAjaxErrorHandling(error, suppressAlert = false) {

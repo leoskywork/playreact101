@@ -1,7 +1,7 @@
 export class FulfillmentArchive {
     constructor(parentUid, uid, remark, time, isDeleted, deleteReason) {
-        this.parentUid = parentUid;
-        this.uid = uid;
+        this.parentId = parentUid;
+        this.id = uid;
         this.remark = remark;
 
         if (time) {

@@ -53,9 +53,9 @@ export class FulfillmentView extends React.Component {
                 <Button
                     className={`btn-fulfill-op-add ${this.state.collapseView ? '' : 'expand'}`}
                     onClick={this.onToggleLskFulfill}
-                    variant="secondary">+
+                    variant="outline-secondary">+
                 </Button>
-                <DropdownToggle split variant="secondary" id={`fulfill-op-${this.props.fulfillment.id}`} disabled={this.shouldDisableEdit()} />
+                <DropdownToggle split variant="outline-secondary" id={`fulfill-op-${this.props.fulfillment.id}`} disabled={this.shouldDisableEdit()} />
                 <DropdownMenu disabled={this.state.isDeletingRoutine} className="intro-op-dropdown-menu">
                     <ActionDropdown
                         beforeCallDeleteRoutine={this.beforeCallDeleteRoutine}
@@ -87,7 +87,8 @@ export class FulfillmentView extends React.Component {
                     showDeletedHistory={this.props.showDeletedHistory}
                     fulfillment={this.props.fulfillment}
                     afterHistoryLoaded={this.props.afterHistoryLoaded}
-                    afterMoreHistoryLoaded={this.afterMoreHistoryLoaded}>
+                    afterMoreHistoryLoaded={this.afterMoreHistoryLoaded}
+                    afterDeleteHistoryReturned={this.afterDeleteHistoryReturned}>
                 </FulfillmentHistory>
             </form>
         </div>
@@ -108,21 +109,30 @@ export class FulfillmentView extends React.Component {
     };
 
     getLastFulfillDescription() {
-        if (this.props.fulfillment.lastFulfill) {
-            //console.log(fulfillment.lastFulfill.getTime(), fulfillment.name);
-            const daysAgo = Utility.getDaysBetween(new Date(), this.props.fulfillment.lastFulfill);
+        let lastFulfill = null;
 
-            if (daysAgo === 0) {
-                return '(today)';
-            } else if (daysAgo === 1) {
-                return '(yesterday)';
-            } else {
-                // date.toLocaleDateString().split('/').join('.');
-                return `(${daysAgo > 99 ? '99+' : daysAgo} days)`
+        if (this.props.fulfillment.historyFulfillments) {
+            for (let i = this.props.fulfillment.historyFulfillments.length - 1; i >= 0; i--) {
+                if (!this.props.fulfillment.historyFulfillments[i].isDeleted) {
+                    lastFulfill = this.props.fulfillment.historyFulfillments[i].time;
+                    break;
+                }
             }
+        } else {
+            lastFulfill = this.props.fulfillment.lastFulfill;
         }
 
-        return '--';
+        if (!lastFulfill) return '--';
+
+        const daysAgo = Utility.getDaysBetween(new Date(), lastFulfill);
+
+        if (daysAgo === 0) {
+            return '(today)';
+        } else if (daysAgo === 1) {
+            return '(yesterday)';
+        } else {
+            return `(${daysAgo > 99 ? '99+' : daysAgo} days)`
+        }
     }
 
     onToggleLskFulfill = () => {
@@ -208,10 +218,23 @@ export class FulfillmentView extends React.Component {
         this.setState({ isDeletingRoutine: true });
     }
 
-    afterDeleteRoutineReturned = (result, id) => {
-        this.setState({ isDeletingRoutine: false });
+    afterDeleteRoutineReturned = (result, routine) => {
+        this.setState({
+            isDeletingRoutine: false,
+            collapseView: true
+        });
 
-        this.props.afterDeleteRoutineReturned(result, id);
+        this.props.afterDeleteRoutineReturned(result, routine);
+    }
+
+    afterDeleteHistoryReturned = (result, history) => {
+        //force to collapse view, so it will reload data next time it expands, not efficient way
+        //but do it this way now, alternatively, just return the deleted history and merge it with existing data
+        if (result && result.success) {
+            this.setState({ collapseView: true });
+        }
+
+        this.props.afterDeleteHistoryReturned(result, history);
     }
 }
 
@@ -224,7 +247,8 @@ FulfillmentView.propTypes = {
     afterHistoryLoaded: PropTypes.func.isRequired,
     afterSubmitFulfillment: PropTypes.func.isRequired,
     afterMoreHistoryLoaded: PropTypes.func.isRequired,
-    afterDeleteRoutineReturned: PropTypes.func.isRequired
+    afterDeleteRoutineReturned: PropTypes.func.isRequired,
+    afterDeleteHistoryReturned: PropTypes.func.isRequired
 }
 
 export default FulfillmentView;

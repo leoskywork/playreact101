@@ -25,7 +25,8 @@ export class Introspection extends React.Component {
             today: new Date().toLocaleDateString().replace(/\//g, '.'),
             showToast: false,
             toastTitle: '',
-            toastMessage: ''
+            toastMessage: '',
+            toastSeverity: 'default'
         };
 
         if (AppConst.isDev) {
@@ -117,13 +118,14 @@ export class Introspection extends React.Component {
                             afterSubmitFulfillment={this.afterSubmitFulfillment}
                             afterMoreHistoryLoaded={this.afterMoreHistoryLoaded}
                             afterDeleteRoutineReturned={this.afterDeleteRoutineReturned}
+                            afterDeleteHistoryReturned={this.afterDeleteHistoryReturned}
                             showRemark={this.state.showRemark}
                             showDeletedRoutine={this.state.showDeletedRoutine}
                             showDeletedHistory={this.state.showDeletedHistory}>
                         </FulfillmentView>)}
                     <div hidden={!this.state.fulfillments || this.state.fulfillments.length === 0}>
                         <button className="btn-intro-common btn-switch"
-                            onClick={() => this.setState({ showRemark: !this.state.showRemark })}>REMARK {this.state.showRemark ? 'SHOW' : 'HIDE'}
+                            onClick={() => this.setState({ showRemark: !this.state.showRemark })}>REMARKS {this.state.showRemark ? 'SHOW' : 'HIDE'}
                         </button>
                         <button className="btn-intro-common btn-switch"
                             onClick={() => this.setState({ showDeletedRoutine: !this.state.showDeletedRoutine })}>DEL ROUTINE {this.state.showDeletedRoutine ? 'SHOW' : 'HIDE'}
@@ -134,7 +136,12 @@ export class Introspection extends React.Component {
                     </div>
                 </div>
 
-                <ToastBox show={this.state.showToast} title={this.state.toastTitle} message={this.state.toastMessage} onClose={this.onCloseToastBox}></ToastBox>
+                <ToastBox show={this.state.showToast}
+                    title={this.state.toastTitle}
+                    message={this.state.toastMessage}
+                    severity={this.state.toastSeverity}
+                    onClose={this.onCloseToastBox}>
+                </ToastBox>
 
             </React.Fragment>
         );
@@ -237,18 +244,19 @@ export class Introspection extends React.Component {
         // }
     }
 
-    afterDeleteRoutineReturned = (result, id) => {
+    afterDeleteRoutineReturned = (result, routine) => {
         this.setState({
             showToast: true,
             toastTitle: 'Delete Routine',
-            toastMessage: result && result.success ? `Routine ${result.data.name} deleted.` : 'Failed to delete routine.'
+            toastMessage: result && result.success ? `Routine ${routine.name} deleted` : `Failed to delete routine ${routine.name}`,
+            toastSeverity: result && result.success ? 'success' : 'fail'
         });
 
         if (result && result.success) {
             let data = [...this.state.fulfillments];
 
             for (let i = 0; i < data.length; i++) {
-                if (data[i].id === id) {
+                if (data[i].id === routine.id) {
                     data.splice(i, 1, result.data);
                     data.sort(this.sortByFulfillmentDateDesc);
                     this.setState({ fulfillments: data });
@@ -264,11 +272,38 @@ export class Introspection extends React.Component {
         }
     }
 
+    afterDeleteHistoryReturned = (result, history) => {
+        const formattedTime = history.time.toLocaleDateString().split('/').join('.');
+        const routine = this.state.fulfillments.find(f => f.id === history.parentId);
+
+        if (result && result.success) {
+            //should do this via setState(), but so many cascading changes, so just reset the entire data array
+            history.isDeleted = true;
+
+            this.setState({
+                showToast: true,
+                toastTitle: 'Delete History',
+                toastMessage: `History record ${formattedTime} of ${routine.name} deleted`,
+                toastSeverity: 'success',
+                fulfillments: [...this.state.fulfillments]
+            });
+
+        } else {
+            this.setState({
+                showToast: true,
+                toastTitle: 'Delete History',
+                toastMessage: `Failed to delete history record of ${routine.name}`,
+                toastSeverity: 'fail'
+            });
+        }
+    }
+
     onCloseToastBox = () => {
         this.setState({
             showToast: false,
             toastTitle: '',
-            toastMessage: ''
+            toastMessage: '',
+            toastSeverity: 'default'
         })
     }
 

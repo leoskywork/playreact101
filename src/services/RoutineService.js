@@ -57,33 +57,25 @@ export class RoutineService {
 
     deleteRoutine(fulfillment, deleteReason, lsk) {
         const config = this.createHttpConfig(lsk);
-        // const dtoDeleteBody = {
-        //     Name: fulfillment.name,
-        //     Reason: deleteReason
-        // }
 
         //axios doesn't support delete with body, use query paramter here
         return axios
             .delete(`${AppConst.netApiBaseUrl}introspection/${fulfillment.id}?reason=${encodeURI(deleteReason)}`, config)
             .then(result => Utility.unifyResultValidator(result))
             .then(result => Utility.unifyObjectMapper(result.data, DtoMapper.fromDtoRoutine))
-            .catch(error => Utility.unifyResultValidator(error));
+            .catch(error => Utility.unifyAjaxErrorHandling(error));
     }
 
     deleteRoutineHistory(fulfillmentHistory, deleteReason, kind, lsk) {
         const config = this.createHttpConfig(lsk);
-        // const dtoDeleteBody = {
-        //     Name: fulfillmentHistory.name,
-        //     Reason: deleteReason,
-        //     Kind: kind
-        // }
         const parentId = fulfillmentHistory.parentId;
 
         //axios doesn't support delete with body
         return axios
             .delete(`${AppConst.netApiBaseUrl}introspection/${parentId}/history/${fulfillmentHistory.id}?reason=${deleteReason}&kind=${kind}`, config)
             .then(result => Utility.unifyResultValidator(result))
-            .catch(error => Utility.unifyResultValidator(error));
+            .then(result => Utility.unifyDirectDataMapper(result))
+            .catch(error => Utility.unifyAjaxErrorHandling(error));
     }
 
     createHttpConfig(lsk) {

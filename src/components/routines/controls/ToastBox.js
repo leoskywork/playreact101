@@ -12,6 +12,22 @@ export class ToastBox extends React.Component {
         this.state = {
             internalShow: true
         }
+
+        this.severityMap = {
+            success: {
+                css: 'success',
+                title: 'Success'
+            },
+            fail: {
+                css: 'fail',
+                title: 'Error'
+            },
+            default: {
+                css: '',
+                title: ''
+            }
+
+        }
     }
 
     componentDidMount() {
@@ -26,11 +42,11 @@ export class ToastBox extends React.Component {
         return <Toast
             onClose={this.onClose}
             show={this.props.show && this.state.internalShow}
-            delay={5 * 1000}
+            delay={10 * 1000}
             autohide
-            className="toast-box">
+            className={`toast-box ${this.severityMap[this.props.severity].css || ''}`}>
             <ToastHeader>
-                <strong className="mr-auto">{this.props.title || 'Notification'}</strong>
+                <strong className="mr-auto">{this.props.title || 'Notification'} {this.severityMap[this.props.severity].title}</strong>
                 <small>just now</small>
             </ToastHeader>
             <ToastBody>
@@ -41,7 +57,7 @@ export class ToastBox extends React.Component {
 
     onClose = () => {
         // this.setState({ internalShow: false });
-        console.log('toast box onClose', this.props.onClose);
+        console.log('toast box onClose', this.props.title, this.props.message);
 
         this.props.onClose();
     }
@@ -51,7 +67,8 @@ ToastBox.propTypes = {
     show: PropTypes.bool.isRequired,
     title: PropTypes.string,
     message: PropTypes.string.isRequired,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    severity: PropTypes.string
 }
 
 export default ToastBox;
