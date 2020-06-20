@@ -74,7 +74,7 @@ export class Introspection extends React.Component {
             <React.Fragment>
                 <h3 className="intro-title" title={AppConst.appName + ' - ' + AppConst.versionDetails}>
                     <span>{AppConst.isDev ? AppConst.appName + ' ' : ''}INTROSPECTION</span>
-                    <span>&nbsp;&nbsp;</span>
+                    <span>&nbsp;</span>
                     <span>{this.state.today}</span>
                 </h3>
                 <form className="intro-load-form" onSubmit={this.onSubmitLoading}>

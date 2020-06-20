@@ -1,7 +1,8 @@
 .intro-title {
 	background-color: darkslategray;
 	color: lightgray;
-	padding: 20px 0;
+    padding: 20px 0;
+    text-transform: uppercase;
 }
 
 .intro-load-form {
@@ -11,12 +12,24 @@
 #intro-lsk-load-input {
 	padding: 6px 10px;
 	margin: 0 10px 20px 10px;
-	font-size: 1.2em;
+    /* font-size: 1.2em; */
+    border-radius: 6px;
+    border-width: 1px;
 }
 
 .btn-intro-load {
-	padding: 6px 10px;
-	font-size: 1.2em;
+	padding: 8px 16px;
+    /* font-size: 1.2em; */
+    border-style: none;
+    /* font-weight: bold; */
+    color: darkslategray;
+    background-color: silver;
+    border-radius: 4px;
+}
+
+.btn-intro-load[disabled]{
+    color: gray;
+    background-color: lightgray;;
 }
 
 .intro-fulfill-item {
@@ -32,9 +45,11 @@
 	padding: 4px 10px;
 	font-size: 1em;
 	margin: 10px 0;
-	width: 260px;
+    width: 260px;
+    border-radius: 4px;
 }
 
+/* ----- deprecated - replace by react-bootstrap */
 .btn-fulfill-op {
 	padding: 8px 12px;
     margin: 10px 5px;
@@ -64,6 +79,28 @@
     margin-left: 0;
     margin-right: 0;
 }
+/* --- */
+
+.btn-fulfill-op-dropdown{
+    margin: 10px 0 10px 10px;
+}
+/* ----- end */
+
+.btn-fulfill-op-container{
+    margin: 10px 0 10px 10px;
+}
+
+.btn-fulfill-op-add{
+    padding-top: 2px;
+    padding-bottom: 8px;
+}
+
+.btn-fulfill-op-add.expand{
+    color: #fff;
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
 
 .btn-intro-fulfill-send {
 	padding: 4px 10px;
@@ -71,7 +108,8 @@
 	font-weight: bold;
 	font-size: 1em;
 	color: darkslategray;
-	background-color: #d3d3d3;
+    background-color: #d3d3d3;
+    border-radius: 4px;
 }
 
 .btn-intro-fulfill-send:disabled {

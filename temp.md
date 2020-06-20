@@ -20,9 +20,11 @@
   - [ ] increase list width when showing remark
   - [x] extract fulfillment history records to a component
     - [x] test show remark
-    - [ ] test load more
+    - [x] test load more
   - [ ] support soft delete routine via popup to input a reason
   - [ ] support soft delete fulfillment record via popup
+  - [ ] support recursive routines
+    - [ ] warning when scheduled days approach
 
 ## react basic
 
@@ -37,6 +39,11 @@
   - component can have state which is an object that determines how that component renders and behaves
   - we can also have 'application level' state by using a state manager like 'Redux' or reacts own 'context api'
     - which can be used to share data between components
+  - change state data(non primary types, i.e object, array, classes) without mutation
+    - do not do this `const player = {score:1, name:'Jeff'}; player.score = 2;`
+    - do do this     `const player = {score:1, name:'Jeff'}; const newPlayer = Object.assign({}, player, {score:2});`
+      - or           `const newPlayer = {...player, score:2};`
+      - for array    `const newArray = old.slice()`
 - uses Webpack but needs no configuration form you
 - comes bundled with a dev server with hot reload
 - prerequisite
@@ -54,8 +61,9 @@
   - componentDidMount()
     - do ajax call inner this func???
 - events
+  - define event callback with arrow function so it gets proper `this` (which is the component) inner it.
 - JSX - html code block
-  - use 'className=' instead of 'class='
+  - use `className=` instead of `class=`
   - syntax & api
     - `<React.Fragment>` lets you return multiple elements in a render() method without creating additional dom element
     - `props` pass values from parent to child component
@@ -166,6 +174,16 @@ scripts.build: "webpack --mode production"
 # npm run eject
 
 ```
+
+## 3rd party packages
+
+### react-bootstrap
+
+- setup
+  - install `npm install react-bootstrap bootstrap`
+  - include css in App.js `import 'bootstrap/dist/css/bootstrap.min.css';`
+  - import in component `import Button from 'react-bootstrap/Button'`
+    - import individual components like above rather than the entire library, it only pulls components that you use, thus reduce traffic sent to client
 
 ## error fix
 

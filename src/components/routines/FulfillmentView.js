@@ -1,10 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+// import SplitButton from 'react-bootstrap/SplitButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownToggle from 'react-bootstrap/DropdownToggle';
+import DropdownMenu from 'react-bootstrap/DropdownMenu';
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+
 import './StyleRoutines.css';
 import FulfillmentHistory from './FulfillmentHistory';
 import AppConst from '../../common/AppConst';
-import PropTypes from 'prop-types';
 import Utility from '../../common/Utility';
 import routineService from '../../services/RoutineService';
+import ActionDropdown from './controls/ActionDropdown';
 
 export class FulfillmentView extends React.Component {
     constructor(props) {
@@ -34,8 +42,30 @@ export class FulfillmentView extends React.Component {
             <span title={this.props.fulfillment.lastRemark}>{this.props.fulfillment.name}</span>
             <span>&nbsp;</span>
             <span>{this.getLastFulfillDescription()}</span>
-            <button className='btn-fulfill-op no-bg-color' onClick={() => { }}><span className="dropdown-caret"></span></button>
-            <button className={`btn-fulfill-op ${!this.state.collapseView ? 'expand' : ''}`} onClick={this.onToggleLskFulfill}>+</button>
+            {/* <button className={`btn-fulfill-op ${!this.state.collapseView ? 'expand' : ''}`} onClick={this.onToggleLskFulfill}>+</button> */}
+            {/* <button className='btn-fulfill-op no-bg-color' onClick={() => { }}><span className="dropdown-caret"></span></button> */}
+
+            {/* <SplitButton
+                className="btn-fulfill-op-dropdown"
+                id={`fulfill-op-${this.props.fulfillment.id}`}
+                variant="secondary"
+                onClick={this.onToggleLskFulfill} title="+">
+                <ActionDropdown fulfillment={this.props.fulfillment}></ActionDropdown>
+            </SplitButton> */}
+
+            {/* need more control of the visual appearance, 'id' for DropdownToggle is necessary */}
+            <Dropdown as={ButtonGroup} className="btn-fulfill-op-container">
+                <Button
+                    className={`btn-fulfill-op-add ${this.state.collapseView ? '' : 'expand'}`}
+                    onClick={this.onToggleLskFulfill}
+                    variant="secondary">+</Button>
+                <DropdownToggle split variant="secondary" id={`fulfill-op-${this.props.fulfillment.id}`} />
+                <DropdownMenu>
+                    <ActionDropdown fulfillment={this.props.fulfillment}></ActionDropdown>
+                </DropdownMenu>
+            </Dropdown>
+
+
             <form className="intro-fulfill-form" onSubmit={e => this.onSubmitFulfillment(e)} hidden={this.state.collapseView}>
                 <input
                     type="text"
@@ -78,7 +108,7 @@ export class FulfillmentView extends React.Component {
                 return '(yesterday)';
             } else {
                 // date.toLocaleDateString().split('/').join('.');
-                return `(${daysAgo > 99 ? '99+' : daysAgo} days ago)`
+                return `(${daysAgo > 99 ? '99+' : daysAgo} days)`
             }
         }
 
