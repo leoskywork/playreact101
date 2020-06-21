@@ -100,11 +100,13 @@
     padding-bottom: 8px;
     border-color: lightgray;
     border-right: none;
+    border: none;
 }
 
 .btn-fulfill-op-add + button{
     border-color: lightgray;
     border-left: none;
+    border: none;
 }
 
 .btn-fulfill-op-add.expand{

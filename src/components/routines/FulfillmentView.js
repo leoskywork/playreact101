@@ -122,7 +122,12 @@ export class FulfillmentView extends React.Component {
             lastFulfill = this.props.fulfillment.lastFulfill;
         }
 
-        if (!lastFulfill) return '--';
+        if (!lastFulfill) {
+            if (this.props.fulfillment.hasArchived) return '(since archived)'
+
+            return '—';
+        }
+
 
         const daysAgo = Utility.getDaysBetween(new Date(), lastFulfill);
 
