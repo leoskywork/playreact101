@@ -125,13 +125,13 @@ export class Introspection extends React.Component {
                         </FulfillmentView>)}
                     <div hidden={!this.state.fulfillments || this.state.fulfillments.length === 0}>
                         <button className="btn-intro-common btn-switch"
-                            onClick={() => this.setState({ showRemark: !this.state.showRemark })}>REMARKS {this.state.showRemark ? 'SHOW' : 'HIDE'}
+                            onClick={() => this.setState({ showRemark: !this.state.showRemark })}>{this.state.showRemark ? 'SHOW' : 'HIDE'} REMARKS
                         </button>
                         <button className="btn-intro-common btn-switch"
-                            onClick={() => this.setState({ showDeletedRoutine: !this.state.showDeletedRoutine })}>DEL ROUTINE {this.state.showDeletedRoutine ? 'SHOW' : 'HIDE'}
+                            onClick={() => this.setState({ showDeletedRoutine: !this.state.showDeletedRoutine })}>{this.state.showDeletedRoutine ? 'SHOW' : 'HIDE'} DELETED ROUTINE
                         </button>
                         <button className="btn-intro-common btn-switch"
-                            onClick={() => this.setState({ showDeletedHistory: !this.state.showDeletedHistory })}>DEL HISTORY {this.state.showDeletedHistory ? 'SHOW' : 'HIDE'}
+                            onClick={() => this.setState({ showDeletedHistory: !this.state.showDeletedHistory })}>{this.state.showDeletedHistory ? 'SHOW' : 'HIDE'} DELETED HISTORY
                         </button>
                     </div>
                 </div>

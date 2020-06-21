@@ -39,11 +39,12 @@ export class FulfillmentView extends React.Component {
 
     render() {
         return <div className="intro-fulfill-item" hidden={!this.props.showDeletedRoutine && this.props.fulfillment.isDeleted}>
-            <span className={this.props.fulfillment.isDeleted ? 'deleted-item' : ''}
-                title={this.props.fulfillment.isDeleted ? `deleted due to ${this.props.fulfillment.deleteReason}` : ''}>
+            <span className={this.props.fulfillment.isDeleted && 'deleted-item'}
+                title={this.props.fulfillment.isDeleted && `deleted reason: ${this.props.fulfillment.deleteReason}`}>
                 <span>{this.props.fulfillment.name}</span>
                 <span>&nbsp;</span>
                 <span>{this.getLastFulfillDescription()}</span>
+                <span>{this.props.fulfillment.isDeleted && !!this.props.fulfillment.deleteReason && `, del reason: ${this.props.fulfillment.deleteReason}`}</span>
             </span>
             {/* <button className={`btn-fulfill-op ${!this.state.collapseView ? 'expand' : ''}`} onClick={this.onToggleLskFulfill}>+</button> */}
             {/* <button className='btn-fulfill-op no-bg-color' onClick={() => { }}><span className="dropdown-caret"></span></button> */}

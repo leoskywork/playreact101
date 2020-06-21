@@ -50,10 +50,10 @@ export class FulfillmentHistory extends React.Component {
                     <li key={i}
                         hidden={r.isDeleted && !this.props.showDeletedHistory}
                         onMouseEnter={() => this.setState({ currentHistory: r })}
-                        // onMouseLeave={() => this.setState({ currentHistory: null })}
                         title={`loaded fulfillments ${arr.length}${this.getTooltip(r)}`}>
-                        <span className={`intro-fulfill-history-item ${r.isDeleted ? 'deleted-item' : ''}`}>
-                            {this.getHistoryFulfillDescription(i, arr)}{r.remark ? (this.props.showRemark ? ', ' + r.remark : ' ...') : ''}
+                        <span className={`intro-fulfill-history-item ${r.isDeleted && 'deleted-item'}`}>
+                            {this.getHistoryFulfillDescription(i, arr)}{r.remark && (this.props.showRemark ? `,  ${r.remark}` : ' ...')}
+                            {r.isDeleted && this.props.showDeletedHistory && !!r.deleteReason && `, del reason: ${r.deleteReason}`}
                         </span>
                         {!this.props.fulfillment.isDeleted && !r.isDeleted && (
                             <Button

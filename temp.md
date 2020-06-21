@@ -21,10 +21,11 @@
   - [x] extract fulfillment history records to a component
     - [x] test show remark
     - [x] test load more
-  - [ ] support soft delete routine via popup to input a reason
-  - [ ] support soft delete fulfillment record via popup
+  - [x] support soft delete routine via popup to input a reason
+  - [x] support soft delete fulfillment record via popup
   - [ ] support recursive routines
     - [ ] warning when scheduled days approach
+  - [ ] impl backend with node.js
 
 ## react basic
 
