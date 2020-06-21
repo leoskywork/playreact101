@@ -41,7 +41,8 @@ export class FulfillmentView extends React.Component {
 
         const nextSchedule = this.getDaysToNextSchedule();
 
-        return <div className="intro-fulfill-item" hidden={!this.props.showDeletedRoutine && this.props.fulfillment.isDeleted}>
+        return <div className="intro-fulfill-item"
+            hidden={(!this.props.showDeletedRoutine && this.props.fulfillment.isDeleted) || (this.props.showRecursiveOnly && !this.props.fulfillment.enableSchedule)}>
             <span className={this.props.fulfillment.isDeleted && 'deleted-item'}
                 title={this.props.fulfillment.isDeleted && `deleted reason: ${this.props.fulfillment.deleteReason}`}>
                 <span>{this.props.fulfillment.name}</span>
@@ -76,7 +77,7 @@ export class FulfillmentView extends React.Component {
             {this.props.fulfillment.enableSchedule && nextSchedule != null && (<Badge
                 className="intro-next-schedule"
                 title={`scheduled every ${this.props.fulfillment.recursiveIntervalDays === 1 ? 'day' : this.props.fulfillment.recursiveIntervalDays + ' days'}`}
-                variant={nextSchedule <= 3 ? 'warning' : (nextSchedule <= 7 ? 'info' : 'light')}
+                variant={nextSchedule <= 2 ? 'warning' : (nextSchedule <= 7 ? 'info' : 'light')}
                 pill>{`${nextSchedule} day`}{Math.abs(nextSchedule) > 1 && 's'}</Badge>
             )}
 
@@ -128,6 +129,7 @@ export class FulfillmentView extends React.Component {
 
         if (!lastFulfill) {
             if (this.props.fulfillment.hasArchived) return '(since archived)'
+            if (this.props.fulfillment.isDeleted) return '';
 
             return '—';
         }
@@ -300,6 +302,7 @@ FulfillmentView.propTypes = {
     showRemark: PropTypes.bool.isRequired,
     showDeletedRoutine: PropTypes.bool.isRequired,
     showDeletedHistory: PropTypes.bool.isRequired,
+    showRecursiveOnly: PropTypes.bool.isRequired,
     afterHistoryLoaded: PropTypes.func.isRequired,
     afterSubmitFulfillment: PropTypes.func.isRequired,
     afterMoreHistoryLoaded: PropTypes.func.isRequired,

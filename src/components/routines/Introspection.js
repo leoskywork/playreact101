@@ -17,6 +17,7 @@ export class Introspection extends React.Component {
             showRemark: false,
             showDeletedRoutine: false,
             showDeletedHistory: false,
+            showRecursiveOnly: false,
             lskHeartbeat: 'beat',
             fulfillments: [],
             isLoadingData: false,
@@ -122,6 +123,7 @@ export class Introspection extends React.Component {
                             afterUpdateRecursiveReturned={this.afterUpdateRecursiveReturned}
                             showRemark={this.state.showRemark}
                             showDeletedRoutine={this.state.showDeletedRoutine}
+                            showRecursiveOnly={this.state.showRecursiveOnly}
                             showDeletedHistory={this.state.showDeletedHistory}>
                         </FulfillmentView>)}
                     <div hidden={!this.state.fulfillments || this.state.fulfillments.length === 0}>
@@ -133,6 +135,9 @@ export class Introspection extends React.Component {
                         </button>
                         <button className="btn-intro-common btn-switch"
                             onClick={() => this.setState({ showDeletedHistory: !this.state.showDeletedHistory })}>{this.state.showDeletedHistory ? 'SHOW' : 'HIDE'} DELETED HISTORY
+                        </button>
+                        <button className="btn-intro-common btn-switch"
+                            onClick={() => this.setState({ showRecursiveOnly: !this.state.showRecursiveOnly })}>{this.state.showRecursiveOnly ? 'SHOW RECURSIVE ONLY' : 'SHOW ALL ROUTINE'}
                         </button>
                     </div>
                 </div>
