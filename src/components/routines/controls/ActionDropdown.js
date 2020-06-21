@@ -7,6 +7,10 @@ import ModalBody from 'react-bootstrap/ModalBody';
 import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalTitle from 'react-bootstrap/ModalTitle';
 import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
 
 import './StyleControls.css'
 import routineService from '../../../services/RoutineService';
@@ -15,18 +19,21 @@ import AppConst from '../../../common/AppConst';
 
 export class ActionDropdown extends React.Component {
     actionKeys = {
-        delete: "Delete",
-        Recursive: "Recursive"
+        recursive: "Recursive",
+        delete: "Delete"
     }
 
     constructor(props) {
         super(props);
 
         this.state = {
-            actions: [this.actionKeys.Recursive, this.actionKeys.delete],
+            actions: [this.actionKeys.recursive, this.actionKeys.delete],
             isConfirmingDelete: false,
-            inputLsk: ''
-
+            inputLsk: '',
+            inputRecursiveLsk: 'not-now',
+            showRecursiveDialog: false,
+            enableSchedule: this.props.fulfillment.enableSchedule || false,
+            recursiveIntervalDays: this.props.fulfillment.recursiveIntervalDays || AppConst.defaultRecursiveDays
         }
     }
 
@@ -41,10 +48,16 @@ export class ActionDropdown extends React.Component {
     render() {
         return <React.Fragment>
             {this.state.actions.map(action =>
-                <DropdownItem key={'fulfill-op-' + action} onClick={() => this.onClickDropdownItem(action)} as="button">{action}
+                <DropdownItem
+                    key={'fulfill-op-' + action}
+                    onClick={() => this.onClickDropdownItem(action)}
+                    as="button">
+                    {action === this.actionKeys.recursive && this.props.fulfillment.enableSchedule && <span className="check-mark"></span>}
+                    {action}
                 </DropdownItem>
             )}
-            {<Modal show={this.state.isConfirmingDelete} onHide={this.dismissDeleteConfirm} centered>
+
+            {<Modal show={this.state.isConfirmingDelete} onHide={this.dismissDeleteDialog} centered>
                 <ModalHeader closeButton><ModalTitle>Delete Routine</ModalTitle></ModalHeader>
                 <ModalBody>
                     <div>Please input a reason for deleting '{this.props.fulfillment.name}'</div>
@@ -61,10 +74,48 @@ export class ActionDropdown extends React.Component {
                     </div>
                 </ModalBody>
                 <ModalFooter>
-                    <Button variant="secondary" onClick={this.dismissDeleteConfirm}>Cancel</Button>
+                    <Button variant="secondary" onClick={this.dismissDeleteDialog}>Cancel</Button>
                     <Button variant="danger" onClick={this.deleteAfterConfirm} disabled={!this.state.inputLsk}>Delete</Button>
                 </ModalFooter>
             </Modal>}
+
+            {<Modal show={this.state.showRecursiveDialog} onHide={this.dismissRecursiveDialog} centered>
+                <ModalHeader closeButton><ModalTitle>Update Recursive</ModalTitle></ModalHeader>
+                <ModalBody>
+                    <div>
+                        <ButtonGroup toggle>
+                            {[true, false].map((flag, i) => (<ToggleButton
+                                key={i} type="radio" variant="outline-secondary" name={flag.toString()} value={flag}
+                                checked={this.state.enableSchedule === flag}
+                                onChange={this.onEnableOrDisableSchedule}>{flag ? "Enable" : "Disable"}</ToggleButton>
+                            ))}
+                        </ButtonGroup>
+                    </div>
+                    <div id="intro-lsk-recursive-interval">
+                        <InputGroup>
+                            <InputGroup.Prepend>
+                                <InputGroup.Text>Interval days</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <FormControl
+                                type="number"
+                                name="recursiveIntervalDays"
+                                value={this.state.recursiveIntervalDays}
+                                onChange={(e) => this.setState({ [e.target.name]: parseInt(e.target.value) })}
+                                disabled={!this.state.enableSchedule}
+                                min="1"
+                                autoComplete="off"
+                                maxLength={AppConst.maxNumberLength}
+                                placeholder="please input a number"
+                            ></FormControl>
+                        </InputGroup>
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <Button variant="secondary" onClick={this.dismissRecursiveDialog}>Cancel</Button>
+                    <Button variant="danger" onClick={this.updateRecursive} disabled={!this.shouldEnableUpdateRecursive()}>Update</Button>
+                </ModalFooter>
+            </Modal>}
+
         </React.Fragment>
     }
 
@@ -76,9 +127,29 @@ export class ActionDropdown extends React.Component {
             setTimeout(() => {
                 document.querySelector("#intro-lsk-delete-reason").select();
             });
-        } else if (action === this.actionKeys.Recursive) {
-            //todo, setupRecursive
+        } else if (action === this.actionKeys.recursive) {
+            this.setState({ showRecursiveDialog: true });
         }
+    }
+
+    onEnableOrDisableSchedule = (e) => {
+        this.setState({ enableSchedule: e.currentTarget.value === 'true' ? true : false });
+    }
+
+    updateRecursive = () => {
+        this.setState({ showRecursiveDialog: false });
+
+        if (!this.shouldEnableUpdateRecursive()) return;
+
+        routineService.updateRecursive(this.state.inputRecursiveLsk, this.props.fulfillment, this.state.enableSchedule, this.state.recursiveIntervalDays)
+            .then(result => {
+                this.props.afterUpdateRecursiveReturned(result);
+            })
+    }
+
+    shouldEnableUpdateRecursive() {
+        return this.state.enableSchedule !== this.props.fulfillment.enableSchedule
+            || (this.state.enableSchedule && this.state.recursiveIntervalDays !== this.props.fulfillment.recursiveIntervalDays && this.state.recursiveIntervalDays > 0);
     }
 
     deleteAfterConfirm = () => {
@@ -100,7 +171,7 @@ export class ActionDropdown extends React.Component {
         });
     }
 
-    dismissDeleteConfirm = () => {
+    dismissDeleteDialog = () => {
         this.setState({ isConfirmingDelete: false });
 
         if (!AppConst.isDev) {
@@ -108,6 +179,9 @@ export class ActionDropdown extends React.Component {
         }
     }
 
+    dismissRecursiveDialog = () => {
+        this.setState({ showRecursiveDialog: false });
+    }
 
 
 
@@ -116,7 +190,8 @@ export class ActionDropdown extends React.Component {
 ActionDropdown.propTypes = {
     fulfillment: PropTypes.object.isRequired,
     beforeCallDeleteRoutine: PropTypes.func.isRequired,
-    afterDeleteRoutineReturned: PropTypes.func.isRequired
+    afterDeleteRoutineReturned: PropTypes.func.isRequired,
+    afterUpdateRecursiveReturned: PropTypes.func.isRequired
 }
 
 export default ActionDropdown;

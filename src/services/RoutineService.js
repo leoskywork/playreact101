@@ -55,6 +55,21 @@ export class RoutineService {
             .catch(error => Utility.unifyAjaxErrorHandling(error));
     }
 
+    updateRecursive(lsk, fulfillment, enable, intervalDays) {
+        const config = this.createHttpConfig(lsk);
+        const dtoBody = {
+            Name: fulfillment.name,
+            Enable: enable,
+            IntervalDays: intervalDays
+        }
+
+        return axios
+            .put(`${AppConst.netApiBaseUrl}introspection/${fulfillment.id}/recursive`, dtoBody, config)
+            .then(result => Utility.unifyResultValidator(result))
+            .then(result => Utility.unifyObjectMapper(result.data, DtoMapper.fromDtoRoutine))
+            .catch(error => Utility.unifyAjaxErrorHandling(error));
+    }
+
     deleteRoutine(fulfillment, deleteReason, lsk) {
         const config = this.createHttpConfig(lsk);
 

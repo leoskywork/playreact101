@@ -23,8 +23,8 @@
     - [x] test load more
   - [x] support soft delete routine via popup to input a reason
   - [x] support soft delete fulfillment record via popup
-  - [ ] support recursive routines
-    - [ ] warning when scheduled days approach
+  - [x] support recursive routines
+    - [x] warning when scheduled days approach
   - [ ] impl backend with node.js
 
 ## react basic

@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import SplitButton from 'react-bootstrap/SplitButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import DropdownMenu from 'react-bootstrap/DropdownMenu';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Badge from 'react-bootstrap/Badge';
 
 import './StyleRoutines.css';
 import FulfillmentHistory from './FulfillmentHistory';
@@ -38,6 +38,9 @@ export class FulfillmentView extends React.Component {
     }
 
     render() {
+
+        const nextSchedule = this.getDaysToNextSchedule();
+
         return <div className="intro-fulfill-item" hidden={!this.props.showDeletedRoutine && this.props.fulfillment.isDeleted}>
             <span className={this.props.fulfillment.isDeleted && 'deleted-item'}
                 title={this.props.fulfillment.isDeleted && `deleted reason: ${this.props.fulfillment.deleteReason}`}>
@@ -46,13 +49,16 @@ export class FulfillmentView extends React.Component {
                 <span>{this.getLastFulfillDescription()}</span>
                 <span>{this.props.fulfillment.isDeleted && !!this.props.fulfillment.deleteReason && `, del reason: ${this.props.fulfillment.deleteReason}`}</span>
             </span>
+
+
             {/* <button className={`btn-fulfill-op ${!this.state.collapseView ? 'expand' : ''}`} onClick={this.onToggleLskFulfill}>+</button> */}
             {/* <button className='btn-fulfill-op no-bg-color' onClick={() => { }}><span className="dropdown-caret"></span></button> */}
+
 
             {/* need more control of the visual appearance, 'id' for DropdownToggle is necessary */}
             <Dropdown as={ButtonGroup} className="btn-fulfill-op-container">
                 <Button
-                    className={`btn-fulfill-op-add ${this.state.collapseView ? '' : 'expand'}`}
+                    className={`btn-fulfill-op-add ${!this.state.collapseView && 'expand'}`}
                     onClick={this.onToggleLskFulfill}
                     variant="outline-secondary">+
                 </Button>
@@ -61,10 +67,18 @@ export class FulfillmentView extends React.Component {
                     <ActionDropdown
                         beforeCallDeleteRoutine={this.beforeCallDeleteRoutine}
                         afterDeleteRoutineReturned={this.afterDeleteRoutineReturned}
+                        afterUpdateRecursiveReturned={this.afterUpdateRecursiveReturned}
                         fulfillment={this.props.fulfillment}>
                     </ActionDropdown>
                 </DropdownMenu>
             </Dropdown>
+
+            {this.props.fulfillment.enableSchedule && nextSchedule != null && (<Badge
+                className="intro-next-schedule"
+                title={`scheduled every ${this.props.fulfillment.recursiveIntervalDays === 1 ? 'day' : this.props.fulfillment.recursiveIntervalDays + ' days'}`}
+                variant={nextSchedule <= 3 ? 'warning' : (nextSchedule <= 7 ? 'info' : 'light')}
+                pill>{`${nextSchedule} day`}{Math.abs(nextSchedule) > 1 && 's'}</Badge>
+            )}
 
 
             <form className="intro-fulfill-form"
@@ -110,25 +124,13 @@ export class FulfillmentView extends React.Component {
     };
 
     getLastFulfillDescription() {
-        let lastFulfill = null;
-
-        if (this.props.fulfillment.historyFulfillments) {
-            for (let i = this.props.fulfillment.historyFulfillments.length - 1; i >= 0; i--) {
-                if (!this.props.fulfillment.historyFulfillments[i].isDeleted) {
-                    lastFulfill = this.props.fulfillment.historyFulfillments[i].time;
-                    break;
-                }
-            }
-        } else {
-            lastFulfill = this.props.fulfillment.lastFulfill;
-        }
+        const lastFulfill = this.getLastFulfill(this.props.fulfillment);
 
         if (!lastFulfill) {
             if (this.props.fulfillment.hasArchived) return '(since archived)'
 
             return '—';
         }
-
 
         const daysAgo = Utility.getDaysBetween(new Date(), lastFulfill);
 
@@ -137,8 +139,51 @@ export class FulfillmentView extends React.Component {
         } else if (daysAgo === 1) {
             return '(yesterday)';
         } else {
-            return `(${daysAgo > 99 ? '99+' : daysAgo} days)`
+            return `(${daysAgo > 99 ? Math.floor(daysAgo / 100) + '99+' : daysAgo} days)`
         }
+    }
+
+    getDaysToNextSchedule() {
+        if (!this.props.fulfillment.enableSchedule) return null;
+        if (!this.props.fulfillment.recursiveIntervalDays || this.props.fulfillment.recursiveIntervalDays <= 0) return null;
+
+        let lastFulfill = this.getLastFulfill(this.props.fulfillment);
+
+        if (!lastFulfill) {
+            if (this.props.fulfillment.hasArchived) {
+                lastFulfill = new Date("2020-1-1");
+            } else {
+                // lastFulfill = this.props.fulfillment.createAt;
+                // lastFulfill = new Date("2019-1-1");
+            }
+        }
+
+        if (!lastFulfill) return null;
+
+        const daysAgo = Utility.getDaysBetween(new Date(), lastFulfill);
+        const nextSchedule = this.props.fulfillment.recursiveIntervalDays - daysAgo;
+
+        return nextSchedule;
+    }
+
+    getLastFulfill(fulfillment) {
+        let lastFulfill = null;
+
+        if (!fulfillment) return lastFulfill;
+
+        //fixme, some issue here, not looking among the archived history records
+        if (fulfillment.historyFulfillments) {
+            for (let i = fulfillment.historyFulfillments.length - 1; i >= 0; i--) {
+                if (!fulfillment.historyFulfillments[i].isDeleted) {
+                    lastFulfill = fulfillment.historyFulfillments[i].time;
+                    break;
+                }
+            }
+        } else {
+            lastFulfill = fulfillment.lastFulfill;
+        }
+
+        return lastFulfill;
     }
 
     onToggleLskFulfill = () => {
@@ -242,6 +287,11 @@ export class FulfillmentView extends React.Component {
 
         this.props.afterDeleteHistoryReturned(result, history);
     }
+
+    afterUpdateRecursiveReturned = (result) => {
+
+        this.props.afterUpdateRecursiveReturned(result, this.props.fulfillment);
+    }
 }
 
 FulfillmentView.propTypes = {
@@ -254,7 +304,8 @@ FulfillmentView.propTypes = {
     afterSubmitFulfillment: PropTypes.func.isRequired,
     afterMoreHistoryLoaded: PropTypes.func.isRequired,
     afterDeleteRoutineReturned: PropTypes.func.isRequired,
-    afterDeleteHistoryReturned: PropTypes.func.isRequired
+    afterDeleteHistoryReturned: PropTypes.func.isRequired,
+    afterUpdateRecursiveReturned: PropTypes.func.isRequired
 }
 
 export default FulfillmentView;

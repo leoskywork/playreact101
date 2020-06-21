@@ -1,6 +1,6 @@
 export class AppConst {
     static get isDev() {
-        return false;
+        return true;
     }
 
     static get appName() {
@@ -74,6 +74,14 @@ export class AppConst {
 
     static get maxFulfillmentLength() {
         return 128;
+    }
+
+    static get maxNumberLength() {
+        return 9;
+    }
+
+    static get defaultRecursiveDays() {
+        return 7;
     }
 
     static get comma() {

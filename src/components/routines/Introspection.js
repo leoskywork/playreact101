@@ -119,6 +119,7 @@ export class Introspection extends React.Component {
                             afterMoreHistoryLoaded={this.afterMoreHistoryLoaded}
                             afterDeleteRoutineReturned={this.afterDeleteRoutineReturned}
                             afterDeleteHistoryReturned={this.afterDeleteHistoryReturned}
+                            afterUpdateRecursiveReturned={this.afterUpdateRecursiveReturned}
                             showRemark={this.state.showRemark}
                             showDeletedRoutine={this.state.showDeletedRoutine}
                             showDeletedHistory={this.state.showDeletedHistory}>
@@ -252,12 +253,16 @@ export class Introspection extends React.Component {
             toastSeverity: result && result.success ? 'success' : 'fail'
         });
 
-        if (result && result.success) {
+        this.replaceWithNewRoutine(result, routine);
+    }
+
+    replaceWithNewRoutine(newRoutineResult, oldRoutine) {
+        if (newRoutineResult && newRoutineResult.success) {
             let data = [...this.state.fulfillments];
 
             for (let i = 0; i < data.length; i++) {
-                if (data[i].id === routine.id) {
-                    data.splice(i, 1, result.data);
+                if (data[i].id === oldRoutine.id) {
+                    data.splice(i, 1, newRoutineResult.data);
                     data.sort(this.sortByFulfillmentDateDesc);
                     this.setState({ fulfillments: data });
                     break;
@@ -267,7 +272,7 @@ export class Introspection extends React.Component {
         } else {
             if (!this.state.customAlertPopped) {
                 this.setState({ customAlertPopped: true });
-                alert('please try to refresh page if fail to delete routine again');
+                alert('please try to refresh page if fail to do the action again');
             }
         }
     }
@@ -296,6 +301,17 @@ export class Introspection extends React.Component {
                 toastSeverity: 'fail'
             });
         }
+    }
+
+    afterUpdateRecursiveReturned = (result, routine) => {
+        this.setState({
+            showToast: true,
+            toastTitle: 'Update Recursive',
+            toastMessage: result && result.success ? `Routine ${routine.name} updated` : `Failed to update routine ${routine.name}`,
+            toastSeverity: result && result.success ? 'success' : 'fail'
+        });
+
+        this.replaceWithNewRoutine(result, routine);
     }
 
     onCloseToastBox = () => {

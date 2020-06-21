@@ -198,6 +198,11 @@
     width: 100%;
 }
 
+.intro-next-schedule{
+    margin-left: 6px;
+    font-weight: normal;
+}
+
 /* ----- common */
 .no-bg-color{
     background-color: inherit;

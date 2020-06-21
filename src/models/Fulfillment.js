@@ -1,6 +1,6 @@
 
 export class Fulfillment {
-    constructor(uid, name, lastFulfill, history, createBy, createAt, lastRemark, hasArchived, isDeleted, deleteReason) {
+    constructor(uid, name, lastFulfill, history, createBy, createAt, lastRemark, hasArchived, isDeleted, deleteReason, enableSchedule, intervalDays) {
         this.id = uid;
         this.name = name;
 
@@ -29,6 +29,9 @@ export class Fulfillment {
             this.isDeleted = isDeleted;
             this.deleteReason = deleteReason;
         }
+
+        this.enableSchedule = enableSchedule;
+        this.recursiveIntervalDays = intervalDays;
     }
 
 

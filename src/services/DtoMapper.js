@@ -9,11 +9,31 @@ export class DtoMapper {
             historyRecords = dto.HistoryFulfillments.map(h => DtoMapper.fromDtoFulfillmentArchive(h));
         }
 
-        return new Fulfillment(dto.Uid, dto.Name, dto.LastFulfill, historyRecords, dto.CreateBy, dto.CreateAt, dto.LastRemark, dto.HasArchived, dto.IsDeleted, dto.DeleteReason);
+        return new Fulfillment(
+            dto.Uid,
+            dto.Name,
+            dto.LastFulfill,
+            historyRecords,
+            dto.CreateBy,
+            dto.CreateAt,
+            dto.LastRemark,
+            dto.HasArchived,
+            dto.IsDeleted,
+            dto.DeleteReason,
+            dto.EnableSchedule,
+            dto.RecursiveIntervalDays
+        );
     }
 
     static fromDtoFulfillmentArchive(dto) {
-        return new FulfillmentArchive(dto.ParentUid, dto.Uid, dto.Remark, dto.Time, dto.IsDeleted, dto.DeleteReason);
+        return new FulfillmentArchive(
+            dto.ParentUid,
+            dto.Uid,
+            dto.Remark,
+            dto.Time,
+            dto.IsDeleted,
+            dto.DeleteReason
+        );
     }
 }
 
