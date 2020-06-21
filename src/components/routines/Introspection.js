@@ -131,13 +131,13 @@ export class Introspection extends React.Component {
                             onClick={() => this.setState({ showRemark: !this.state.showRemark })}>{this.state.showRemark ? 'SHOW' : 'HIDE'} REMARKS
                         </button>
                         <button className="btn-intro-common btn-switch"
+                            onClick={() => this.setState({ showRecursiveOnly: !this.state.showRecursiveOnly })}>{this.state.showRecursiveOnly ? 'RECURSIVE ONLY' : 'RECURSIVE ONLY OFF'}
+                        </button>
+                        <button className="btn-intro-common btn-switch"
                             onClick={() => this.setState({ showDeletedRoutine: !this.state.showDeletedRoutine })}>{this.state.showDeletedRoutine ? 'SHOW' : 'HIDE'} DELETED ROUTINE
                         </button>
                         <button className="btn-intro-common btn-switch"
                             onClick={() => this.setState({ showDeletedHistory: !this.state.showDeletedHistory })}>{this.state.showDeletedHistory ? 'SHOW' : 'HIDE'} DELETED HISTORY
-                        </button>
-                        <button className="btn-intro-common btn-switch"
-                            onClick={() => this.setState({ showRecursiveOnly: !this.state.showRecursiveOnly })}>{this.state.showRecursiveOnly ? 'SHOW RECURSIVE ONLY' : 'SHOW ALL ROUTINE'}
                         </button>
                     </div>
                 </div>
