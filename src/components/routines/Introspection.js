@@ -194,12 +194,19 @@ export class Introspection extends React.Component {
         });
     };
 
-    afterSubmitFulfillment = (result, id) => {
+    afterSubmitFulfillment = (result, routine) => {
+        this.setState({
+            showToast: true,
+            toastTitle: 'Submit Fulfillment',
+            toastMessage: result && result.success ? `Routine ${routine.name} updated` : `Failed to fulfill routine ${routine.name}`,
+            toastSeverity: result && result.success ? 'success' : 'fail'
+        });
+
         if (result && result.success) {
             let data = [...this.state.fulfillments];
 
             for (let i = 0; i < data.length; i++) {
-                if (data[i].id === id) {
+                if (data[i].id === routine.id) {
                     data.splice(i, 1, result.data);
                     data.sort(this.sortByFulfillmentDateDesc);
                     this.setState({ fulfillments: data });
@@ -214,7 +221,7 @@ export class Introspection extends React.Component {
             }
 
             setTimeout(() => {
-                document.querySelector('#intro-lsk-fulfill-' + id).select();
+                document.querySelector('#intro-lsk-fulfill-' + routine.id).select();
             });
         }
     }

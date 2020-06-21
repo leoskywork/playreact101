@@ -100,7 +100,7 @@ export class ActionDropdown extends React.Component {
                                 type="number"
                                 name="recursiveIntervalDays"
                                 value={this.state.recursiveIntervalDays}
-                                onChange={(e) => this.setState({ [e.target.name]: parseInt(e.target.value) })}
+                                onChange={this.onChangeRecursiveInterval}
                                 disabled={!this.state.enableSchedule}
                                 min="1"
                                 autoComplete="off"
@@ -119,6 +119,7 @@ export class ActionDropdown extends React.Component {
         </React.Fragment>
     }
 
+
     onClickDropdownItem = (action) => {
         console.log('click dropdown item', action);
 
@@ -136,6 +137,14 @@ export class ActionDropdown extends React.Component {
         this.setState({ enableSchedule: e.currentTarget.value === 'true' ? true : false });
     }
 
+    onChangeRecursiveInterval = (e) => {
+        console.log('----- change interval', e.target.name, e.target.value);
+
+        const newNumber = parseInt(e.target.value);
+
+        this.setState({ [e.target.name]: isNaN(newNumber) ? '' : newNumber });
+    }
+
     updateRecursive = () => {
         this.setState({ showRecursiveDialog: false });
 
@@ -148,8 +157,17 @@ export class ActionDropdown extends React.Component {
     }
 
     shouldEnableUpdateRecursive() {
-        return this.state.enableSchedule !== this.props.fulfillment.enableSchedule
-            || (this.state.enableSchedule && this.state.recursiveIntervalDays !== this.props.fulfillment.recursiveIntervalDays && this.state.recursiveIntervalDays > 0);
+        if (this.state.enableSchedule !== this.props.fulfillment.enableSchedule) {
+            if (!this.state.enableSchedule) return true;
+            if (this.state.enableSchedule && this.state.recursiveIntervalDays > 0) return true;
+
+            return false;
+        }
+
+        if (!this.state.enableSchedule) return false;
+        if (this.state.recursiveIntervalDays !== this.props.fulfillment.recursiveIntervalDays && this.state.recursiveIntervalDays > 0) return true;
+
+        return false;
     }
 
     deleteAfterConfirm = () => {

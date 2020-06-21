@@ -139,7 +139,7 @@ export class FulfillmentView extends React.Component {
         } else if (daysAgo === 1) {
             return '(yesterday)';
         } else {
-            return `(${daysAgo > 99 ? Math.floor(daysAgo / 100) + '99+' : daysAgo} days)`
+            return `(${daysAgo > 100 ? Math.floor(daysAgo / 100) + '00+' : daysAgo} days)`
         }
     }
 
@@ -236,7 +236,7 @@ export class FulfillmentView extends React.Component {
                 });
             }
 
-            this.props.afterSubmitFulfillment(result, this.props.fulfillment.id);
+            this.props.afterSubmitFulfillment(result, this.props.fulfillment);
         });
     };
 
