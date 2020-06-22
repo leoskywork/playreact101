@@ -103,6 +103,51 @@ export class Utility {
 
         return daysSincePrior;
     }
+
+    static getDaysToNextSchedule(fulfillment) {
+        if (!fulfillment) return null;
+        if (!fulfillment.enableSchedule) return null;
+        if (!fulfillment.recursiveIntervalDays || fulfillment.recursiveIntervalDays <= 0) return null;
+
+        let lastFulfill = this.getLastFulfill(fulfillment);
+
+        if (!lastFulfill) {
+            if (fulfillment.hasArchived) {
+                lastFulfill = new Date("2020-1-1");
+            } else {
+                // lastFulfill = fulfillment.createAt;
+                // lastFulfill = new Date("2019-1-1");
+            }
+        }
+
+        if (!lastFulfill) return null;
+
+        const daysAgo = Utility.getDaysBetween(new Date(), lastFulfill);
+        const nextSchedule = fulfillment.recursiveIntervalDays - daysAgo;
+
+        return nextSchedule;
+    }
+
+    static getLastFulfill(fulfillment) {
+        if (!fulfillment) return null;
+
+        let lastFulfill = null;
+
+        //fixme, some issue here, not looking among the archived history records
+        //should just look at the lastFulfill field once the logic of find last fulfill is perfected on server side
+        if (fulfillment.historyFulfillments) {
+            for (let i = fulfillment.historyFulfillments.length - 1; i >= 0; i--) {
+                if (!fulfillment.historyFulfillments[i].isDeleted) {
+                    lastFulfill = fulfillment.historyFulfillments[i].time;
+                    break;
+                }
+            }
+        } else {
+            lastFulfill = fulfillment.lastFulfill;
+        }
+
+        return lastFulfill;
+    }
 }
 
 export default Utility;

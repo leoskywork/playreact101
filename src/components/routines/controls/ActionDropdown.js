@@ -180,7 +180,7 @@ export class ActionDropdown extends React.Component {
         let inputUnits = this.state.inputLsk.split(AppConst.comma);
         if (inputUnits.length === 1) inputUnits = inputUnits.splice(AppConst.commaCN);
 
-        let deleteReason = null;
+        let deleteReason = '';
         if (inputUnits.length > 1) deleteReason = inputUnits[1].trim();
 
         routineService.deleteRoutine(this.props.fulfillment, deleteReason, inputUnits[0].trim()).then(result => {

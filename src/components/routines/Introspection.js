@@ -6,6 +6,7 @@ import routineService from '../../services/RoutineService';
 import AppConst from '../../common/AppConst';
 import FulfillmentView from './FulfillmentView';
 import ToastBox from './controls/ToastBox';
+import Utility from '../../common/Utility';
 
 export class Introspection extends React.Component {
 
@@ -17,7 +18,7 @@ export class Introspection extends React.Component {
             showRemark: false,
             showDeletedRoutine: false,
             showDeletedHistory: false,
-            showRecursiveOnly: false,
+            showRecursiveOnly: true,
             lskHeartbeat: 'beat',
             fulfillments: [],
             isLoadingData: false,
@@ -112,7 +113,7 @@ export class Introspection extends React.Component {
                 <div className="sm-align-right-wrap">
                     <br></br>
                     <div className='intro-loading-message message-main-loading' hidden={!this.state.isLoadingData}>Loading...</div>
-                    {this.state.fulfillments.map(f =>
+                    {(this.state.showRecursiveOnly ? [...this.state.fulfillments].sort(Introspection.sortByRecursiveWeightAsc) : this.state.fulfillments).map(f =>
                         <FulfillmentView key={f.id}
                             fulfillment={f}
                             afterHistoryLoaded={this.afterHistoryLoaded}
@@ -125,13 +126,14 @@ export class Introspection extends React.Component {
                             showDeletedRoutine={this.state.showDeletedRoutine}
                             showRecursiveOnly={this.state.showRecursiveOnly}
                             showDeletedHistory={this.state.showDeletedHistory}>
-                        </FulfillmentView>)}
+                        </FulfillmentView>)
+                    }
                     <div hidden={!this.state.fulfillments || this.state.fulfillments.length === 0}>
                         <button className="btn-intro-common btn-switch"
                             onClick={() => this.setState({ showRemark: !this.state.showRemark })}>{this.state.showRemark ? 'SHOW' : 'HIDE'} REMARKS
                         </button>
                         <button className="btn-intro-common btn-switch"
-                            onClick={() => this.setState({ showRecursiveOnly: !this.state.showRecursiveOnly })}>{this.state.showRecursiveOnly ? 'RECURSIVE ONLY' : 'RECURSIVE ONLY OFF'}
+                            onClick={() => this.setState({ showRecursiveOnly: !this.state.showRecursiveOnly })}>{this.state.showRecursiveOnly ? 'RECURSIVE FIRST ON' : 'RECURSIVE FIRST OFF'}
                         </button>
                         <button className="btn-intro-common btn-switch"
                             onClick={() => this.setState({ showDeletedRoutine: !this.state.showDeletedRoutine })}>{this.state.showDeletedRoutine ? 'SHOW' : 'HIDE'} DELETED ROUTINE
@@ -165,7 +167,7 @@ export class Introspection extends React.Component {
 
             if (success) {
                 const data = result.data || [];
-                data.sort(this.sortByFulfillmentDateDesc);
+                data.sort(Introspection.sortByFulfillmentDateDesc);
                 this.setState({ fulfillments: data });
             }
 
@@ -173,8 +175,16 @@ export class Introspection extends React.Component {
         });
     }
 
-    sortByFulfillmentDateDesc(a, b) {
+    static sortByFulfillmentDateDesc(a, b) {
         return (b.lastFulfill || b.createAt).getTime() - (a.lastFulfill || a.createAt).getTime();
+    }
+
+    static sortByRecursiveWeightAsc(a, b) {
+        if (a.enableSchedule && !b.enableSchedule) return -1;
+        if (!a.enableSchedule && b.enableSchedule) return 1;
+        if (!a.enableSchedule && !b.enableSchedule) return Introspection.sortByFulfillmentDateDesc(a, b);
+
+        return (Utility.getDaysToNextSchedule(a) || 0) - (Utility.getDaysToNextSchedule(b) || 0);
     }
 
     disableLoadButton() {
@@ -328,11 +338,18 @@ export class Introspection extends React.Component {
 
     onCloseToastBox = () => {
         this.setState({
-            showToast: false,
-            toastTitle: '',
-            toastMessage: '',
-            toastSeverity: 'default'
-        })
+            showToast: false
+        });
+
+        setTimeout(() => {
+            if (this.state.showToast) return;
+
+            this.setState({
+                toastTitle: '',
+                toastMessage: '',
+                toastSeverity: 'default'
+            });
+        }, 500);
     }
 
 

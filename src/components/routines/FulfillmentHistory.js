@@ -115,7 +115,7 @@ export class FulfillmentHistory extends React.Component {
         let inputUnits = this.state.inputLsk.split(AppConst.comma);
         if (inputUnits.length === 1) inputUnits = inputUnits.splice(AppConst.commaCN);
 
-        let deleteReason = null;
+        let deleteReason = '';
         if (inputUnits.length > 1) deleteReason = inputUnits[1].trim();
 
         const kind = this.props.fulfillment.historyFulfillments.indexOf(selectedHistory) > -1 ? AppConst.stagedHistory : AppConst.archivedHistory;

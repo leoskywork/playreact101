@@ -33,8 +33,9 @@ export class RoutineService {
 
     getHeartBeat(lsk, user) {
         const config = this.createHttpConfig(lsk);
+        const time = new Date().toLocaleTimeString();
 
-        return axios.get(`${AppConst.netApiBaseUrl}introspection/heartbeat?user=${encodeURI(user)}`, config)
+        return axios.get(`${AppConst.netApiBaseUrl}introspection/heartbeat?time=${time}&user=${encodeURI(user)}`, config)
             .then(result => Utility.unifyResultValidator(result, true))
             .catch(error => Utility.unifyAjaxErrorHandling(error, true));
     }

@@ -39,10 +39,11 @@ export class FulfillmentView extends React.Component {
 
     render() {
 
-        const nextSchedule = this.getDaysToNextSchedule();
+        const nextSchedule = Utility.getDaysToNextSchedule(this.props.fulfillment);
 
         return <div className="intro-fulfill-item"
-            hidden={(!this.props.showDeletedRoutine && this.props.fulfillment.isDeleted) || (this.props.showRecursiveOnly && !this.props.fulfillment.enableSchedule)}>
+            // hidden={(!this.props.showDeletedRoutine && this.props.fulfillment.isDeleted) || (this.props.showRecursiveOnly && !this.props.fulfillment.enableSchedule)}>
+            hidden={(!this.props.showDeletedRoutine && this.props.fulfillment.isDeleted)}>
             <span className={this.props.fulfillment.isDeleted && 'deleted-item'}
                 title={this.props.fulfillment.isDeleted && `deleted reason: ${this.props.fulfillment.deleteReason}`}>
                 <span>{this.props.fulfillment.name}</span>
@@ -74,11 +75,11 @@ export class FulfillmentView extends React.Component {
                 </DropdownMenu>
             </Dropdown>
 
-            {this.props.fulfillment.enableSchedule && nextSchedule != null && (<Badge
+            {this.props.fulfillment.enableSchedule && (<Badge
                 className="intro-next-schedule"
                 title={`scheduled every ${this.props.fulfillment.recursiveIntervalDays === 1 ? 'day' : this.props.fulfillment.recursiveIntervalDays + ' days'}`}
                 variant={nextSchedule <= 2 ? 'warning' : (nextSchedule <= 7 ? 'info' : 'light')}
-                pill>{`${nextSchedule} day`}{Math.abs(nextSchedule) > 1 && 's'}</Badge>
+                pill>{`${nextSchedule == null ? '—' : nextSchedule} day`}{Math.abs(nextSchedule) > 1 && 's'}</Badge>
             )}
 
 
@@ -107,7 +108,7 @@ export class FulfillmentView extends React.Component {
                     afterDeleteHistoryReturned={this.afterDeleteHistoryReturned}>
                 </FulfillmentHistory>
             </form>
-        </div>
+        </div >
     }
 
     shouldDisableEdit() {
@@ -125,7 +126,7 @@ export class FulfillmentView extends React.Component {
     };
 
     getLastFulfillDescription() {
-        const lastFulfill = this.getLastFulfill(this.props.fulfillment);
+        const lastFulfill = Utility.getLastFulfill(this.props.fulfillment);
 
         if (!lastFulfill) {
             if (this.props.fulfillment.hasArchived) return '(since archived)'
@@ -143,49 +144,6 @@ export class FulfillmentView extends React.Component {
         } else {
             return `(${daysAgo > 100 ? Math.floor(daysAgo / 100) + '00+' : daysAgo} days)`
         }
-    }
-
-    getDaysToNextSchedule() {
-        if (!this.props.fulfillment.enableSchedule) return null;
-        if (!this.props.fulfillment.recursiveIntervalDays || this.props.fulfillment.recursiveIntervalDays <= 0) return null;
-
-        let lastFulfill = this.getLastFulfill(this.props.fulfillment);
-
-        if (!lastFulfill) {
-            if (this.props.fulfillment.hasArchived) {
-                lastFulfill = new Date("2020-1-1");
-            } else {
-                // lastFulfill = this.props.fulfillment.createAt;
-                // lastFulfill = new Date("2019-1-1");
-            }
-        }
-
-        if (!lastFulfill) return null;
-
-        const daysAgo = Utility.getDaysBetween(new Date(), lastFulfill);
-        const nextSchedule = this.props.fulfillment.recursiveIntervalDays - daysAgo;
-
-        return nextSchedule;
-    }
-
-    getLastFulfill(fulfillment) {
-        let lastFulfill = null;
-
-        if (!fulfillment) return lastFulfill;
-
-        //fixme, some issue here, not looking among the archived history records
-        if (fulfillment.historyFulfillments) {
-            for (let i = fulfillment.historyFulfillments.length - 1; i >= 0; i--) {
-                if (!fulfillment.historyFulfillments[i].isDeleted) {
-                    lastFulfill = fulfillment.historyFulfillments[i].time;
-                    break;
-                }
-            }
-        } else {
-            lastFulfill = fulfillment.lastFulfill;
-        }
-
-        return lastFulfill;
     }
 
     onToggleLskFulfill = () => {
