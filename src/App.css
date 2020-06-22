@@ -77,4 +77,16 @@ h5 {
 	color: darkslategray;
 }
 
+input:disabled{
+    color: darkgray !important;
+    border-color: darkgray;
+    cursor: not-allowed;
+}
+
+button:disabled{
+    color: darkgray !important;
+    cursor: not-allowed;
+}
+
+
 /* ---------------------------------------------------------------- */

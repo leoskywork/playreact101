@@ -64,7 +64,7 @@ export class FulfillmentView extends React.Component {
                     onClick={this.onToggleLskFulfill}
                     variant="outline-secondary">+
                 </Button>
-                <DropdownToggle split variant="outline-secondary" id={`fulfill-op-${this.props.fulfillment.id}`} disabled={this.shouldDisableEdit()} />
+                <DropdownToggle split variant="outline-secondary" id={`fulfill-op-${this.props.fulfillment.id}`} disabled={this.isCallingApi()} />
                 <DropdownMenu disabled={this.state.isDeletingRoutine} className="intro-op-dropdown-menu">
                     <ActionDropdown
                         beforeCallDeleteRoutine={this.beforeCallDeleteRoutine}
@@ -111,8 +111,12 @@ export class FulfillmentView extends React.Component {
         </div >
     }
 
+    isCallingApi() {
+        return this.state.isDeletingRoutine || this.state.isSendingLskFulfill;
+    }
+
     shouldDisableEdit() {
-        return this.state.isDeletingRoutine || this.props.fulfillment.isDeleted || this.state.isSendingLskFulfill;
+        return this.props.fulfillment.isDeleted || this.isCallingApi();
     }
 
     shouldDisableSendButton() {

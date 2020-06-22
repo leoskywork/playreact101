@@ -51,9 +51,11 @@ export class ActionDropdown extends React.Component {
                 <DropdownItem
                     key={'fulfill-op-' + action}
                     onClick={() => this.onClickDropdownItem(action)}
+                    disabled={this.props.fulfillment.isDeleted}
                     as="button">
                     {action === this.actionKeys.recursive && this.props.fulfillment.enableSchedule && <span className="check-mark"></span>}
                     {action}
+                    {action === this.actionKeys.recursive && this.props.fulfillment.enableSchedule && ` (${this.getRecursiveDaysString()})`}
                 </DropdownItem>
             )}
 
@@ -201,7 +203,9 @@ export class ActionDropdown extends React.Component {
         this.setState({ showRecursiveDialog: false });
     }
 
-
+    getRecursiveDaysString() {
+        return `${this.props.fulfillment.recursiveIntervalDays} day${this.props.fulfillment.recursiveIntervalDays > 1 ? 's' : ''}`;
+    }
 
 }
 

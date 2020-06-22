@@ -226,11 +226,6 @@
     text-decoration: line-through;
 }
 
-input:disabled{
-    color: darkgray;
-    border-color: darkgray;
-    cursor: not-allowed;
-}
 
 .btn-round{
     margin-top: -4px;

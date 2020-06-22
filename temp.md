@@ -26,6 +26,11 @@
   - [x] support recursive routines
     - [x] warning when scheduled days approach
   - [ ] impl backend with node.js
+    - [ ] migrate to bode first
+    - [ ] sync filter flags to backend
+    - [ ] notification hub
+      - [ ] can view history messages
+      - [ ] auto stack when multi messages same/near time?
 
 ## react basic
 
