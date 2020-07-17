@@ -2,7 +2,11 @@
 
 ~~A todo list app~~
 A introspection app
-  
+
+---
+
+## Below is auto generated
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Learn More

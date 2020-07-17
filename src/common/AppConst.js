@@ -1,5 +1,9 @@
 export class AppConst {
     static get isDev() {
+        return true;
+    }
+
+    static get useNodeBackend() {
         return false;
     }
 
@@ -31,13 +35,18 @@ export class AppConst {
         ]
     }
 
-    static get apiBaseUrl() {
-        // return AppConst.isDev ? 'http://localhost:5000/public/' : 'http://118.31.35.69:1080/api/mock/'; 
-        return AppConst.isDev ? 'http://localhost:5000/public/' : 'https://leoskywork.com/api/mock/';
-    }
+    // static get apiBaseUrl() {
+    //     // return AppConst.isDev ? 'http://localhost:5000/public/' : 'http://118.31.35.69:1080/api/mock/'; 
+    //     return AppConst.isDev ? 'http://localhost:5000/public/' : 'https://leoskywork.com/api/mock/';
+    // }
 
     //.net framework api
     static get netApiBaseUrl() {
+
+        if (AppConst.useNodeBackend) {
+            return AppConst.isDev ? 'http://localhost:5000/' : 'https://leoskywork.com/nodeapi/';
+        }
+
         // return AppConst.isDev ? 'http://localhost:57005/' : 'http://118.31.35.69:1080/api/';
         return AppConst.isDev ? 'http://localhost:57005/' : 'https://leoskywork.com/api/';
     }
@@ -59,11 +68,11 @@ export class AppConst {
     }
 
     static get heartBeatInterval() {
-        return 1000 * 60 * 60;
+        return 1000 * 60 * 60; //in ms
     }
 
     static get dayRolloverCheckingRate() {
-        return 1000 * 60;
+        return 1000 * 60; //in ms
     }
 
     static get stagedHistory() {

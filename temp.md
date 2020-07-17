@@ -26,7 +26,7 @@
   - [x] support recursive routines
     - [x] warning when scheduled days approach
   - [ ] impl backend with node.js
-    - [ ] migrate to bode first
+    - [ ] migrate to node first
     - [ ] sync filter flags to backend
     - [ ] notification hub
       - [ ] can view history messages
