@@ -3,9 +3,31 @@
 ~~A todo list app~~
 A introspection app
 
+## todo
+
+- [ ] state manage deep dive
+- [ ] router deep dive
+- [ ] use webpack ?
+- [ ] auth
+  - [ ] jwt token
+
+## how to
+
+```sh
+# 1. how start the app
+  # start the api server(node or asp.net) 
+  npm run start # note the settings {}.scripts.start in package.json
+
+
+# 2. release website
+  npm run build # note the settings {}.scripts.build in package.json
+
+
+```
+
 ---
 
-## Below is auto generated
+## Below is auto generated ----------------------------------------------------------
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

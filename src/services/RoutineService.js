@@ -4,11 +4,13 @@ import Utility from '../common/Utility';
 import DtoMapper from './DtoMapper';
 
 export class RoutineService {
+    apiBaseUrl = AppConst.apiBaseUrl;
+
     getRoutines(lsk) {
         const config = this.createHttpConfig(lsk);
 
         return axios
-            .get(`${AppConst.netApiBaseUrl}introspection`, config)
+            .get(`${this.apiBaseUrl}introspection`, config)
             .then(result => Utility.unifyResultValidator(result))
             .then(result => Utility.unifyArrayMapper(result.data, DtoMapper.fromDtoRoutine))
             .catch(error => Utility.unifyAjaxErrorHandling(error));
@@ -18,13 +20,13 @@ export class RoutineService {
         const config = this.createHttpConfig(lsk);
 
         if (historyKind === AppConst.archivedHistory) {
-            return axios.get(`${AppConst.netApiBaseUrl}introspection/${id}?history=archived`, config)
+            return axios.get(`${this.apiBaseUrl}introspection/${id}?history=archived`, config)
                 .then(result => Utility.unifyResultValidator(result))
                 .then(result => Utility.unifyArrayMapper(result.data, DtoMapper.fromDtoFulfillmentArchive))
                 .catch(error => Utility.unifyAjaxErrorHandling(error));
         }
 
-        return axios.get(`${AppConst.netApiBaseUrl}introspection/${id}`, config)
+        return axios.get(`${this.apiBaseUrl}introspection/${id}`, config)
             .then(result => Utility.unifyResultValidator(result))
             .then(result => Utility.unifyObjectMapper(result.data, DtoMapper.fromDtoRoutine))
             .catch(error => Utility.unifyAjaxErrorHandling(error));
@@ -35,7 +37,7 @@ export class RoutineService {
         const config = this.createHttpConfig(lsk);
         const time = new Date().toLocaleTimeString().replace(' ', '-').toLowerCase();
 
-        return axios.get(`${AppConst.netApiBaseUrl}introspection/heartbeat?time=${time}&user=${encodeURI(user)}`, config)
+        return axios.get(`${this.apiBaseUrl}introspection/heartbeat?time=${time}&user=${encodeURI(user)}`, config)
             .then(result => Utility.unifyResultValidator(result, true))
             .catch(error => Utility.unifyAjaxErrorHandling(error, true));
     }
@@ -50,7 +52,7 @@ export class RoutineService {
         }
 
         return axios
-            .put(`${AppConst.netApiBaseUrl}introspection/${fulfillment.id}`, dtoFulfillment, config)
+            .put(`${this.apiBaseUrl}introspection/${fulfillment.id}`, dtoFulfillment, config)
             .then(result => Utility.unifyResultValidator(result))
             .then(result => Utility.unifyObjectMapper(result.data, DtoMapper.fromDtoRoutine))
             .catch(error => Utility.unifyAjaxErrorHandling(error));
@@ -65,7 +67,7 @@ export class RoutineService {
         }
 
         return axios
-            .put(`${AppConst.netApiBaseUrl}introspection/${fulfillment.id}/recursive`, dtoBody, config)
+            .put(`${this.apiBaseUrl}introspection/${fulfillment.id}/recursive`, dtoBody, config)
             .then(result => Utility.unifyResultValidator(result))
             .then(result => Utility.unifyObjectMapper(result.data, DtoMapper.fromDtoRoutine))
             .catch(error => Utility.unifyAjaxErrorHandling(error));
@@ -76,7 +78,7 @@ export class RoutineService {
 
         //axios doesn't support delete with body, use query paramter here
         return axios
-            .delete(`${AppConst.netApiBaseUrl}introspection/${fulfillment.id}?reason=${encodeURI(deleteReason)}`, config)
+            .delete(`${this.apiBaseUrl}introspection/${fulfillment.id}?reason=${encodeURI(deleteReason)}`, config)
             .then(result => Utility.unifyResultValidator(result))
             .then(result => Utility.unifyObjectMapper(result.data, DtoMapper.fromDtoRoutine))
             .catch(error => Utility.unifyAjaxErrorHandling(error));
@@ -88,7 +90,7 @@ export class RoutineService {
 
         //axios doesn't support delete with body
         return axios
-            .delete(`${AppConst.netApiBaseUrl}introspection/${parentId}/history/${fulfillmentHistory.id}?reason=${deleteReason}&kind=${kind}`, config)
+            .delete(`${this.apiBaseUrl}introspection/${parentId}/history/${fulfillmentHistory.id}?reason=${deleteReason}&kind=${kind}`, config)
             .then(result => Utility.unifyResultValidator(result))
             .then(result => Utility.unifyDirectDataMapper(result))
             .catch(error => Utility.unifyAjaxErrorHandling(error));

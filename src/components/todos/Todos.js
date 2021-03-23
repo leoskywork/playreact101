@@ -34,7 +34,8 @@ class Todos extends React.Component {
             if (this.poppedAlerts.has(alertKey) && Date.now() - this.poppedAlerts.get(alertKey) < 30000) return;
 
             this.poppedAlerts.set(alertKey, Date.now());
-            alert(`reload api result: ${JSON.stringify(result)}, source: ${source}`);
+            //fixme, import popup
+            //alert(`reload api result: ${JSON.stringify(result)}, source: ${source}`);
         });
     }
 

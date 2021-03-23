@@ -35,18 +35,16 @@ export class AppConst {
         ]
     }
 
-    // static get apiBaseUrl() {
+    static get apiBaseUrl() {
     //     // return AppConst.isDev ? 'http://localhost:5000/public/' : 'http://118.31.35.69:1080/api/mock/'; 
     //     return AppConst.isDev ? 'http://localhost:5000/public/' : 'https://leoskywork.com/api/mock/';
-    // }
-
-    //.net framework api
-    static get netApiBaseUrl() {
-
+    //static get netApiBaseUrl() {
+        
         if (AppConst.useNodeBackend) {
             return AppConst.isDev ? 'http://localhost:5000/' : 'https://leoskywork.com/nodeapi/';
         }
-
+        
+        //.net framework api
         // return AppConst.isDev ? 'http://localhost:57005/' : 'http://118.31.35.69:1080/api/';
         return AppConst.isDev ? 'http://localhost:57005/' : 'https://leoskywork.com/api/';
     }
