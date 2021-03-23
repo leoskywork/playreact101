@@ -8,7 +8,7 @@ export class TodoService {
 		let queryString = limit > 0 ? '?limit=' + limit : '';
 
 		return axios
-			.get(`${AppConst.apiBaseUrl}todos${queryString}`)
+			.get(`${AppConst.apiBaseUrl}public/todos${queryString}`)
 			.then(result => Utility.unifyResultValidator(result))
 			.then(result => Utility.unifyArrayMapper(result.data, todoService.mapFromDtoTodo))
 			.catch(error => Utility.unifyAjaxErrorHandling(error));
@@ -16,7 +16,7 @@ export class TodoService {
 
 	addTodo(todo) {
 		return axios
-			.post(`${AppConst.apiBaseUrl}todos/`, todo)
+			.post(`${AppConst.apiBaseUrl}public/todos/`, todo)
 			.then(result => Utility.unifyResultValidator(result))
 			.then(result => Utility.unifyObjectMapper(result.data, todoService.mapFromDtoTodo))
 			.catch(error => Utility.unifyAjaxErrorHandling(error));
@@ -24,7 +24,7 @@ export class TodoService {
 
 	deleteTodo(id) {
 		return axios
-			.delete(`${AppConst.apiBaseUrl}todos/${id}`)
+			.delete(`${AppConst.apiBaseUrl}public/todos/${id}`)
 			.then(result => Utility.unifyResultValidator(result))
 			.then(result => result.data)
 			.catch(error => Utility.unifyAjaxErrorHandling(error));
@@ -32,11 +32,21 @@ export class TodoService {
 
 	updateTodo(todo) {
 		return axios
-			.put(`${AppConst.apiBaseUrl}todos/${todo.id}`, todo)
+			.put(`${AppConst.apiBaseUrl}public/todos/${todo.id}`, todo)
 			.then(result => Utility.unifyResultValidator(result))
 			.then(result => Utility.unifyObjectMapper(result.data, todoService.mapFromDtoTodo))
 			.catch(error => Utility.unifyAjaxErrorHandling(error));
-	}
+    }
+    
+    createHttpConfig() {
+        return {
+            headers: {
+                //[ref](https://stackoverflow.com/questions/15945118/detecting-ajax-requests-on-nodejs-with-express)
+                //sometimes, need add the following header to ensure backend 'req.xhr' checking works
+                "X-Request-With": "XMLHttpRequest"
+            }
+        }
+    }
 
 	static mapFromDtoTodo(dto) {
 		if (dto._id) {

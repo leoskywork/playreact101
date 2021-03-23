@@ -4,7 +4,7 @@ export class AppConst {
     }
 
     static get useNodeBackend() {
-        return false;
+        return true;
     }
 
     static get appName() {
@@ -35,9 +35,11 @@ export class AppConst {
         ]
     }
 
+    // todos api ------ node
+    // routines api --- asp.net
     static get apiBaseUrl() {
-    //     // return AppConst.isDev ? 'http://localhost:5000/public/' : 'http://118.31.35.69:1080/api/mock/'; 
-    //     return AppConst.isDev ? 'http://localhost:5000/public/' : 'https://leoskywork.com/api/mock/';
+    //return AppConst.isDev ? 'http://localhost:5000/public/' : 'http://118.31.35.69:1080/api/mock/'; 
+    //return AppConst.isDev ? 'http://localhost:5000/public/' : 'https://leoskywork.com/api/mock/';
     //static get netApiBaseUrl() {
         
         if (AppConst.useNodeBackend) {
