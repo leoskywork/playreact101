@@ -46,6 +46,7 @@ A introspection app
 # 1. how start the app
   # start the api server(node or asp.net) first
   npm run start # note the settings {}.scripts.start in package.json
+  npm start     # same as above
 
 
 # 2. release website
@@ -230,6 +231,7 @@ scripts.build: "webpack --mode production"
   - a quick work around is to config IIS to redirect to home page (e.g /r101/) when have 404 error
   - sophisticated approach would be use hash history/browser history
     - [ref](https://stackoverflow.com/questions/27928372/react-router-urls-dont-work-when-refreshing-or-writing-manually)
+      - tried hash router (one of the answers from above link), it worked, but mass up the url
     - [ref2](https://github.com/jintoppy/react-training/blob/master/basic/node_modules/react-router/docs/guides/Histories.md#browserhistory)
 
 ---

@@ -34,7 +34,7 @@ export class App extends React.Component {
                 about: new NavItem('About', '/about'),
                 support: new NavItem('Support', '/support'),
                 introspection: new NavItem('Intro', '/intro'),
-                _basePath: new NavItem('_basePath', '/r101', true)
+                _basePath: new NavItem('_basePath', '/r101/#/', true)
             },
             hideHeader: false
         };
