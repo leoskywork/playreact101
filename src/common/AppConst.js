@@ -1,10 +1,10 @@
 export class AppConst {
     static get isDev() {
-        return true;
+        return false;
     }
 
     static get useNodeBackend() {
-        return true;
+        return false;
     }
 
     static get appName() {
@@ -31,24 +31,22 @@ export class AppConst {
             ['1.1.2', '2020.6.21'],
             ['1.1.3', '2020.6.21'],
             //support recursive routines
-            ['1.1.4', '2020.6.21']
+            ['1.1.4', '2020.6.21'],
+            //local host
+            ['1.1.5', '2021.11.19']
         ]
     }
 
     // todos api ------ node
     // routines api --- asp.net
     static get apiBaseUrl() {
-    //return AppConst.isDev ? 'http://localhost:5000/public/' : 'http://118.31.35.69:1080/api/mock/'; 
-    //return AppConst.isDev ? 'http://localhost:5000/public/' : 'https://leoskywork.com/api/mock/';
-    //static get netApiBaseUrl() {
         
         if (AppConst.useNodeBackend) {
             return AppConst.isDev ? 'http://localhost:5000/' : 'https://leoskywork.com/nodeapi/';
         }
         
         //.net framework api
-        // return AppConst.isDev ? 'http://localhost:57005/' : 'http://118.31.35.69:1080/api/';
-        return AppConst.isDev ? 'http://localhost:57005/' : 'https://leoskywork.com/api/';
+        return AppConst.isDev ? 'http://localhost:57005/' : 'http://localhost:8080/api6/'; //'https://leoskywork.com/api/';
     }
 
     static get frontendBaseUrl() {

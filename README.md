@@ -44,7 +44,7 @@ A introspection app
 
 ```sh
 # 1. how start the app
-  # start the api server(node or asp.net) 
+  # start the api server(node or asp.net) first
   npm run start # note the settings {}.scripts.start in package.json
 
 
@@ -59,7 +59,7 @@ A introspection app
 - background
   - react is a js library(though behave like a framework) published by facebook
   - SPA web app
-  - the 'V' in MVC
+  - the 'V' in MVC(backend)
   - name convention
     - capital first char for component name
 - virtual DOM
@@ -72,7 +72,7 @@ A introspection app
     - do do this     `const player = {score:1, name:'Jeff'}; const newPlayer = Object.assign({}, player, {score:2});`
       - or           `const newPlayer = {...player, score:2};`
       - for array    `const newArray = old.slice()`
-- uses Webpack but needs no configuration form you
+- uses Webpack but needs no configuration from you
 - comes bundled with a dev server with hot reload
 - prerequisite
   - nodejs
@@ -150,7 +150,7 @@ A introspection app
   - a js compiler
 - fix async, await error 'regeneratorRuntime is not defined'
   - install babel-polyfill, babel-preset-env, babel-preset-stage-0
-  - webpack.config.js, add `babel-polyfill` to entry, add `stage-0` to loaders[].query.presets[]
+  - webpack.config.js, add `babel-polyfill` to entry, add `stage-0` to `loaders[].query.presets[]`
 - config
 
 ```js
