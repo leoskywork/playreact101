@@ -120,7 +120,8 @@ class Todos extends React.Component {
         return (
             <React.Fragment>
                 <br></br>
-                <h3>Todo List Due {new Date(dueHour).toLocaleString().replace(',', ' ')}</h3>
+                {/* <h3>Todo List Due {new Date(dueHour).toLocaleString().replace(',', ' ').replace('/', '.')}</h3> */}
+                <h3>Todo list from node api</h3>
                 <br></br>
                 <AddTodo addTodo={this.addTodo}></AddTodo>
                 <br></br>

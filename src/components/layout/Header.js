@@ -52,10 +52,7 @@ class Header extends React.Component {
 	componentDidMount() {
 		console.log('-----> header did mount ', document.location);
 
-		//fixme: don't know why, can't get value from AppConst here...
-		const lowerPath = document.location.pathname.toLowerCase();
-		const lowerBase = this.props.nav._basePath.path.toLowerCase();
-		const current = Object.values(this.props.nav).find(n => lowerBase + n.path.toLowerCase() === lowerPath);
+        const current = this.getCurrentNav();
 
 		if (current && current.name !== this.state.currentNavItem) {
 			this.setState({ currentNavItem: current.name });
@@ -66,16 +63,21 @@ class Header extends React.Component {
 		console.log('-----> header did update, pre: ', ps, ', current: ', this.state);
 		console.log('-----> location', document.location.pathname);
 
-		//fixme: don't know why, can't get value from AppConst here...
-		const lowerPath = document.location.pathname.toLowerCase();
-		const lowerBase = this.props.nav._basePath.path.toLowerCase();
-		const current = Object.values(this.props.nav).find(n => lowerBase + n.path.toLowerCase() === lowerPath);
+        const current = this.getCurrentNav();
 
 		if (current && current.name !== this.state.currentNavItem) {
 			//if (current) {
 			this.setState({ currentNavItem: current.name });
 		}
-	}
+    }
+    
+    getCurrentNav() {
+        //fixme: don't know why, can't get value from AppConst here...
+        const lowerPath = document.URL.toLowerCase();
+        const lowerBase = this.props.nav._basePath.path.toLowerCase();
+        const allNav = Object.values(this.props.nav);
+		return allNav.find(n => lowerPath.endsWith(lowerBase + n.path.toLowerCase()));
+    }
 }
 
 Header.propTypes = {

@@ -8,7 +8,7 @@ export class AppConst {
     }
 
     static get appName() {
-        return AppConst.isDev ? 'Dev React 101' : 'Pilot React 101';
+        return AppConst.isDev ? 'Dev React 101' : 'Non-dev React 101';
     }
 
     static get createdAt() {
@@ -32,7 +32,7 @@ export class AppConst {
             ['1.1.3', '2020.6.21'],
             //support recursive routines
             ['1.1.4', '2020.6.21'],
-            //local host
+            //use local host
             ['1.1.5', '2021.11.19']
         ]
     }
