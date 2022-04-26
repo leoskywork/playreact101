@@ -51,7 +51,7 @@ A introspection app
 
 # 2. release website
   npm run build # note the settings {}.scripts.build in package.json
-
+  # then move to publish folder - no need, this is done automatically by script now
 
 ```
 

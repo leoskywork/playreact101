@@ -94,7 +94,7 @@ export class Introspection extends React.Component {
                 <h3 className="intro-title" title={AppConst.appName + ' - ' + AppConst.versionDetails}>
                     <span>{AppConst.isDev ? AppConst.appName + ' ' : ''}INTROSPECTION</span>
                     <span>&nbsp;</span>
-                    <span>{this.state.today}</span>
+                    <span>{this.state.today.split(".202")[0]}</span>
                 </h3>
                 <form className="intro-load-form" onSubmit={this.onSubmitLoading}>
                     <input
