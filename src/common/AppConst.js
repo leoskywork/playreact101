@@ -46,7 +46,9 @@ export class AppConst {
         }
         
         //.net framework api
-        return AppConst.isDev ? 'http://localhost:57005/' : 'http://leo-asus:8080/api6/'; //'https://leoskywork.com/api/';
+        //return AppConst.isDev ? 'http://localhost:57005/' : 'https://leoskywork.com/api/';  //remote
+        //return AppConst.isDev ? 'http://localhost:57005/' : 'http://leo-asus:8080/api6/';   //LAN web api
+        return AppConst.isDev ? 'http://localhost:57005/' : 'http://localhost:8080/api6/';    //same pc
     }
 
     static get frontendBaseUrl() {

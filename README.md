@@ -45,6 +45,7 @@ A introspection app
 ```sh
 # 1. how start the app
   # start the api server(node or asp.net) first
+  npm install   # run once, after clone repo from github
   npm run start # note the settings {}.scripts.start in package.json
   npm start     # same as above
 
