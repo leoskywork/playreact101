@@ -203,7 +203,13 @@ export class Introspection extends React.Component {
         this.reload(this.state.lskLoad, 'submit loading').then(success => {
             if (success) {
                 this.setState({ lskLoad: '' });
-                document.querySelector('.intro-load-form').remove();
+                try{
+                    const loadingForm = document.getElementsByClassName("intro-load-form")[0];
+                    loadingForm.style.display= "none";
+                    //loadingForm.remove(); //get error for this
+                }catch(err){ 
+                    console.log(err); 
+                }
             }
         });
     };
