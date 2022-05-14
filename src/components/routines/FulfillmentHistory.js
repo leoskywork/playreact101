@@ -10,7 +10,7 @@ import ModalTitle from 'react-bootstrap/ModalTitle';
 import AppConst from '../../common/AppConst';
 import Utility from '../../common/Utility';
 import routineService from '../../services/RoutineService';
-import './StyleRoutines.css';
+import './StyleIntro.css';
 
 
 export class FulfillmentHistory extends React.Component {

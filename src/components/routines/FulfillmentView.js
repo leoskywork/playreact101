@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Badge from 'react-bootstrap/Badge';
 
-import './StyleRoutines.css';
+import './StyleIntro.css';
 import FulfillmentHistory from './FulfillmentHistory';
 import AppConst from '../../common/AppConst';
 import Utility from '../../common/Utility';
@@ -25,7 +25,8 @@ export class FulfillmentView extends React.Component {
             isLoadingHistoryRecords: false,
             lskFulfill: AppConst.defaultFulfillDay,
             className: 'FulfillmentView',
-            isDeletingRoutine: false
+            isDeletingRoutine: false,
+            showRecursiveDialog: 0
         }
     }
 
@@ -64,14 +65,20 @@ export class FulfillmentView extends React.Component {
                     onClick={this.onToggleLskFulfill}
                     variant="outline-secondary">+
                 </Button>
-                <DropdownToggle split variant="outline-secondary" id={`fulfill-op-${this.props.fulfillment.id}`} disabled={this.isCallingApi()} />
-                <DropdownMenu disabled={this.state.isDeletingRoutine} className="intro-op-dropdown-menu">
+                <DropdownToggle split variant="outline-secondary"
+                    id={`fulfill-op-${this.props.fulfillment.id}`} 
+                    //onClick={this.onToggleCaretClick}
+                    disabled={this.isCallingApi()} />
+                <DropdownMenu disabled={this.state.isDeletingRoutine} className="intro-op-dropdown-menu" onClick={this.onToggleCaretClick}>
+                {this.state.showRecursiveDialog % 2 === 0 ?
                     <ActionDropdown
+                        id = {`recursive-dialog-${this.state.showRecursiveDialog}`}
                         beforeCallDeleteRoutine={this.beforeCallDeleteRoutine}
                         afterDeleteRoutineReturned={this.afterDeleteRoutineReturned}
                         afterUpdateRecursiveReturned={this.afterUpdateRecursiveReturned}
                         fulfillment={this.props.fulfillment}>
                     </ActionDropdown>
+                : null}
                 </DropdownMenu>
             </Dropdown>
 
@@ -166,6 +173,14 @@ export class FulfillmentView extends React.Component {
 
             this.getHistoryRecords(this.state.lskLoad, 'toggle-fulfill-button');
         }
+    }
+
+    onToggleCaretClick = (e) =>{
+        //console.log('onToggleCaretClick - ', e.currentTarget);
+
+        console.log('onToggleCaretClick - ', this.state.showRecursiveDialog);
+        //fixme, not working, want to creat a new dialog every time, but it always reuse it 
+        //this.setState({showRecursiveDialog: this.state.showRecursiveDialog + 1});
     }
 
     onSubmitFulfillment = (e) => {

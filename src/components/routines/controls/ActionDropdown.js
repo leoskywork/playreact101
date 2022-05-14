@@ -30,22 +30,50 @@ export class ActionDropdown extends React.Component {
             actions: [this.actionKeys.recursive, this.actionKeys.delete],
             isConfirmingDelete: false,
             inputLsk: '',
-            inputRecursiveLsk: 'not-now',
+            inputRecursiveLsk: 'not-now',   
             showRecursiveDialog: false,
-            enableSchedule: this.props.fulfillment.enableSchedule || false,
-            recursiveIntervalDays: this.props.fulfillment.recursiveIntervalDays || AppConst.defaultRecursiveDays
+            syncParent: false
+            // enableSchedule: this.props.fulfillment.enableSchedule || false,
+            // recursiveIntervalDays: this.props.fulfillment.recursiveIntervalDays || AppConst.defaultRecursiveDays
         }
+
+    }
+
+    // syncEnableScheduleWithParent(){
+    //     if(this.state.enableSchedule !== this.props.fulfillment.enableSchedule || this.state.recursiveIntervalDays !== this.props.fulfillment.recursiveIntervalDays){
+    //         this.setState({ 
+    //             enableSchedule: this.props.fulfillment.enableSchedule || false,
+    //             recursiveIntervalDays: this.props.fulfillment.recursiveIntervalDays || AppConst.defaultRecursiveDays
+    //         });
+    //     }
+    // }
+
+    static getDerivedStateFromProps(props, state) {
+        console.log('action dropdown - getDerivedStateFromProps()')
+    
+        if(!state.syncParent){
+            return {
+                syncParent: true,
+                enableSchedule: props.fulfillment.enableSchedule || false,
+                recursiveIntervalDays: props.fulfillment.recursiveIntervalDays || AppConst.defaultRecursiveDays
+            };
+        }
+
+        return null;
     }
 
     componentDidMount() {
-        console.log('action dropdown', this.props.fulfillment.id, 'did mount');
+        console.log('action dropdown', this.props.fulfillment.name, 'did mount');
     }
 
     componentWillUnmount() {
-        console.log('action dropdown', this.props.fulfillment.id, 'will unmount');
+        console.log('action dropdown', this.props.fulfillment.name, 'will unmount');
     }
 
     render() {
+        console.log('ActionDropDown - render()');
+       // this.syncEnableScheduleWithParent();
+
         return <React.Fragment>
             {this.state.actions.map(action =>
                 <DropdownItem
@@ -81,7 +109,7 @@ export class ActionDropdown extends React.Component {
                 </ModalFooter>
             </Modal>}
 
-            {<Modal show={this.state.showRecursiveDialog} onHide={this.dismissRecursiveDialog} centered>
+            {<Modal show={this.state.showRecursiveDialog} onHide={this.dismissRecursiveDialog} centered className='22-test'>
                 <ModalHeader closeButton><ModalTitle>Update Recursive</ModalTitle></ModalHeader>
                 <ModalBody>
                     <div>

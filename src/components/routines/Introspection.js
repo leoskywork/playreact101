@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './StyleRoutines.css';
+import './StyleIntro.css';
 
 import routineService from '../../services/RoutineService';
 import AppConst from '../../common/AppConst';

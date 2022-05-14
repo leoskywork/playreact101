@@ -38,6 +38,11 @@
     background-color: red;
 }
 
+.check-mark{
+    position: relative;
+    left: -20px;
+}
+
 .check-mark::before{
     content: '\2713';
     display: inline-block;
