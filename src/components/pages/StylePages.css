@@ -4,6 +4,7 @@
 
 .contact-list {
 	margin: 10px auto;
+	list-style-type: none;
 }
 
 .contact-item {

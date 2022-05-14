@@ -104,7 +104,7 @@ class Todos extends React.Component {
     render() {
         //console.log('Todos.render', this.state.todoList, this.props.deadline);
 
-        let dueHour = Math.floor(this.props.deadline.getTime() / 1000 / 60 / 60) * 1000 * 60 * 60;
+        //let dueHour = Math.floor(this.props.deadline.getTime() / 1000 / 60 / 60) * 1000 * 60 * 60;
 
         //note[fixed]??? why react still warning even if added the key prop?
         //  - need wrap entire jsx within an elem (div or React.Fragment) if result is a mapped list + some html elements

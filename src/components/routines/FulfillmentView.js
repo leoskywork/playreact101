@@ -78,7 +78,7 @@ export class FulfillmentView extends React.Component {
             {this.props.fulfillment.enableSchedule && (<Badge
                 className="intro-next-schedule"
                 title={`scheduled every ${this.props.fulfillment.recursiveIntervalDays === 1 ? 'day' : this.props.fulfillment.recursiveIntervalDays + ' days'}`}
-                variant={nextSchedule <= 2 ? 'warning' : (nextSchedule <= 7 ? 'info' : 'light')}
+                bg={nextSchedule <= 2 ? 'warning' : (nextSchedule <= 7 ? 'info' : 'light')}
                 pill>{`${nextSchedule == null ? '—' : nextSchedule} day`}{Math.abs(nextSchedule) > 1 && 's'}</Badge>
             )}
 

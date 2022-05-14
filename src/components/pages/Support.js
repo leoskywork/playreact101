@@ -1,5 +1,5 @@
 import React from 'react';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import './StylePages.css';
 
 class Contact {

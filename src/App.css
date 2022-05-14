@@ -37,7 +37,7 @@ body {
 
 a {
 	color: #333;
-	text-decoration: none;
+	text-decoration: none !important;
 }
 
 input[type='number'],

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import logo from './logo.svg';
@@ -34,7 +34,7 @@ export class App extends React.Component {
                 about: new NavItem('About', '/about'),
                 support: new NavItem('Support', '/support'),
                 introspection: new NavItem('Intro', '/intro'),
-                _basePath: new NavItem('_basePath', '/r101/#', true)
+                _basePath: new NavItem('_basePath', '/r101', true)
             },
             hideHeader: false
         };
@@ -60,18 +60,12 @@ export class App extends React.Component {
                         {AppConst.appName}
                     </h1>
                     <Header nav={nav} hideHeader={this.state.hideHeader}></Header>
-                    <Route
-                        path={nav.home.path}
-                        exact
-                        render={_ => (
-                            <div className="todo-board">
-                                <Todos deadline={this.state.deadline} />
-                            </div>
-                        )}
-                    ></Route>
-                    <Route path={nav.about.path} component={About}></Route>
-                    <Route path={nav.support.path} component={Support}></Route>
-                    <Route path={nav.introspection.path} render={_ => <Intro collapseHeader={this.collapseHeader}></Intro>}></Route>
+                    <Routes>
+                        <Route path={nav.home.path} exact element={<div className="todo-board"><Todos deadline={this.state.deadline} /></div>}></Route>
+                        <Route path={nav.about.path} element={<About />}></Route>
+                        <Route path={nav.support.path} element={<Support />}></Route>
+                        <Route path={nav.introspection.path} element={<Intro collapseHeader={this.collapseHeader}></Intro>}></Route>
+                    </Routes>
                 </div>
             </Router>
         );

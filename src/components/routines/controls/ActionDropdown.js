@@ -85,9 +85,9 @@ export class ActionDropdown extends React.Component {
                 <ModalHeader closeButton><ModalTitle>Update Recursive</ModalTitle></ModalHeader>
                 <ModalBody>
                     <div>
-                        <ButtonGroup toggle>
+                        <ButtonGroup>
                             {[true, false].map((flag, i) => (<ToggleButton
-                                key={i} type="radio" variant="outline-secondary" name={flag.toString()} value={flag}
+                                key={i} id={"recursive-toggle-" + i} type="radio" variant="outline-secondary" name="radio" value={flag}
                                 checked={this.state.enableSchedule === flag}
                                 onChange={this.onEnableOrDisableSchedule}>{flag ? "Enable" : "Disable"}</ToggleButton>
                             ))}
@@ -95,9 +95,7 @@ export class ActionDropdown extends React.Component {
                     </div>
                     <div id="intro-lsk-recursive-interval">
                         <InputGroup>
-                            <InputGroup.Prepend>
-                                <InputGroup.Text>Interval days</InputGroup.Text>
-                            </InputGroup.Prepend>
+                            <InputGroup.Text>Interval days</InputGroup.Text>
                             <FormControl
                                 type="number"
                                 name="recursiveIntervalDays"
@@ -136,7 +134,9 @@ export class ActionDropdown extends React.Component {
     }
 
     onEnableOrDisableSchedule = (e) => {
-        this.setState({ enableSchedule: e.currentTarget.value === 'true' ? true : false });
+        //console.log(e.currentTarget.value, e);
+        //need to ensure the value is a boolean value, lots of codes dependent on it
+        this.setState({ enableSchedule: (e.currentTarget.value === true || e.currentTarget.value === "true") });
     }
 
     onChangeRecursiveInterval = (e) => {

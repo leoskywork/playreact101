@@ -192,7 +192,8 @@ touch ./src/index.js
 touch .babelrc  # add { "presets": ["env", "react"] } to file
 # setup index.js - hookup react render with dom elem
 # main line
-ReactDom.render(<App />, document.getElementById('app'));
+ReactDom.render(<App />, document.getElementById('app')); # v17
+ # v18 - use createRoot instead
 # impl App.js
 // you app logic
 # modify package.json, set following entries

@@ -111,7 +111,6 @@ export class Introspection extends React.Component {
                     <button type="submit" className="btn-intro-load" disabled={this.disableLoadButton()}>ENTER</button>
                 </form>
                 <div className="sm-align-right-wrap">
-                    <br></br>
                     <div className='intro-loading-message message-main-loading' hidden={!this.state.isLoadingData}>Loading...</div>
                     {(this.state.showRecursiveOnly ? [...this.state.fulfillments].sort(Introspection.sortByRecursiveWeightAsc) : this.state.fulfillments).map(f =>
                         <FulfillmentView key={f.id}

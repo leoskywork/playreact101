@@ -3,6 +3,7 @@
 	color: lightgray;
     padding: 20px 0;
     text-transform: uppercase;
+    margin-bottom: 60px;
 }
 
 .intro-load-form {
@@ -33,12 +34,14 @@
 }
 
 .intro-fulfill-item {
-	margin: 30px auto;
+	margin: 20px auto;
+    width: 500px;
+    text-align: left;
 	font-size: 1.4em;
 }
 
 .intro-fulfill-form {
-	margin: 30px auto;
+	margin: 20px auto;
 }
 
 .intro-fulfill-form input[type='text'] {
@@ -131,18 +134,22 @@
 }
 
 .intro-fulfill-history{
-    padding: 10px;
+    padding: 10px 0;
     max-height: 320px;
-    max-width: 390px;
+    max-width: 400px;
     overflow: auto;
-    margin: 10px auto;
+    /* margin: 10px auto; */
     text-align: left;
+}
+
+.intro-fulfill-history .btn-intro-common{
+    margin-left: 4px;
 }
 
 .intro-fulfill-history-item{
     color: darkslategray;
     cursor: default;
-    padding: 4px 10px;
+    padding: 4px;
     /* width: 360px; */
     display: inline-block;
 }
