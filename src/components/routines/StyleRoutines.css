@@ -35,7 +35,8 @@
 
 .intro-fulfill-item {
 	margin: 20px auto;
-    width: 500px;
+    max-width: 500px; /* better than width:500px, fit for both large and small display*/
+    padding-left: 20px;
     text-align: left;
 	font-size: 1.4em;
 }
